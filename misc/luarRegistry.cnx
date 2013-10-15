@@ -1,0 +1,10 @@
+*luarRegistry.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4
+
+*registry*
+
+*registry.get* (key,defualtValue)
+取得值，如果没有返回defaultValue
+
+*registry.set* (key,value)
+设置key,value
+vim:tw=78:ts=8:ft=help:norl:

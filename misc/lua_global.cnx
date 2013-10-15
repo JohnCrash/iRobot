@@ -1,0 +1,53 @@
+*lua_global.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4 
+
+*game*
+*game.setScript* (event,function)
+event可以是下面的值
+	eventConsole 控制台发出一条命令时调用,function( cmd )
+	eventErrorHandler 当出现Lua编译或者执行错误的时候调用,function( msg )
+	
+	eventMouseMove 屏幕鼠标移动时发出该事件event( x,y,z)
+	eventMousePress 鼠标一个键按下时event(x,y,buttonID)
+		buttonID在mygui.lua中定义
+			gui.MouseButtonLeft = 0
+			gui.MouseButtonRight = 1
+			gui.MouseButtonMiddle = 2
+			gui.Button0 = 0
+			gui.Button1 = 1
+			gui.Button2 = 2
+			gui.Button3 = 3
+			gui.Button4 = 4
+			gui.Button5 = 5
+			gui.Button6 = 6
+			gui.Button7 = 7
+	eventMouseRelease 鼠标被施放时 event(x,y,buttonID)
+	eventKeyPress 键盘按下时event(guiKey,char)
+		guiKey见mygui.lua定义
+	eventKeyRelease 键盘释放时event(guiKey)
+	eventFrameStarted 帧渲染开始时event(timeSinceLastFrame)
+	eventFrameRenderingQueued
+		Called after all render targets have had their rendering commands issued,
+		but before render windows have been asked to flip their buffers over. 
+	eventFrameEnded 帧渲染结束event(timeSinceLastFrame)
+	eventShutdown 程序关闭，重启前将发出该事件 event()
+
+*game.reset* (type)
+type可以是下面字符串中的一个
+"NORMAL" 完全重启，包括重建MyGUI和Ogre环境
+"FAST" 快速重启，仅仅重启场景
+
+*game.quit* ()
+退出游戏
+
+*game.getKeyState* (key)
+如果key是按下返回true,其他情况返回false
+
+*game.applyTranslate* (filename)
+使用指定的翻译文件
+
+*module* (...)
+lua 5.2 中没有module函数。这个函数是重新定义的
+在一个模块的开始可以这么写_ENV=module(...)这样在模块中定义的全局
+变量将放入模块中
+
+vim:tw=78:ts=8:ft=help:norl:

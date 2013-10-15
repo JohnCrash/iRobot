@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HKS type="Hotkey" version="1">
+<hotkey name="_new" caption="New" tip="" key="Ctrl+Shift+N"/>
+<hotkey name="_open" caption="Open" tip="" key="Ctrl+O"/>
+<hotkey name="_save" caption="Save" tip="" key="Ctrl+S"/>
+<hotkey name="_delete" caption="Delete" tip="" key="Delete"/>
+<hotkey name="_about" caption="About" tip="" key="A"/>
+<hotkey name="_saveas" caption="About" tip="" key="Ctrl+Alt+S"/>
+</HKS>

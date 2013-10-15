@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCSX" position="130 190 530 235">
+        <Property key="Caption" value="#&lt;I&gt;Project SetHello #&lt;M&gt;你好吗？"/>
+        <Widget type="TabControl" skin="TabControl" position="15 10 495 180">
+            <Widget type="TabItem" skin="" position="2 24 489 152">
+                <Property key="Caption" value="File"/>
+                <Widget type="TextBox" skin="TextBox" position="15 10 460 20">
+                    <Property key="Caption" value="#&lt;I&gt;Widgets"/>
+                </Widget>
+                <Widget type="EditBox" skin="EditBoxStretch" position="15 35 460 105" align="Stretch">
+                    <Property key="Caption" value="#FF0000#&lt;B&gt;#&lt;I&gt;Widgets"/>
+                </Widget>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 489 152">
+                <Property key="Caption" value="#&lt;I&gt;Project"/>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 489 152">
+                <Property key="Caption" value="#&lt;B&gt;Edit"/>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 489 152">
+                <Property key="Caption" value="#&lt;I&gt;Colours"/>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 489 152">
+                <Property key="Caption" value="#&lt;M&gt;Widgets"/>
+            </Widget>
+        </Widget>
+    </Widget>
+</MyGUI>

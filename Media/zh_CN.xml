@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Translate>
+    <Msg msgid="Shadow" msgstr="阴影"/>
+    <Msg msgid="About" msgstr="关于"/>
+    <Msg msgid="Properties" msgstr="属性"/>
+    <Msg msgid="Quit" msgstr="退出"/>
+    <Msg msgid="Not is a translate xml document " msgstr="不是一个翻译xml文档"/>
+    <Msg msgid="Help" msgstr="帮助"/>
+    <Msg msgid="hasShadowCasterVertexProgram " msgstr=""/>
+    <Msg msgid="Depth write enabled" msgstr=""/>
+    <Msg msgid="Warning" msgstr="警告！"/>
+    <Msg msgid="Select" msgstr="选择"/>
+    <Msg msgid="Pass" msgstr=""/>
+    <Msg msgid="sphere" msgstr="球"/>
+    <Msg msgid="Open file" msgstr="打开文件"/>
+    <Msg msgid="Exit" msgstr="退出"/>
+    <Msg msgid="Cancel" msgstr="取消"/>
+    <Msg msgid="Scan..." msgstr="扫描"/>
+    <Msg msgid="hasShadowReceiverVertexProgram" msgstr=""/>
+    <Msg msgid="Lighting" msgstr=""/>
+    <Msg msgid="hasGeometryProgram" msgstr=""/>
+    <Msg msgid="Update" msgstr="更新"/>
+    <Msg msgid="File" msgstr="文件"/>
+    <Msg msgid="Test" msgstr=""/>
+    <Msg msgid="Translate..." msgstr=""/>
+    <Msg msgid="Plane" msgstr="平面"/>
+    <Msg msgid="Diffuse" msgstr="漫"/>
+    <Msg msgid="Hi" msgstr=""/>
+    <Msg msgid="Material" msgstr="材质"/>
+    <Msg msgid="hasVertexProgram" msgstr=""/>
+    <Msg msgid="Rigid sphere" msgstr=""/>
+    <Msg msgid="Ok" msgstr="确定"/>
+    <Msg msgid="CopyRight (C) 2012" msgstr="版权所有(C)2012"/>
+    <Msg msgid="Move" msgstr="移动"/>
+    <Msg msgid="Edit" msgstr="编辑"/>
+    <Msg msgid="No" msgstr="否"/>
+    <Msg msgid="CullingMode" msgstr=""/>
+    <Msg msgid="保存并且重启" msgstr=""/>
+    <Msg msgid="确定" msgstr=""/>
+    <Msg msgid="Can&apos;t open file " msgstr=""/>
+    <Msg msgid="Sphere" msgstr=""/>
+    <Msg msgid="Ambient" msgstr=""/>
+    <Msg msgid="ManualCullingMode" msgstr=""/>
+    <Msg msgid="ShadeOptions" msgstr=""/>
+    <Msg msgid="hasFragmentProgram" msgstr=""/>
+    <Msg msgid="CompareFunction" msgstr=""/>
+    <Msg msgid="isProgrammable" msgstr=""/>
+    <Msg msgid="Run" msgstr="运行"/>
+    <Msg msgid="hasShadowReceiverFragmentProgram " msgstr=""/>
+    <Msg msgid="Yes" msgstr="是"/>
+    <Msg msgid="Open" msgstr="打开"/>
+    <Msg msgid="Colour write disabled" msgstr=""/>
+    <Msg msgid="isTransparent" msgstr=""/>
+    <Msg msgid="Properties..." msgstr="属性"/>
+    <Msg msgid="Themes" msgstr=""/>
+    <Msg msgid="Run 2 thread" msgstr=""/>
+    <Msg msgid="DestBlendFactor" msgstr=""/>
+    <Msg msgid="Translate file " msgstr="翻译文件"/>
+    <Msg msgid="错误" msgstr=""/>
+    <Msg msgid="Material..." msgstr="材料..."/>
+    <Msg msgid="createWindow" msgstr=""/>
+    <Msg msgid="材质" msgstr=""/>
+    <Msg msgid="New" msgstr="新建"/>
+    <Msg msgid="TransparencyCastsShadows" msgstr=""/>
+    <Msg msgid="Delete" msgstr="删除"/>
+    <Msg msgid="Script" msgstr="脚本"/>
+    <Msg msgid="Save as..." msgstr="另存"/>
+    <Msg msgid="Builder" msgstr=""/>
+    <Msg msgid="reload" msgstr=""/>
+    <Msg msgid="Rigid box" msgstr=""/>
+    <Msg msgid="hasSeparateSceneBlending" msgstr=""/>
+    <Msg msgid="Open..." msgstr="打开..."/>
+    <Msg msgid="Move local" msgstr=""/>
+    <Msg msgid="Depth check enabled" msgstr=""/>
+    <Msg msgid="Save file" msgstr="保存文件"/>
+    <Msg msgid="Use Material" msgstr=""/>
+    <Msg msgid="Technique" msgstr=""/>
+    <Msg msgid="Pause" msgstr=""/>
+    <Msg msgid="Geometry" msgstr=""/>
+    <Msg msgid="iRobot Builder 1.0" msgstr=""/>
+    <Msg msgid="SceneBlendingOperationAlpha" msgstr=""/>
+    <Msg msgid="SceneBlending " msgstr=""/>
+    <Msg msgid="ReceiveShadows" msgstr=""/>
+    <Msg msgid="Physic" msgstr=""/>
+    <Msg msgid="Save" msgstr="存储"/>
+    <Msg msgid="Ogre" msgstr=""/>
+    <Msg msgid="Box" msgstr=""/>
+    <Msg msgid="hello" msgstr=""/>
+    <Msg msgid="Cylinder" msgstr=""/>
+    <Msg msgid="Rigid cylinder" msgstr=""/>
+    <Msg msgid="Translate" msgstr="翻译"/>
+    <Msg msgid="Do you want save this change?" msgstr="你想保存这次改变吗？"/>
+    <Msg msgid="Self-Illumination" msgstr=""/>
+    <Msg msgid="Specular" msgstr=""/>
+    <Msg msgid="Modify" msgstr=""/>
+    <Msg msgid="SkinManager" msgstr=""/>
+    <Msg msgid="Shadow technique" msgstr=""/>
+    <Msg msgid="PolygonMode" msgstr=""/>
+    <Msg msgid="Up" msgstr="#FFFFFF上一层"/>
+    <Msg msgid="TextureUnitState" msgstr=""/>
+    <Msg msgid="Options..." msgstr="选项..."/>
+    <Msg msgid="Plane move" msgstr=""/>
+    <Msg msgid="Apply" msgstr="应用"/>
+    <Msg msgid="Options" msgstr="选项"/>
+    <Msg msgid="SourceBlendFactor" msgstr=""/>
+    <Msg msgid="Skin:" msgstr=""/>
+    <Msg msgid="iRobot" msgstr=""/>
+    <Msg msgid="Load ogre resource" msgstr=""/>
+    <Msg msgid="Rotate" msgstr="旋转"/>
+    <Msg msgid="Shininess" msgstr=""/>
+    <Msg msgid="Physica" msgstr="物理学"/>
+</Translate>

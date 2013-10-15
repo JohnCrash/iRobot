@@ -1,0 +1,6 @@
+*LuaDebug.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4 
+*LuaDebug*
+Lua调试使用server/client模式
+iRobot主动连接到到调试服务，127.0.0.1
+使用NotePad++插件实现
+vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCSX" position="45 35 575 445" align="Center" layer="Modal">
+        <Property key="Caption" value="Translate"/>
+        <Widget type="ListBox" skin="ListBox" position="5 5 555 260" align="HStretch VStretch" name="_list"/>
+        <Widget type="Button" skin="Button" position="485 375 75 25" align="Right Bottom" name="_save">
+            <Property key="Caption" value="Save"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox" position="5 275 555 95" align="HStretch Bottom" name="_edit">
+            <Property key="MultiLine" value="true"/>
+            <Property key="TextAlign" value="Left Top"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="395 375 85 25" align="Right Bottom" name="_scan">
+            <Property key="Caption" value="Scan..."/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position="5 380 380 20" align="HStretch Bottom" name="_text"/>
+    </Widget>
+</MyGUI>

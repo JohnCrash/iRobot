@@ -1,0 +1,194 @@
+material Ogre/Earth
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture material/Earth.jpg
+			}
+		}
+	}
+}
+
+material Ogre/Earring
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.7 0.7 0
+			diffuse 0.7 0.7 0
+
+			texture_unit
+			{
+				texture material/spheremap.png
+				colour_op_ex add src_texture src_current
+				colour_op_multipass_fallback one one
+				env_map spherical
+			}
+		}
+	}
+}
+
+material Ogre/Skin
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.3 0.8 0.3
+
+			texture_unit
+			{
+				texture material/GreenSkin.jpg
+				tex_address_mode mirror
+			}
+		}
+	}
+}
+
+material Ogre/Tusks
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.7 0.7 0.6
+
+			texture_unit
+			{
+				texture material/tusk.jpg
+				scale 0.2 0.2
+			}
+		}
+	}
+}
+
+material Ogre/Eyes
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0.4 0.4
+			diffuse 1 0.7 0
+			emissive 0.3 0.1 0
+		}
+	}
+}
+
+material ControletColor
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.294 0.77 1
+			diffuse 0 0 0
+		}
+	}
+}
+
+material ControletSelectColor
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0 0
+			diffuse 0 0 0
+		}
+	}
+}
+
+material Examples/CloudySky
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				texture material/clouds.jpg
+				scroll_anim 0.15 0
+			}
+		}
+	}
+}
+	
+material Examples/CloudyNoonSkyBox
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture material/cloudy_noon.jpg material/separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material Examples/StormySkyBox
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture material/stormy.jpg material/separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material Examples/SceneSkyBox1
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture material/cubemap_fr.jpg material/cubemap_bk.jpg material/cubemap_lf.jpg material/cubemap_rt.jpg material/cubemap_up.jpg material/cubemap_dn.jpg material/separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+
+material Examples/SceneSkyBox2
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture material/cubescene_fr.jpg material/cubescene_bk.jpg material/cubescene_lf.jpg material/cubescene_rt.jpg material/cubescene_up.jpg material/cubescene_dn.jpg material/separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}

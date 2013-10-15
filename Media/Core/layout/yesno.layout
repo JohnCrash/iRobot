@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowC" position="315 430 400 140" align="Center" layer="Modal">
+        <Widget type="Button" skin="Button" position="125 65 65 25" name="_yes">
+            <Property key="Caption" value="Yes"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="210 65 60 25" name="_no">
+            <Property key="Caption" value="No"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position="10 0 370 55" name="_msg"/>
+    </Widget>
+</MyGUI>

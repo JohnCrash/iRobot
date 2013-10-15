@@ -1,0 +1,536 @@
+*luagui.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4
+
+*gui.loadLayout* ( filename )
+用于加载一个.layout界面文件,filename是文件名
+并且根据设定排布窗口位置。
+
+*gui.createWidget* ( type,skin,layer,align,name )
+创建一个顶级窗口。没有父窗口。
+type可以是下面的字符串
+	"|Button|" 按键，RadioBox或者CheckBox
+	"|Canvas|" 画布
+	"|ComboBox|" 下拉列表
+	"|DDContainer|" 容器窗口
+	"|EditBox|" 编辑栏
+	"|ItemBox|"
+	"|ListBox|" 列表栏
+	"|MenuBar|" 菜单条
+	"|MultiListBox|"
+	"|PopupMenu|" 弹出菜单
+	"|ProgressBar|" 进度条
+	"|ScrollBar|" 滚动条
+	"|ScrollView|" 滚动视图
+	"|ImageBox|" 图像控件
+	"|TextBox|" 静态文本
+	"|TabControl|" 标签栏
+	"|Widget|" 控件
+	"|StrangeButton|"
+	"|Window|" 不同窗口
+skin通常设置成和type一样的字串，但是有些可以特别设置
+如果type是
+	"|Button|" 可以将skin设置成"CheckBox" 和 "RadioButton"
+			"ButtonImage","ButtonCloseSkin"等
+	"|EditBox|" skin可以设置成"EditBoxStretch","EditBoxEmpty"
+	"|ScrollBar|" skin可以设置成"ScrollBarV","ScrollBarH","SliderV"
+			"SliderH"
+	"|Window|" skin可以设置成"WindowC"仅带标题栏的窗口。
+			"WindowCX"带标题栏和关闭按钮。
+			"WindowCS"带标题栏可以改变大小。
+			"WindowsCSX"带标题栏有关闭按钮可以改变大小。
+layer 从低到顶可以设置成"Back","Overlapped","Middle","Modal",
+			"Main","Popup","FadeMiddle","Info","ToolTip"
+align 对齐方式可以设置成
+name 部件名称可以没有
+
+*gui.getWidgetFromPoint* (x,y)
+	返回x,y位置上的控件
+	
+*gui.getDefaultSkin* ()
+	返回默认的界面样式
+	
+*gui.setDefaultSkin* ()
+	设置默认的界面样式
+	
+*gui.loadResource* ( filename )
+	加载gui资源
+
+*gui.getScreenSize* ()
+	返回屏幕的宽度和高度
+	
+*gui.newUString* () 可以有3种调用
+	gui.newUString( string ) 这里string是一个lua字串
+	gui.newUString( ustring ) 这里ustring是一个UString
+	gui.newUString() 构造一个空的ustring
+
+*gui.getKeyState* (key)
+	返回true表示键被按下，其他情况返回false
+	
+*gui.setKeyFocusWidget* (widget)
+	将widget设置为键盘焦点
+	
+*gui.getKeyFocusWidget* ()
+	取得拥有键盘焦点的widget
+	
+*gui.getMouseFocusWidget* ()
+*gui.getMousePosition* ()
+*gui.getLastPressedPosition* ()
+*gui.addWidgetModal* (widget)
+	让widget进入对话框模式，在对话框删除后会自动remove.不用特别调用removeWidgetModal
+*gui.removeWidgetModal* (widget)
+*gui.isFocusMouse* ()
+*gui.isFocusKey* ()
+*gui.isCaptureMouse* ()
+*gui.isModalAny* ()
+
+*Widget* 一般来说部件是一个基类。所有的gui部件都继承与它。
+		也就是说下面的所有方法都可以应用到其他的部件上。
+	setVisible (b) 设置部件可见性
+	getVisible () 返回部件的可见性true,false
+	setPosition (x,y) 设置部件位置
+	getPosition () 返回部件位置x,y
+	setSize (w,h) 设置部件尺寸，宽和高
+	getSize () 返回部件的宽和高
+	getName () 返回部件名称
+	setAlpha (a) 设置部件透明度a
+	getAlpha () 返回部件透明度
+	setAlign (align) 设置部件的对齐方式
+	getAlign () 返回部件的对齐方式
+	setColor (r,g,b) 设置部件颜色。该函数可以使用setColor("#FF0000")
+		的调用方式。
+	getParent () 返回父部件。如果没有返回nil
+	getTypeName () 返回部件的类型名。例如:Button返回"Button"
+	child ( name ) 返回指定名称的子部件。没有返回nil
+	childs () 返回一个表包含全部的子部件。
+	destroy () 摧毁部件只身
+	attachToWidget (widget) 将自己变成指定部件的子部件。
+	detachFromWidget () 从父部件上分离出类。
+	changeWidgetSkin (skin) 改变部件的skin
+	setWidgetStyle (style) 设置部件的类型style可以是下面的值
+		"Child","Popup","Overlapped"
+	getWidgetStyle () 返回部件的类型。
+	setProperty (name,key) 给部件设置附加数据
+	setCoord (x,y,w,h)
+	setRealPosition (x,y)
+	setRealSize (w,h)
+	setRealCoord (x,y,w,h)
+	setEnabled (b) 打开和禁止部件
+	setEnabledSilent (b)
+	getEnabled () 取得部件的状态
+	getInheritedEnabled ()
+	getClientCoord ()
+	getClientWidget ()
+	isRootWidget () 如果没有父窗口返回true,其他返回false
+	getParentSize () 返回父窗口的尺寸
+	createChild (type,skin,align,name) 创建子窗口。参数参加createWidget
+	setScript (event,func) 设置部件的事件event可以是下面的值
+	Widget *Event* 事件
+		*eventMouseButtonClick* 鼠标点击,func(sender)
+		*eventMouseButtonPressed* 鼠标按键按下,func(sender,x,y,id)
+		*eventMouseMove*	鼠标移动,func(sender,x,y)
+		*eventMouseLostFocus* 失去鼠标焦点,func(sender,old)
+		*eventMouseSetFocus* 得到鼠标焦点,func(sender,new)
+		*eventMouseDrag* 拖动鼠标,func(sender,x,y,id)
+		*eventMouseWheel* 鼠标滚轮,func(sender,rel)
+		*eventMouseButtonReleased* 鼠标按键弹起,func(sender,x,y,id)
+		*eventMouseButtonDoubleClick* 双击,func(sender)
+		*eventKeySetFocus* 得到键盘焦点,func(sender,old)
+		*eventKeyLostFocus* 失去键盘焦点,func(sender,new)
+		*eventKeyButtonPressed* 键盘按下,func(sender,code,char)
+		*eventKeyButtonReleased* 键盘弹起,func(sender,code,char)
+		*eventRootMouseChangeFocus*
+		*eventRootKeyChangeFocus*
+		*eventToolTip*
+		*eventChangeProperty* 部件对应的属性改变, func(sender,key,value)
+	Window事件
+		*eventWindowButtonPressed* func(sender,id)
+		*eventWindowChangeCoord* func(sender)
+	EditBox事件
+		*eventEditSelectAccept* func(sender)
+		*eventEditTextChange* func(sender)
+	ListBox事件
+		*eventListSelectAccept* 双击或者输入 func(sender,index)
+		*eventListChangePosition* func(sender,index)
+		*eventListMouseItemActivate* func(sender,index)
+		*eventListMouseItemFocus* func(sender,index)
+		*eventListChangeScroll* func(sender,index)
+	ComboBox事件
+		*eventComboAccept* func(sender,index)
+		*eventComboChangePosition* func(sender,index)
+	ScrollBar事件
+		*eventScrollChangePosition* func(sender,index)
+	TabControl事件
+		*eventTabChangeSelect* func(sender,index)
+	DDContainer事件
+		*eventStartDrag*
+		*eventRequestDrop*
+		*eventDropResult*
+		*eventChangeDDState*
+		*requestDragWidgetInfo*
+	ItemBox事件
+		*requestCreateWidgetItem* func(sender,item)
+		*requestCoordItem* func(sender,x,y,b)
+		*requestDrawItem* func(sender,item,...)
+		*eventSelectItemAccept* func(sender,index)
+		*eventChangeItemPosition* func(sender,index)
+		*eventMouseItemActivate* func(sender,index)
+		*eventNotifyItem* func(sender,...)
+	MenuControl事件
+		*eventMenuCtrlAccept* func(sender,item)
+		*eventMenuCtrlClose* func(sender)
+
+下面的点连接方式仅仅代表一种继承关系，继承类可以使用基类的方法。		
+Widget.*TextBox*
+	setCaption ( text ) 设置编辑栏内容
+	getCaption () 返回编辑栏内容
+	getTextRegion () 返回坐标x,y,w,h
+	getTextSize () 返回字串尺寸w,h
+	getFontName () 返回字体名称
+	setFontName (font) 设置字体
+	setFontHeight (h) 设置字体高度
+	getFontHeight () 返回字体高度
+	setTextAlign (align) 设置文字对齐方式
+	getTextAlign () 返回字串对齐方式
+	setTextColor (r,g,b,a) 设置字串颜色
+	getTextColor () 取得字串颜色r,g,b,a
+	setTextShadow (b) 设置阴影字体
+	getTextShadow () 返回是否为阴影字体
+
+Widget.TextBox.*Button*
+	setStateSelected (b) 设置CheckBox,RadioBox被选择状态
+	getStateSelected () 取得选择状态
+	setModeImage (b)
+	getModeImage ()
+	setImageResource (name)
+	setImageGrop (name)
+	setImageName (name)
+
+Widget.TextBox.*EditBox*
+	getTextSelectionStart () 返回选择文本的开始索引，失败返回gui.ITEM_NONE
+	getTextSelectionEnd () 返回选择文本的结束索引，失败返回gui.ITEM_NONE
+	getTextSelectionLength () 返回选择文本的长度
+	getTextInterval (index,str) 
+	setTextIntervalColour (start,count,r,g,b,a) 设置范围内字串的颜色
+	setTextSelection (start,end) 选择指定范围内的文本
+	deleteTextSelection () 删除选择的文本
+	isTextSelection () 是否有选择
+	setTextSelectionColour (r,g,b,a) 给选择的文本设置颜色
+	setTextCursor (index) 将光标设置到给定的索引
+	setOnlyText ( str )
+	getOnlyText ()
+	getTextLength () 返回文本栏中字符的个数
+	setOverflowToTheLeft (b)
+	getOverflowToTheLeft ()
+	setMaxTextLength (len) 设置文本栏能容纳最多的字符个数
+	getMaxTextLength () 返回文本栏能容纳的最多的字符个数
+	insertText (str|,index) 在指定索引插入字符串，index可选择有或者没有
+	eraseText (start,count) 删除指定范围里面的文本
+	setEditReadOnly (b) 将文本栏设置为只读或者否
+	getEditReadOnly () 文本栏是否为只读
+	setEditPassword (b) 设置文本栏为密码模式或者否
+	getEditPassword () 返回文本栏是否为密码模式
+	setEditMultiLine (b) 设置为本栏为多行模式
+	getEditMultiLine () 返回文本栏是否为多行模式
+	setEditStatic (b) 设置文本栏为静态模式
+	getEditStatic () 返回文本栏是否为静态模式
+	setPasswordChar (int)
+	getPasswordChar ()
+	setEditWordWrap (b)
+	getEditWordWrap ()
+	setTabPrinting (b)
+	getTabPrinting ()
+	getInvertSelected ()
+	setInvertSelected (b) 设置反选
+	setVisibleVScroll (b) 设置显示纵向滚动条
+	isVisibleVScroll () 返回是否纵向滚动条可见
+	getVScrollRange () 返回纵向滚动条范围
+	getVScrollPosition () 返回纵向滚动条位置
+	setVScrollPosition (pos) 设置纵向滚动条位置
+	setVisibleHScroll (b) 设置显示横向滚动条
+	isVisibleHScroll () 返回是否横向滚动条可见
+	getHScrollRange () 返回横向滚动条范围
+	getHScrollPosition () 返回横向滚动条位置
+	setHScrollPosition (pos) 设置横向滚动条位置
+	
+Widget.TextBox.*Window*
+	setVisibleSmooth (b) 设置平滑可见
+	destroySmooth ()
+	setAutoAlpha (b)
+	getAutoAlpha ()
+	getCaptionWidget () 返回窗口的标题栏Widget
+	setMinSize (w,h) 设置窗口的最小尺寸
+	getMinSize () 返回窗口的最小尺寸w,h
+	setMaxSize (w,h) 设置窗口的最大尺寸
+	getMaxSize () 返回窗口的最大尺寸w,h
+	setSnap (b)
+	getSnap ()
+	setMovable (b) 设置窗口是否可以移动
+	getMovable ()
+	getActionScale ()
+	
+Widget.*ListBox*
+	getItemCount () 返回列表項个数
+	insertItemAt (index,str|,name) 在索引index后面插入一个列表項
+	addItem (str) 加入一个列表項
+	removeItemAt (pos) 删除一个列表項
+	removeAllItems () 删除全部列表項
+	swapItemsAt (pos1,pos2) 交换两个列表項
+	findItemIndexWith (str)
+	getIndexSelected () 返回被选择的列表項
+	setIndexSelected (pos) 选择指定的列表項
+	clearIndexSelected () 取消选择
+	setItemDataAt (pos,str)
+	getItemDataAt (pos)
+	setItemNameAt (pos,name)
+	getItemNameAt (pos)
+	beginToItemAt (pos)
+	beginToItemFirst ()
+	beginToItemLast ()
+	beginToItemSelected ()
+	isItemVisibleAt (pos,b)
+	isItemSelectedVisible (b)
+	setScrollVisible (b)
+	setScrollPosition (pos)
+	getOptimalHeight ()
+	
+Widget.TextBox.EditBox.*ComboBox*
+	getItemCount ()
+	insertItemAt (index,str|,name)
+	addItem (str)
+	removeItemAt (pos)
+	removeAllItems ()
+	findItemIndexWith (str)
+	getIndexSelected ()
+	setIndexSelected (pos)
+	clearIndexSelected ()
+	setItemDataAt (pos,name)
+	clearItemDataAt (pos)
+	getItemDataAt (pos)
+	setItemNameAt (pos,name)
+	getItemNameAt (pos)
+	beginToItemAt (pos)
+	beginToItemFirst ()
+	beginToItemLast ()
+	beginToItemSelected ()
+	setComboModeDrop
+	getComboModeDrop
+	setSmoothShow
+	getSmoothShow
+	setMaxListLength
+	getMaxListLength
+	setFlowDirection
+	getFlowDirection
+	
+Widget.*ScrollBar*
+	setVerticalAlignment
+	getVerticalAlignment
+	setScrollRange
+	getScrollRange
+	setScrollPosition
+	getScrollPosition
+	setScrollPage
+	getScrollPage
+	setScrollViewPage
+	getScrollViewPage
+	getLineSize
+	setTrackSize
+	getTrackSize
+	setMinTrackSize
+	getMinTrackSize
+	setMoveToClick
+	getMoveToClick
+	
+Widget.*TabControl*
+	getItemCount
+	insertItemAt
+	addItem
+	removeItemAt
+	removeItem
+	removeAllItems
+	getItemAt
+	getItemIndex
+	findItemIndex
+	findItemIndexWith
+	findItemWith
+	swapItems
+	getIndexSelected
+	setIndexSelected
+	clearIndexSelected
+	setItemDataAt
+	clearItemDataAt
+	getItemDataAt
+	setItemNameAt
+	getItemNameAt
+	beginToItemAt
+	beginToItemFirst
+	beginToItemLast
+	beginToItemSelected
+	setButtonWidthAt
+	setButtonWidth
+	getButtonWidthAt
+	getButtonWidth
+	setButtonDefaultWidth
+	getButtonDefaultWidth
+	setButtonAutoWidth
+	getButtonAutoWidth
+	setSmoothShow
+	getSmoothShow
+	
+Widget.TextBox.*TabItem*
+	setButtonWidth
+	
+Widget.*DDContainer*
+	setNeedDragDrop
+	getNeedDragDrop
+	resetDrag
+	
+Widget.DDContainer.*ItemBox*
+	getItemCount
+	insertItemAt
+	addItem
+	removeItemAt
+	removeAllItems
+	redrawAllItems
+	getIndexSelected
+	setIndexSelected
+	clearIndexSelected
+	clearItemDataAt
+	setItemDataAt
+	getItemDataAt
+	setVerticalAlignment
+	getVerticalAlignment
+	getIndexByWidget
+	getWidgetDrag
+	getWidgetByIndex
+	resetDrag
+	
+Widget.*MenuControl*
+	getItemCount
+	insertItemAt
+	addItem
+	removeItemAt
+	removeItem
+	removeAllItems
+	getItemAt
+	getItemIndex
+	findItemIndex
+	findItemWith
+	setItemDataAt
+	setItemData
+	clearItemDataAt
+	clearItemData
+	getItemDataAt
+	setItemIdAt
+	setItemId
+	getItemById
+	findItemById
+	getItemIndexById
+	setItemNameAt
+	setItemName
+	getItemNameAt
+	getItemName
+	findItemIndexWith
+	setItemChildVisibleAt
+	setItemChildVisible
+	createItemChildTAt
+	createItemChildT
+	getItemChildAt
+	getItemChild
+	createItemChildAt
+	createItemChild
+	removeItemChildAt
+	removeItemChild
+	getItemTypeAt
+	getItemType
+	setItemTypeAt
+	setItemType
+	setPopupAccept
+	getPopupAccept
+	getMenuItemParent
+	setVerticalAlignment
+	getVerticalAlignment
+
+Widget.MenuControl.*MenuBar*
+
+Widget.MenuControl.*PopupMenu*
+
+Widget.TextBox.Button.*MenuItem*
+	setItemName
+	getItemName
+	setItemData
+	getItemData
+	removeItem
+	setItemId
+	getItemId
+	createItemChild
+	setItemType
+	getItemType
+	setItemChildVisible
+	getMenuCtrlParent
+	getItemChild
+	getItemChecked
+	setItemChecked
+	
+Widget.*MultiListBox*
+
+Widget.TextBox.*MultiListItem*
+
+Widget.*ProgressBar*
+	setProgressRange
+	getProgressRange
+	setProgressPosition
+	getProgressPosition
+	setProgressAutoTrack
+	getProgressAutoTrack
+	setFlowDirection
+	getFlowDirection
+	
+Widget.*ScrollView*
+	setVisibleVScroll
+	isVisibleVScroll
+	setVisibleHScroll
+	isVisibleHScroll
+	setCanvasAlign
+	getCanvasAlign
+	setCanvasSize
+	getCanvasSize
+	getViewCoord
+	setViewOffset
+	getViewOffset
+	
+Widget.*Canvas*
+
+Widget.*ImageBox*
+
+*UString*
+	size() 返回字符个数
+	length() 返回字符个数
+	max_size() 返回能容纳的最大字符个数
+	reserve(size) 保留指定大小的空间
+	resize() 重新设定字串长度
+	swap(ustring) 交换两个字串的内容
+	empty() 如果字符为空返回true,其他返回false
+	capacity() 返回UString的容量
+	clear() 将UString清空
+	substr(index,num) 返回将指定范围的字串
+	toUTF8() 将返回一个lua字串，包含UString的utf8字串
+	at(index) 返回指定索引的unicode16字符编码
+	append(str)  str可以是一个lua字串也可以是一个UString对象
+	insert(index,str) 在指定的位置插入字串str
+	erase(index,num) 删除范围里的字符
+	replace(index,num,str) 将指定范围里的字符替换为str中的字串
+	compare(str) 比较两个字串，==0表示相等 >0表示大于 <0表示小于
+	find(str,index) 从index开始查找指定字串str,成功返回字串索引，
+		否则返回-1
+	rfind(str,index) 反向查找字串str
+
+*hotkey*
+	load(filename) 装入新的热键表（只提供文件名，目录位置可以在resources.xml中的ConfigPath设置）
+	clear() 清除全部热键
+	save(filename) 保存热键表
+	add(name,key) 加入一个热键
+	remove(name) 删除热键
+	set(name,key) 设置热键
+	count() 返回热键数量
+	at(index) 返回4个值,分别是名称，标题，提示文本，热键
+
+    vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,9 @@
+*iRobotLua.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4  
+
+Lua接口在设计的时候遵循的原则
+1.尽量在外部实现独立的实现Lua接口
+2.尽量一简洁的方式，不引入复杂和低效率的中间层
+3.一定要使得Lua环境可以独立的重新启动。并且不会对iRobot造成不可挽回的影响
+
+关于lua_self假设了全部的udata都是LuaBind**
+vim:tw=78:ts=8:ft=help:norl:

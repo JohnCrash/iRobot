@@ -1,0 +1,647 @@
+*lua5.1.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4 
+
+lua5.2 标准库文档~
+
+*_G*
+全局变量。Lua自己不使用这个变量。改变它的值不会影响任何环境。
+
+*_VERSION*
+全局变量（不是一个函数），存储当前Lua版本号。当前这个值是"Lua5.2"
+
+*assert* (v[,message])
+如果v是false assert引发一个错误，否则返回全部参数message是错误消息。
+message默认值是"assertion failed!"
+    
+*collectgarbage* ([opt[,arg]])
+ 该函数是一个通用垃圾回收器。它根据第一个参数执行不同的回收策略。
+ 	”collect"	执行完整的垃圾回收周期。默认操作。
+	"stop"		停止自动垃圾回收直到重新启动它。
+	"restart"	重启自动垃圾回收。
+	"count"		返回Lua总的内存使用数量(kb)
+			k,b = collectagarbage("count")
+			assert(k*1024==math.floor(k)*1024+b)
+	"step"		执行一个垃圾回收step。step"size"由arg指定。
+			如果完成收集周期返回true。
+	"setpause"	设置收集器pause参数新的值，返回以前的值。
+	"setstepmul"	设置收集器multiplier新的值，返回以前的值。
+	"isrunning"	判断收集器是否在运行。
+	"generational"	试验型功能。
+	"incremental"	垃圾回收器进入增量模式，这是默认模式。
+
+*dofile* ([filename])
+打开文件并且执行包含的Lua |chunk|。如果没有参数就从标准输入读取chunk。
+返回全部执行结果。发生错误dofile传播错误到他的调用者（dofile没有运行
+在保护模式）
+
+*error* (message[,level])
+终止最近的保护函数调用并且返回message作为错误信息，函数error不会返回。
+如果message是一个字符串，通常加入错误发生的位置的信息在message的开始部分。
+level错误发生的位置默认为1，1表示错误发生在调用error的函数中。2代表
+错误发生在调用error的函数的调用者那里。
+
+*getmetatable* (object)
+如果object没有一个元表(metatable)返回nil。如果ojbect的元表有"_metatable"
+项，返回相关的值。否则返回对象的元表(metatable)。
+
+*ipairs* (t)			相关|pairs|
+如果t有元方法__ipairs，用t作为参数调用它，将返回三个结果。
+否则，返回三个值：一个iterator函数，table t，和0。 >
+	for i,v in ipairs(t) do body end
+>
+将遍历t，(1,t[1]) ,(2,t[2]),... >
+	泛型for等价于一下代码
+	for var_1,...,var_n in <explist> do <block> end
+	等价于
+	local _f,_s,_var = <explist>
+	while true do
+		local var_1,...,var_n = _f(_s,_var)
+    		_var = var_1
+		if _var==nil then break end
+			<block>
+		end
+	end
+>
+*loadfile* (filename[,mode[,env]]])
+类似于|load|,但是从文件filename或者从标准输入中取得|chunk|。如果没有给定文件
+名将从标准输入中取得|chunk|。
+
+*load* (ld[,source[,mode[,env]]])
+如果ld是一个字符串直接装入|chunk|，|chunk|来自于这个字符串。如果ld是一个函数，
+|load|反复调用它取得|chunk|片段。每次调用、ld必须返回一个和上次串联的字符串
+。返回空字符串或者nil读取结束。
+如果没有语法错误，返回编译的chunk作为一个函数。否则返回nil加错误信息。
+如果导致函数有|upvalues|，第一个upvalue被设置为全局变量或者env，当装入
+main chunk，第一个upvalue将是|_ENV|变量。
+可选参数source被作为错误信息或者调试信息使用。缺省为ld，如果ld是一个字符串，
+或者其他情况"=(load)"。
+字符串mode 控制是否chunk能是文本或者二进制（预编译chunk）。可能的字符串'b'
+（二进制chunks），'t'（文本chunks），或者"bt"（混合方式）。默认是"bt"
+
+*chunk*
+一个Lua代码块
+
+*next* (table[,index])
+允许程序遍历整个表。第一个参数是一个表格，第二个参数是表格的一个索引。next返回
+表的下一个索引和关联的值。当第二个参数使用nil，next返回初始索引和它关联的值。
+当使用最后一个索引调用next或者表是空的，next返回nil。如果缺少索引参数，默认传
+入nil。你也能用next(t)来检测表是不是为空。
+next不能保证顺序遍历，即使是一个数值表。（想顺序遍历，使用数值for）
+
+*pairs* (t)			相关|ipairs|
+如果t有元方法__ipairs，用t作为参数调用它，将返回三个结果。
+否则返回上个值：|next|函数，表格t，和nil。 >
+	for k,v in pairs(t) do body end
+	将枚举全部key-value对
+>
+*pcall* (f[,arg1,...])
+在保护模式下使用给定的参数调用函数f。这以为着一些f函数内部的错误不会传播，相反
+pcall俘获错误和返回状态code。它的第一个返回值是状态code（a boolean）。如果是
+true调用成功没有错误，在这种情况下pcall也返回全部f返回值在状态code后面。有错误
+发生时pcall返回false加一个错误信息。
+
+*print* (...)
+接收多个参数打印它们的值到标准输出，使用|tostring|函数将每一个参数转换为字符串。
+print没有义务进行格式化输出，仅仅简单的显示这些值，用于实例调试。为了完整的控制
+输出，使用|string.format|和|io.write|。
+
+*rawequal* (v1,v2)
+检查v1是否等于v2，不调用元方法。返回一个boolean。
+
+*rawget* (table,index)
+取得真正的table[index]，不调用元方法。table必须是一个表。
+
+*rawlen* (v)
+返回对象v的长度，v必须是一个表或者字符串，不调用元方法。返回一个整数。
+
+*rawset* (table,index,value)
+设置真正table[index]的值为value，不调用元方法。table必须是一个表，index不能是nil
+和NaN，value是一个Lua值。
+函数返回table。
+
+*require* (modname)
+装入一个给定模块。这个函数开始查找|package.loaded|表确定modname是否已经被加载。
+如果已经加载，函数直接返回存储在其中的值package.loaded[modname]。否则它试着为这个
+模块查找一个loader。require使用package.searchers序列来查找loader。通过改变这个序
+列，我们可以改变require加载方式。下面的解释基于默认配置的|package.searchers|。
+首先require查询package.preload[modname]获得以loader（函数）。没找到的话require
+搜索|package.path|中的路径。如果也失败，require在|package.cpath|中查找C loader。
+如果还是失败的话require尝试|package.searchers|。
+一旦loader被找到，require调用loader使用两个参数:modname和一个扩展值（如果loader
+来自于一个文件扩展值是文件名）。如果loader返回一个non-nil值，require将这个值赋于
+package.loaded[modname]。如果没有non-nil返回将不进行赋值操作，然后require给入口赋
+true。在这中情况require最终返回package.loader[modname]。
+如果在转载中有错误发生，或者如果没有找到loader，require将抛出错误。
+这个过程的等价伪代码: >
+	function require(modname)
+    		if not package.loaded[modname] then
+			local loader = findloader(modname)
+    			if loader == nil then
+				error("unable to load module "..modname)
+			end
+			package.loaded[modname] = true
+			local res = loader(modname)
+    			if res ~= nil then
+				package.loaded[modname] = res
+			end
+		end
+		return package.loaded[modname]
+	end
+>
+*select* (index,...)
+如果index是一个数值，返回变参中第index个后的全部参数。index可以是负数索引例如-1
+表示最后一个。index还可以是字符串"#"，select返回全部参数的个数。 >
+	select(3,'h','e','l','l','o')
+	返回'l','l','o'
+	select(-2,'h','e','l','l','o')
+	返回'l','o'
+	select('#','h','e','l','l','o')
+	返回5
+>
+*setmetatable* (table,metable)
+设置表的元表。（你不能改变Lua其他类型的元表）如果元表是nil，删除存在的元表。如果
+原来的元表有方法"__metatable"，抛出错误。
+函数返回table。
+
+*tonumber* (e[,base])
+当调用没有使用base时，tonumber试着将参数转换成数值。如果参数已经是一个数值直接
+直接返回。如果不能转换返回nil。  >
+ When called with base, then e should be a string to be interpreted as an integer 
+ numeral in that base. The base may be any integer between 2 and 36, inclusive. 
+ In bases above 10, the letter 'A' (in either upper or lower case) represents 10,
+ 'B' represents 11, and so forth, with 'Z' representing 35. If the string e is not
+ a valid numeral in the given base, the function returns nil.
+>
+
+*tostring* (v)
+将任意的lua值v转换为一个合理的字符串。如果v的元表中有方法"__tostring"，那么
+tostring将使用v作为参数调用它，并且返回函数的结果。
+
+*type* (v)
+返回参数的类型，返回值是一个字符串。可能是下面中的一个"nil","string","boolean",
+"table","function","thread",和"userdata" >
+	type("nil") 将返回"nil"
+>
+*xpcall* (f,msgh[,arg1,...])
+和|pcall|类似，除了增加一个消息处理器msgh。
+
+string~
+*string.byte* (s,[,i[,j]])
+    返回字符串内部编码s[i],s[i+1],...,s[j]。i默认是1，j默认是i;
+    和|string.sub|规则相同。内部编码不一定可移植。      >
+    string.byte("hello",1,5)
+    在mac上返回104,101,108,108,111
+>
+*string.char* (...)
+    接收零个或多个整数。返回由参数编码组成的字符串。相当于
+    |string.byte|的逆运算。内部编码不一定可移植。      >
+    string.char(104,101,108,108,111)
+    在mac上返回hello
+>
+*string.dump* (function)
+    返回一个字符串包含给定函数的二进制表述，以便于稍后使用|load|
+    函数加载该字串返回函数的副本。(可以重新指定|upvalues|)。
+
+*string.find* (s,|pattern|[,init[,plain]])
+    查找字符串s中的第一个pattern匹配，如果发现匹配返回开始和结束
+    位置，否则返回nil。可选参数init指定查找开始位置默认为1，可以
+    为负数。第四个参数plain为true将关闭pattern匹配方式，函数简单
+    的搜索子串pattern。 >
+    string.find("data:2013/1/29.","%d+")
+    返回6,9
+>
+*string.format* (formatstring,...)
+    格式化输出变参，formatstring给出格式（必须是字符串）规则和C函
+    数sprintf一样。不同之处是*,h,L,l,n和p不被支持加入q。q可以是
+    string或者double数值。
+
+*string.gmatch* (s,|pattern|)
+    返回一个iterator函数，每次调用它返回下个匹配。 >
+    s = "hello world from Lua"
+    for w in string.gmatch(s,"%a+") do
+        print(w)
+    end
+    另一个例子，收集key=value对。
+    t = {}
+    s = "from=world,to=Lua"
+    for k,v in string.gmatch(s,"(%w+)=(%w+)") do
+        t[k] = v
+    end
+>
+*string.gsub* (s,|pattern|,repl[,n])
+    返回字符串s经过匹配替换的副本，如果发现模式就用repl替换。reple
+    可以是一个字符串，表格，或者函数。gsub返回第二个值是匹配的次数。
+    如果reple是一个字符串，将直接用于替换。%为转义字符，%d（d为1-9）
+    代表第n次俘获|captures|字串。%0代表整个匹配，%%代表字符%。
+    如果reple是一个表格，使用第一个俘获|captures|作为key查询该表格。
+    如果reple是一个函数，每次匹配成功将调用该函数。
+    如果表格查询和函数返回的是一个字符串或者数值，将被用于替换。如果
+    是false或者nil，将不替换。 >
+    x = string.gsub("hello world","(%w+)","%1 %1")
+    --> x="hello hello world world"
+
+    x = string.gsub("hello world","%w+","%0 %0",1)
+    --> x="hello hello world"
+
+    x = string.gsub("hello world from Lua","(%w+)%s*(%w+)","%2 %1")
+    --> x="world hello Lua from"
+
+    x = string.gsub("home = $HOME,user = $USER","%$(%w+)",os.getenv)
+    --> x="home = /home/roberto,user = roberto"
+
+    x = string.gsub("4+5 = $return 4+5$","%$(.-)%$",
+	    function(s)
+	    	return load(s)()
+		end )
+    --> x="4+5 = 9"
+
+    local t = {name="lua",version="5.2"}
+    x = string.gsub("$name-$version.tar.gz","%$(%w+)",t)
+    --> x="lua-5.2.tar.gz"
+
+*string.len* (s)
+    返回字符串的长度。空字符串""返回0。内部0也被计数。
+    如"a\000bc\000"返回5。
+
+*string.lower* (s)
+    接收字符串返回该字符串小写复本。
+
+*string.match* (s,|pattern|[,init])
+    查找s中的第一个匹配。如果发现一个，match返回pattern俘获。否则
+    返回nil。如果pattern不包括俘获|captures|，返回整个匹配。
+    可选参数init表示开始查找位置默认1，可以为负值。 >
+    x = string.match("hello world","%w+")
+    --> x="hello"
+
+    local x,y = string.match("hello world","(%w+)%s*(%w+)")
+    --> x="hello"
+    --> y="world"
+>
+*string.rep* (s,n[,sep])
+    返回一个字符串，由n个s组成，用sep分割。sep默认是空字符串
+    （没有分割）。 >
+    x = string.rep("hello",3," ")
+    --> x="hello hello hello"
+>
+*string.reverse* (s)
+    返回反转字符串。
+
+*string.sub* (s,i[,j])
+    返回s从i到j的字串，i和j能为负数。默认j等于-1（最后一个字符位置）。
+    string.sub(s,1,j)相当于返回第一个到j的字符串。
+    string.sub(s,-i)返回长度为i的后缀。
+    如果i大于j函数返回空字符串。 >
+    x = string.sub("lua.5.2.tar.gz",-3)
+    --> x=".gz"
+    x = string.sub("hello lua hello",3,-3)
+    --> x="llo lua hel"
+>
+*string.upper* (s)
+    返回字符串的大写复本。
+
+string模式 *pattern*
+pattern魔法字符包括^ $ ( ) % . [ ] * + - ?，如果要在
+pattern表示魔法字符可以使用%进行转义，如%.表示.
+        .       所有字符
+        %a      字母a-z A-Z
+        %c      控制字符
+        %d      单个数字0-9
+        %g      除空格外的所有可打印字符
+        %l      小写字母
+        %p      标点符号
+        %s      空格
+        %u      大写字母
+        %w      字母和数字
+        %x      十六进制数字
+        %z      0
+        [set]   集合，可以单个指定[012345]。或者范围指定[0-5]        
+        [^set]  代表集合的补集
+        +       重复1次或多次，最长可能匹配
+        *       重复0次或多次，最长可能匹配
+        -       重复0次和多次，最短可能匹配
+        ?       可选部分（出现0或1次）如"[+-]?d+"匹配带可以带
+                +-号的整数
+        %bxy    x和y是两个不同的字符。意思是匹配字符从x开始到
+                y结束。
+        %n      n是1-9。表示第n个被匹配的字符串看 |captures|
+        %f[set] 
+
+        string俘获 *captures*
+                一个|pattern|能包含sub-patterns,被叫做俘获。
+                当匹配成功sub-string被俘获为了以后使用。例如
+                "(a*(.)%w(%s*))"，这里"a*(.)%w(%s*)"被存储为第
+                一个俘获，"."是第二，"%s*"是第三个。
+
+table~
+记住每当操作需要表的长度，表需要有正确的序列或者有__len元方法。
+所有的函数忽略non-numeric key参数。
+为了性能考虑，所有表函数使用raw模式。
+
+*table.concat* (list[,sep[,i[,j]]])
+给定一个表list所有的元素都是string或者number组成，函数concat
+返回字符串list[i]..sep..list[i+1]..sep..list[j]。默认sep是一个
+空字符串，i默认是1，j默认是#list。如果i>j返回空字符串。 >
+	x = table.concat({"hello",2,3,4,"ok"},' ')
+	--> x = 'hello 2 3 4 ok'
+>
+*table.insert* (list,[pos,]value)
+向表list的pos位置插入一个元素value。
+上一表中的元素list[pos],list[pos+1],...,list[#list]。默认情况
+pos等于#list+1，如此调用table.insert(t,x)插入x到表格t的最后。 >
+	local t={1,3}
+	table.insert(t,2,2)
+    	--> t = {1,2,3}
+>
+*table.pack* (...)
+返回一个新表，将全部参数存入key 1,2...中。表项n将被设置为参数的个数。
+注意返回的表也许不能成为一个序列。 >
+	x = table.pack(1,"hello")
+	--> x = {1,"hello",n=2}
+>
+*table.remove* (list[,pos])
+从表list中删除位置pos处的元素。下移list[pos+1],list[pos+2],...,
+list[#list]。返回被删除元素的值。默认pos等于#list，这样table.remove(t)
+删除t中的最后一个元素。 >
+	x = {1,"hello",2,n=4,3}
+	table.remove(x)
+    	-->x = {1,"hello",n=4,2}
+	table.remove(x,2)
+    	-->x = {1,n=4,2}
+>
+错误的调用方式|table|
+	*Error	table.remove(x,'n')
+
+*table.sort* (list[,comp]
+对表list进行排序，list[1]到list[#list]。如果comp是给定，它必须是一个函数
+接收两参数，想在第一参数在第二个参数前面返回true。如果comp没给定，Lua使用
+<操作代替。
+
+*table.unpack* (list[,i[,j]])
+返回表的全部元素。函数等价于:
+	return list[i],list[i+1],...,list[j]
+默认i等于1，j等于#list
+
+package~
+*package.config*
+*package.cpath*
+*package.loaded*
+*package.loadlib*
+*package.path*
+*package.preload*
+*package.searchers*
+*package.searchpath*
+
+os~
+*os.clock* ()
+返回一个CPU时间，秒级精度。 
+
+*os.date* (format[,time]])
+返回一个字符串或者一个包含日期和时间的表，格式由format给定。
+如果给出time参数，格式化输出time描述的时间(看|os.time|)，否则data格式化当
+前时间。
+如果format开始于'!'，日期格式为CUT(标准时间)。这个可选操作后面，如果format
+是字符串'*t'，那么data返回一个包含year(4个数),month(1-12),day(1-31),hours
+(0-23),min(0-59),sec(0-61),wday(weekday,Sunday is 1),yday(day of the year)
+,isdst(boolean)表。最后的项肯定不存在。
+如果format不是"*t",那么data返回日期字符串，格式化规则和C函数strftime一样。
+当没有参数时，data返回合理的日期和时间表示法依赖于当前系统。
+在一下系统下，该函数也许不是线程安全的。 >
+	print(os.date())
+    	-->"1/31 17:36:19 2013" 
+>
+*os.difftime* (t2,t1)
+返回从时间t1到时间t2间隔的秒数。在POSIX,Windows和一些系统这个值是t2-t1
+
+*os.execute* ([command])
+这个函数相当于C函数system。它将command传送给操作系统执行。第一个返回为true
+代表命令command正确终止，否则相反。在第一个返回值后面返回一个字符串和一个数值。
+	"exit"		命令command普通终止;接着的数值是一个命令退出状态code。
+	"signal"	命令command由signal终止;接下来的数是终止signal。
+当调用没有command时，如果shell可用该函数返回true。
+
+*os.exit* ([code[,close])
+调用C函数exit终止主程序。如果code等于true，返回状态是EXIT_SUCCESS;如果code
+等于false，返回状态EXIT_FAILURE;如果code等于一个数值，返回状态等于该数值。
+默认是true。
+如果可选参数close等于true，在退出前关闭Lua状态。
+
+*os.getenv* (varname)
+返回一个进程环境变量varname的值,或者nil如果变量不存在。 >
+	x = os.getenv('HOME')
+	--> x = '/Users/john'
+>
+*os.remove* (filename)
+删除文件filename（或者空目录）。如果失败返回nil加一个错误字符串和错误编码。
+
+*os.rename* (oldname,newname)
+重新命名文件或者目录。如果函数失败返回nil加一个错误字符串和错误编码。
+
+*os.setlocale* (local[,category])
+设置程序的locale。locale是一个系统依赖字符串。category是一个可选字符串描述
+类别可以是"all","collate","ctype","monetary","numeric",和'time";默认"all"。
+函数返回新的locale名称，或者nil请求没有达成。
+如果locale是一个空字符串，当前的locale设置为本地locale。如果local等于"C",
+这时当前locale被设置成标准C locale。
+当第一个参数设置为nil，这个函数仅仅返回当前locale的名称。 >
+	print(os.setlocale())
+    	--> "zh_CN"
+>
+*os.time* ([table])
+没有给定参数时返回当前时间，或者由table描述的时间。这个table必须有year,month,day
+项，也许包括hour,min,sec,isdst项(default is nil)。具体见|os.data|。
+返回值是一个数值，具体依赖于你的系统。在POSIX,Windows和一些系统，这个数值通过
+从一个开始时间到现在的秒数来表述(epoch)。返回的数值仅仅可以用在|os.date|和
+|os.difftime|中。
+
+*os.tmpname* ()
+返回一个能使用的临时文件的文件名。这个文件在使用时必须明确打开不需要时明确删除。
+在POSIX系统，这个函数也创建这个文件去避免安全风险。你仍然需要打开它和删除它（在
+不使用的时候）。
+如果可能，你应该尽量使用|io.tmpfile|，它在程序结束时自动删除临时文件。
+
+io~
+io库提供两种io操作风格。第一种使用隐含的文件描述符，有操作设置默认的
+输入文件和输出文件。第二种是明确的文件描述符。当使用明确风格时，所有的
+操作由表io提供。|io.open|返回文件描述符和它们的操纵方法。
+表io也提供3个于定义的文件描述符io.stdin,io.stdout,io.stderr。I/O库绝不
+会关闭这些文件。
+I/O函数在出错时返回nil（加一个错误消息和一个系统依赖代码）。
+
+*io.stderr*	标准错误输出
+*io.stdin*  	标准输入
+*io.stdout*	标准输出
+
+*io.close* ([file])
+等价于|file:close|。没有给出file关闭默认输出文件。
+
+*io.flush* ()
+等价于|io.output():flush()|。
+
+*io.input* ([file])
+当使用文件名file调用该函数，它以文本模式打开该文件。并且设置文件句柄为默认输入。
+当不使用参数调用时它返回默认输入文件。
+在函数出错时提升错误，返回一个错误代码。
+
+*io.lines* ([filename...])
+打开一个filename文件进入读取模式，返回一个iterator函数，工作类似于|file:lines|。
+当iterator函数侦测到文件的结尾，函数返回nil并且自动关闭文件。
+不带参数调用|io.lines|等价于io.input():lines();iterator遍历默认输入文件的全部行。
+在这种情况下循环结束不关闭文件。
+在函数出错时提升错误，返回一个错误代码。
+
+*io.open* (filename[,mode])
+这个函数打开一个filename文件，mode可以指定一个模式字符串。函数返回文件句柄，或者
+发生错误返回nil加一个错误消息。
+mode字符串可以是下面的一个
+	"r"	读模式(默认)
+	"w"	写模式
+	"a"	追加模式
+	"r+"	更新模式，所有以前的数据保留。
+	"w+"	更新模式，所有一起的数据删除。
+	"a+"	追加更新模式，以前的数据保留，仅仅可以在文件尾部写入。
+模式字符串也能加入一个字符'b'在结尾，这在一些系统中打开二进制模式。
+
+*io.output* ([file])
+类似于|io.input|，但是操作覆盖默认输出文件。
+
+*io.popen* (prog[,mode])
+函数依赖于具体的系统支持，不是所有的系统都可用。
+开始程序prog在隔离进程中返回一个文件的句柄，你能使用这个文件句柄读取程序的数据。
+（如果mode是"r"，默认）或者写入数据给程序（如果mode是"w"）。
+
+*io.read* (...)
+等价于io.input():read(...)。 |io.input|
+
+*io.tmpfile* ()
+返回一个临时文件句柄。这个文件打开在更新模式并且在程序结束时被自动关闭。
+
+*io.type* (obj)
+检测obj是否是一个可用的文件句柄。如果obj是一个打开的文件句柄，返回一个字符串"file"。
+如果obj是一个关闭的文件句柄返回字符串"closed file"。
+或者如果obj不是一个文件句柄返回nil。
+
+*io.write* (...)
+等价于io.output():write(...)  参考|io.output|
+
+file~
+*file:close* ()
+ 关闭文件。注意文件将自动关闭当它的句柄是被垃圾回收时。
+ 当关闭一个由io.popen打开的文件时，|file:close|返回和|os.execute|相同的值。
+
+*file:flush* ()
+保存已经写入的数据到文件里。
+
+*file:lines* (...)
+返回一个iterator函数，每次调用该函数，读取文件使用给定的格式。当没有格式给定时，
+使用"*l"作为默认。 >
+	for c in file:lines(1) do body end
+>
+这将遍历文件全部的字符，开始在当前位置。不像|io.lines|，这个函数不关闭文件在循环
+结束时。
+在函数出错时提升错误，返回一个错误代码。
+
+*file:read* (...)
+读取文件，根据给定的格式确定如何读取。没种格式函数返回读取的一个字符串或者数值。
+或者如果不能读取数据返回nil。当调用不使用任何格式时函数默认格式是读取下一行。
+可用的可是有:
+	"*n"	读取一个数值，这种格式返回一个数。
+	"*a"	读取全部文件，从当前位置开始。在文件结尾它返回空字符串。
+	"*l"	跳过行尾读取下一行，在文件结尾返回nil。这是默认格式
+	"*L"	同上
+	number	读取给定数量的字节，在文件结尾时返回nil。如何number等于0，返回
+		一个空的字符串。
+
+*file:seek* ([whence[,offset]])
+设置或者取得文件的当前位置（读取或写入位置），当前位置设置为offset加上基准位置base。
+base由whence指定，可以是下面的值:
+	"set"	开始位置0(文件的开始)
+	"cur"	当前位置
+	"end"	文件的结尾位置
+操作成功seek返回文件的当前位置，数值是从文件开始到当前的字节数。如果seek失败，返回
+nil加一个错误信息字串。
+默认whence值是"cur"，offset默认是0。因此调用file:seeok()返回当前位置,不改变当前位置
+file:seek("set")设置当前位置为文件的开始并且返回0，而调用file:seek("end")设置当
+位置为文件的结尾，并且返回文件尺寸。
+
+*file:setvbuf* (mode[,size])
+设置输出文件的缓冲区模式。这里有三种可能的模式：
+	"no"	没有缓冲，输出结果立刻执行。
+	"full"	完全缓冲，输出操作是执行仅当缓冲满或者你明确的调用|file:flush|
+	"line"	行缓冲，有新行写入执行输出操作。
+最后两种方式size指定缓冲区大小，单位是字节，默认指定一个恰当的尺寸。	
+
+*file:write* (...)
+写入每一参数到文件中。参数必须是字符串或者数值。
+成功函数返回文件，其他情况返回nil加一个错误信息字符串。
+
+math~
+*math.abs*
+*math.acos*
+*math.asin*
+*math.atan*
+*math.atan2*
+*math.ceil*
+*math.cos*
+*math.cosh*
+*math.deg*
+*math.exp*
+*math.floor*
+*math.fmod*
+*math.frexp*
+*math.huge*
+*math.ldexp*
+*math.log*
+*math.max*
+*math.min*
+*math.modf*
+*math.pi*
+*math.pow*
+*math.rad*
+*math.random*
+*math.randomseed*
+*math.sin*
+*math.sinh*
+*math.sqrt*
+*math.tan*
+*math.tanh*
+
+bit32~
+*bit32.arshift*
+*bit32.band*
+*bit32.bnot*
+*bit32.bor*
+*bit32.btest*
+*bit32.bxor*
+*bit32.extract*
+*bit32.lrotate*
+*bit32.lshift*
+*bit32.replace*
+*bit32.rrotate*
+*bit32.rshift*
+
+coroutine~
+*coroutine.create*
+*coroutine.resume*
+*coroutine.running*
+*coroutine.status*
+*coroutine.wrap*
+*coroutine.yield*
+
+debug~
+*debug.debug*
+*debug.getuservalue*
+*debug.gethook*
+*debug.getinfo*
+*debug.getlocal*
+*debug.getmetatable*
+*debug.getregistry*
+*debug.getupvalue*
+*debug.setuservalue*
+*debug.sethook*
+*debug.setlocal*
+*debug.setmetatable*
+*debug.setupvalue*
+*debug.traceback*
+*debug.upvalueid*
+*debug.upvaluejoin*
+
+vim:tw=78:ts=8:ft=help:norl:

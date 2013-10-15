@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCSX" position="140 10 845 655" align="Center" layer="Overlapped" name="window">
+        <Property key="Enabled" value="true"/>
+        <Widget type="Button" skin="Button" position="205 545 110 40" name="ok">
+            <Property key="Caption" value="确定"/>
+        </Widget>
+        <Widget type="ListBox" skin="ListBox" position="20 50 275 435" name="list"/>
+        <Widget type="EditBox" skin="EditBox" position="20 500 415 30" name="edit"/>
+        <Widget type="TextBox" skin="TextBox" position="20 10 270 30" name="text"/>
+        <Widget type="Button" skin="Button" position="70 550 125 40" name="reset">
+            <Property key="Caption" value="reload"/>
+        </Widget>
+        <Widget type="TabControl" skin="TabControl" position="310 55 505 195" name="tab"/>
+        <Widget type="MenuBar" skin="MenuBar" position="315 255 500 25" name="menu"/>
+        <Widget type="Button" skin="Button" position="325 545 135 35" name="cb">
+            <Property key="Caption" value="createWindow"/>
+        </Widget>
+        <Widget type="ScrollBar" skin="ScrollBarH" position="320 285 355 20" name="hbar">
+            <Property key="Range" value="5"/>
+            <Property key="Page" value="1"/>
+            <Property key="RangePosition" value="1"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBoxStretch" position="320 315 505 175" name="multiEdit">
+            <Property key="MultiLine" value="true"/>
+        </Widget>
+    </Widget>
+</MyGUI>

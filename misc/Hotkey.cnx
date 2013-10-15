@@ -1,0 +1,8 @@
+*Hotkey.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4
+关于热键的显示与设置
+有热键的MenuItem会显示热键。通过修改PopupMenuNormal增加了一个TextBox用来显示热键。
+对应修改可以参见MyGUI_BlackOrangeTemplates.xml
+MenuItem类文件也进行了修改
+如果你想显示热键使用setUserString("hotkey","Ctrl+...")来实现。
+注意setUserString不是虚拟函数，需要使用MenuItem::setUserString
+vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Resource" version="1.1">
+	<Resource type="ResourceImageSet" name="MainToolBar">
+		<Group name="Objects" texture="g4058.png" size="60 60">
+			<Index name="_rigid_sphere">
+				<Frame point="0 0"/>
+			</Index>
+			<Index name="_rigid_box">
+				<Frame point="64 0"/>
+			</Index>
+			<Index name="_rigid_cylinder">
+				<Frame point="130 0"/>
+			</Index>
+			<Index name="_plane">
+				<Frame point="194 0"/>
+			</Index>	
+			<Index name="_jointball">
+				<Frame point="0 62"/>
+			</Index>	
+			<Index name="_move">
+				<Frame point="0 126"/>
+			</Index>	
+			<Index name="_rotate">
+				<Frame point="64 126"/>
+			</Index>
+			<Index name="_move2d">
+				<Frame point="129 126"/>
+			</Index>	
+			<Index name="_modify">
+				<Frame point="194 126"/>
+			</Index>
+			<Index name="_select">
+				<Frame point="194 60"/>
+			</Index>			
+		</Group>
+	</Resource>
+</MyGUI>

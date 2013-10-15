@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<base>
+	<script do="main.lua" /> 
+	<group name="General">
+		<repository 
+		type="FileSystem" 
+		recursive="true"
+		location="H:/Source/iRobot/trunk/Media/builder"/>	
+	</group>
+</base>

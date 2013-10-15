@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCS" position="434 418 155 188" align="Center" layer="Overlapped" name="MainMenu">
+        <Property key="Caption" value="iRobot"/>
+        <Widget type="Button" skin="Button" position="10 110 125 30" name="Quit">
+            <Property key="Caption" value="Quit"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="10 5 125 30" name="Builder">
+            <Property key="Caption" value="Builder"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="10 40 125 30" name="Options">
+            <Property key="Caption" value="Options"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="10 75 125 30" name="Test">
+            <Property key="Caption" value="Test"/>
+        </Widget>
+    </Widget>
+</MyGUI>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCSX" position="157 209 710 605" align="Center" layer="Info">
+        <Property key="Caption" value="错误"/>
+        <Widget type="EditBox" skin="EditBoxStretch" position="5 35 690 495" align="Stretch" name="edit">
+            <Property key="MultiLine" value="true"/>
+            <Property key="VisibleHScroll" value="true"/>
+            <Property key="VisibleVScroll" value="true"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="590 535 100 30" align="Right Bottom" name="save">
+            <Property key="Caption" value="保存并且重启"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position="5 5 690 25" align="HStretch Top" name="text"/>
+        <Widget type="TextBox" skin="TextBox" position="10 535 190 25" align="Right Bottom" name="count"/>
+    </Widget>
+</MyGUI>

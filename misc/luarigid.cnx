@@ -1,0 +1,64 @@
+*luarigid.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4
+
+    *geo*
+*geo.createSphere* (r,des,|colide) 
+	创建一个球r是半径,colide表示是否参与碰撞,des表示线框密度
+
+*geo.createBox* (l,w,h,des,|colide)
+	创建一个盒子
+	
+*geo.createCylinder* (r,h,des,|colide)
+	创建一个圆柱体
+	
+*geo.createPlane* (a,b,c,d,width,height,xseg,yseg,|colide)
+	创建一个平面a,b,c,d是平面参数
+	width,height是平面的宽高,xseg,yseg是平面网格密度
+
+*geo.createRigidSphere* (r|,des)
+	创建一个刚体球,半径r
+	
+*geo.createRigidBox* (l,w,h|,des)
+	创建一个刚体盒子
+	
+*geo.createRigidCylinder* (r,h|,des)
+	创建一个刚体圆柱体
+
+*geo.simulation* (b)
+	开始或者停止模拟
+
+*geo.isSimulation* ()
+	返回当前是否在模拟
+
+*geo.addNode* (o)
+	将对象加入模拟
+	
+*geo.removeNode* (o)
+	将一个对象撤出模拟
+*geo.addRigidNode* (o)
+	将刚体加入模拟
+	
+*geo.clearAllNode* ()
+	撤销刚体和对象的模拟
+	
+*geo.loadScene* ( filename )
+	加载场景，返回一个boolean值表示是否成功
+
+*geo.saveScene* ( filename )
+	保存场景，返回一个boolean值表示是否成功
+	
+geo.*VisualObject*
+	updatePhysica
+	getPosition
+	getLocalAxis
+	setPosition
+	translate
+	rotate
+	Intersect
+	setCastShadows
+	getGeometryObject
+	setMaterialName
+	getMaterialName
+	
+geo.VisualObject.*Rigid*
+
+vim:tw=78:ts=8:ft=help:norl:

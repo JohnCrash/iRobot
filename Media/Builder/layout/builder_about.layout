@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCX" position="300 195 345 195" align="Center" layer="Overlapped">
+        <Property key="Caption" value="iRobot Builder 1.0"/>
+        <Widget type="Button" skin="Button" position="125 115 85 35" align="HCenter Top" name="_ok">
+            <Property key="Caption" value="Ok"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position="20 15 295 20">
+            <Property key="Caption" value="CopyRight (C) 2012"/>
+        </Widget>
+    </Widget>
+</MyGUI>

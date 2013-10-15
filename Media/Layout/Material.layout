@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCX" position="125 231 774 562" align="Center" layer="Overlapped" name="MaterialDialog">
+        <Property key="Caption" value="材质"/>
+        <Property key="FontHeight" value="9"/>
+        <Property key="TextColour" value="1 0 0"/>
+        <Property key="TextAlign" value="Right Top"/>
+        <Widget type="TabControl" skin="TabControl" position="0 0 770 485">
+            <Widget type="TabItem" skin="" position="2 24 764 457">
+                <Property key="Caption" value="Material"/>
+                <Widget type="ListBox" skin="ListBox" position="10 30 315 420" name="_matlist"/>
+                <Widget type="Button" skin="CheckBox" position="355 10 170 20" name="mat_transparent">
+                    <Property key="Caption" value="isTransparent"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="540 10 200 20" name="mat_receive">
+                    <Property key="Caption" value="ReceiveShadows"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="355 35 395 20" name="mat_transparency">
+                    <Property key="Caption" value="TransparencyCastsShadows"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="10 5 310 20">
+                    <Property key="Caption" value="Material"/>
+                </Widget>
+                <Widget type="EditBox" skin="EditBoxStretch" position="335 85 420 365" name="_matrialEdit">
+                    <Property key="MultiLine" value="true"/>
+                    <Property key="VisibleHScroll" value="true"/>
+                    <Property key="VisibleVScroll" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="335 60 415 20" name="_scrptText">
+                    <Property key="Caption" value="Script"/>
+                </Widget>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 764 457">
+                <Property key="Caption" value="Technique"/>
+                <Widget type="ListBox" skin="ListBox" position="15 35 175 100" name="_techlist"/>
+                <Widget type="TextBox" skin="TextBox" position="15 10 170 20">
+                    <Property key="Caption" value="Technique"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="240 20 295 20" name="tech_transparent">
+                    <Property key="Caption" value="isTransparent"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="240 45 300 20" name="tech_depthwrite">
+                    <Property key="Caption" value="Depth write enabled"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="240 70 310 20" name="tech_depth">
+                    <Property key="Caption" value="Depth check enabled"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="240 95 300 20" name="tech_color">
+                    <Property key="Caption" value="Colour write disabled"/>
+                </Widget>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 764 457">
+                <Property key="Caption" value="Pass"/>
+                <Widget type="ListBox" skin="ListBox" position="15 40 120 150" name="_passlist"/>
+                <Widget type="TextBox" skin="TextBox" position="15 10 125 20">
+                    <Property key="Caption" value="Pass"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="160 15 160 20" name="pass_isprogrammable">
+                    <Property key="Caption" value="isProgrammable"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="160 40 160 20" name="pass_hasVertexProgram">
+                    <Property key="Caption" value="hasVertexProgram"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="390 40 170 20" name="pass_hasFragmentProgram">
+                    <Property key="Caption" value="hasFragmentProgram"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="390 15 180 20" name="pass_hasGeometryProgram">
+                    <Property key="Caption" value="hasGeometryProgram"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="160 90 255 20" name="pass_hasShadowCasterVertexProgram">
+                    <Property key="Caption" value="hasShadowCasterVertexProgram "/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="160 65 280 20" name="pass_hasShadowReceiverVertexProgram">
+                    <Property key="Caption" value="hasShadowReceiverVertexProgram"/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="160 115 380 20" name="pass_hasShadowReceiverFragmentProgram">
+                    <Property key="Caption" value="hasShadowReceiverFragmentProgram "/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="160 140 65 20">
+                    <Property key="Caption" value="Ambient"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="355 140 65 20">
+                    <Property key="Caption" value="Diffuse"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="160 165 65 20">
+                    <Property key="Caption" value="Specular"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="355 165 65 20">
+                    <Property key="Caption" value="Shininess"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="160 190 110 20">
+                    <Property key="Caption" value="Self-Illumination"/>
+                </Widget>
+                <Widget type="EditBox" skin="EditBox" position="230 140 80 25" name="pass_ambient"/>
+                <Widget type="EditBox" skin="EditBox" position="425 140 85 25" name="pass_diffuse"/>
+                <Widget type="EditBox" skin="EditBox" position="230 165 80 25" name="pass_specular"/>
+                <Widget type="EditBox" skin="EditBox" position="425 165 85 25" name="pass_shininess"/>
+                <Widget type="EditBox" skin="EditBox" position="270 190 85 25" name="pass_Self_Illumination"/>
+                <Widget type="TextBox" skin="TextBox" position="5 240 170 20">
+                    <Property key="Caption" value="SceneBlending "/>
+                </Widget>
+                <Widget type="Button" skin="CheckBox" position="160 215 235 20" name="pass_hasSeparateSceneBlending">
+                    <Property key="Caption" value="hasSeparateSceneBlending"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="5 265 175 25" name="_sceneblending">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="185 240 205 20">
+                    <Property key="Caption" value="SceneBlendingOperationAlpha"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="185 265 205 25" name="_sceneblendingAlpha">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="5 295 170 20">
+                    <Property key="Caption" value="CullingMode"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="5 320 175 25" name="_cullingMode">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="185 295 205 20">
+                    <Property key="Caption" value="ManualCullingMode"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="185 320 205 25" name="_manualCullingMode">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="400 295 170 20">
+                    <Property key="Caption" value="CompareFunction"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="400 320 180 25" name="_compareFunction">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="5 350 170 20">
+                    <Property key="Caption" value="SourceBlendFactor"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="5 375 175 25" name="_sceneBlendFactor">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="185 350 205 20">
+                    <Property key="Caption" value="DestBlendFactor"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="185 375 205 25" name="_desBlendFactor">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="400 240 175 20">
+                    <Property key="Caption" value="ShadeOptions"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="400 265 180 25" name="_shadeOptions">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="400 350 175 20">
+                    <Property key="Caption" value="PolygonMode"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="400 375 180 25" name="_polygonMode">
+                    <Property key="Static" value="true"/>
+                </Widget>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 764 457">
+                <Property key="Caption" value="TextureUnitState"/>
+            </Widget>
+        </Widget>
+        <Widget type="Button" skin="Button" position="655 490 105 30" name="_apply">
+            <Property key="Caption" value="Apply"/>
+        </Widget>
+    </Widget>
+</MyGUI>

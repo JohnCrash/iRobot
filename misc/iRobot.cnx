@@ -1,0 +1,53 @@
+*iRobot.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4
+*iRobot* 开发文档
+
+|luagui|        MyGUI的lua实现
+|game|          game lua界面          
+|hotkey|
+|UString|
+|registry|
+
+关于mygui的改变字体颜色与粗细的约定
+#000000,#BBBBBB表示一个颜色，不区分大小写
+##表示#本身
+#<I> 表示斜体Italic
+#<B> 表示粗体Bold
+#<N> 表示普通Normal
+#<M> 表示BoldItalic
+注意：仅仅ResourceDynamicFont支持该方式
+
+关于字符串编码问题，在需要显示的地方使用UTF8编码。如果一个本地编码传入到
+UString字串中,将出现问题。标准的UString投递异常。解决办法
+(UString在内部使用unicode16)
+1种方案就是捕获异常，做针对处理
+2将问题字符转换成16进制明码或者固定标记
+3碰见异常，将本地码转变为UTF8
+
+关于MyGUI设置的对齐方式在加载后不起作用?
+使用		MyGUI::IntSize size = MyGUI::RenderManager::getInstance().getViewSize();
+		MyGUI::IntSize newSize = size;
+		//启用默认对齐方式
+		for_each( mVw.begin(),mVw.end(),boost::bind(&MyGUI::Widget::_setAlign,_1,size,newSize) );
+来解决
+
+关于热键的显示与设置
+有热键的MenuItem会显示热键。通过修改PopupMenuNormal增加了一个TextBox用来显示热键。
+对应修改可以参见MyGUI_BlackOrangeTemplates.xml
+MenuItem类文件也进行了修改
+如果你想显示热键使用setUserString("hotkey","Ctrl+...")来实现。
+注意setUserString不是虚拟函数，需要使用MenuItem::setUserString
+
+1
+文件MyGUI_ResourceDynamicFont.h和ResourceDynamicFont.cpp用来
+使MyGUI具有动态显示字符的能力，这样可以应付中文这种多字符语言
+
+2
+CMakeLists.txt是ode编译文件,用于在Mac下进行编译
+
+3
+在MyGUI的MyGUI_LogManager.h中加入
+		LogSource* getDefaultSource(){ 
+			return mDefaultSource;
+		}
+		
+vim:tw=78:ts=8:ft=help:norl:

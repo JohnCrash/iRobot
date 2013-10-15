@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="List">
+	<List file="mygui/MyGUI_BlueWhiteImages.xml"/>
+	<List file="mygui/MyGUI_BlueWhiteSkins.xml"/>
+	<List file="mygui/MyGUI_BlueWhiteTemplates.xml"/>
+</MyGUI>

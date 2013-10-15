@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCSX" position="140 150 510 400" align="Center" layer="Modal">
+        <Widget type="ComboBox" skin="ComboBox" position="5 5 405 25" align="HStretch Top" name="_path"/>
+        <Widget type="Button" skin="Button" position="415 5 80 25" align="Right Top" name="_up">
+            <Property key="Caption" value="Up"/>
+        </Widget>
+        <Widget type="ListBox" skin="ListBox" position="5 35 490 285" align="HStretch VStretch" name="_filelist"/>
+        <Widget type="EditBox" skin="EditBox" position="5 335 320 25" align="HStretch Bottom" name="_name"/>
+        <Widget type="Button" skin="Button" position="330 335 75 25" align="Right Bottom" name="_ok">
+            <Property key="Caption" value="Open"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="410 335 85 25" align="Right Bottom" name="_cancel">
+            <Property key="Caption" value="Cancel"/>
+        </Widget>
+        <Widget type="Widget" skin="PanelSkin" position="5 325 490 5" align="HStretch Bottom"/>
+    </Widget>
+</MyGUI>

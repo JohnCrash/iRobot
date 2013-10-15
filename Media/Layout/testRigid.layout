@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowC" position="35 455 645 80" align="Left Bottom" layer="Overlapped">
+        <Widget type="Button" skin="Button" position="5 5 75 35" name="sphere">
+            <Property key="Caption" value="sphere"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="550 5 80 35" name="run">
+            <Property key="Caption" value="Run"/>
+        </Widget>
+    </Widget>
+</MyGUI>
