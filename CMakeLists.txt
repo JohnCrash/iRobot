@@ -153,20 +153,20 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${iRobot_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${iRobot_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${iRobot_BINARY_DIR}/bin)
 
-set(Boost_USE_MULTITHREADED ON)
-
 set(iRobot_DEPENDENCIES_DIR "" CACHE PATH "iRobot dependencies")
 #告诉FindBoost模块boost位置
 set(BOOST_ROOT ${iRobot_DEPENDENCIES_DIR}/boost)
+set(BOOST_LIBRARYDIR ${iRobot_DEPENDENCIES_DIR}/boost/lib)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
 
 #find_package(Freetype)	
 find_package(OIS)
 find_package(OGRE)	
 find_package(MyGUI)
-find_package(Boost)
+find_package(Boost COMPONENTS thread system date_time chrono)
 find_package(ODE)
 find_package(Lua)
-
 
 include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -191,7 +191,7 @@ if(WIN32)
 		set_source_files_properties(src/stdheader.cpp PPROPERTIES COMPILE_FLAGS "/Ycstdheader.h")
 	endif()
 	add_executable(iRobot WIN32 ${HEADER_FILES} ${SOURCE_FILES} ${RESOURCE_FILES})
-	target_link_libraries(iRobot ${BOOST_LIBRARIES} ${OGRE_LIBRARIES} ${OIS_LIBRARIES} 
+	target_link_libraries(iRobot ${Boost_LIBRARIES} ${OGRE_LIBRARIES} ${OIS_LIBRARIES} 
 		${MyGUI_LIBRARIES} ${ODE_LIBRARIES} ${Lua_LIBRARIES} Ws2_32)
 elseif(APPLE)
 	find_package(IOKit)
@@ -207,7 +207,7 @@ elseif(APPLE)
 	set_source_files_properties(src/Main.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")
 
 	add_executable(iRobot MACOSX_BUNDLE ${HEADER_FILES} ${SOURCE_FILES} ${RESOURCE_FILES})
-	target_link_libraries(iRobot ${BOOST_LIBRARIES} 
+	target_link_libraries(iRobot ${Boost_LIBRARIES} 
 		${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${MyGUI_LIBRARIES} ${Cocoa_LIBRARIES} 
 		${Carbon_LIBRARIES} ${IOKit_LIBRARIES} ${ODE_LIBRARIES} ${Lua_LIBRARIES})
 
