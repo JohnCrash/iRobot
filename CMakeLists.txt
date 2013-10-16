@@ -155,20 +155,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${iRobot_BINARY_DIR}/bin)
 
 set(Boost_USE_MULTITHREADED ON)
 
+set(iRobot_DEPENDENCIES_DIR "" CACHE PATH "iRobot dependencies")
+
 #find_package(Freetype)	
-find_package(OIS)
+#find_package(OIS)
 find_package(OGRE)	
 find_package(MyGUI)
 find_package(Boost)
 find_package(ODE)
 find_package(Lua)
 
-set(MyGUI_SOURCE "${PROJECT_SOURCE_DIR}/mygui" CACHE PATH "MyGUI Source")
-set(MyGUI_BUILD "${PROJECT_SOURCE_DIR}/Build_mygui" CACHE PATH "MyGUI Build")
-
-set(OGRE_SOURCE "${PROJECT_SOURCE_DIR}/ogre" CACHE PATH "OGRE Source")
-set(OGRE_BUILD "${PROJECT_SOURCE_DIR}/Build_ogre" CACHE PATH "Ogre build")
-set(OGRE_DEPENDENCIES_DIR "" CACHE PATH "Ogre dependencies")
 
 include_directories(
 ${CMAKE_CURRENT_SOURCE_DIR}/include

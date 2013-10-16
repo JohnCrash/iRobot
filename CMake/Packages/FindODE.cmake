@@ -16,18 +16,19 @@ getenv_path(iRobot_SOURCE)
 
 # construct search paths
 set(ODE_PREFIX_PATH 
-${PROJECT_SOURCE_DIR}/ode
-${PROJECT_SOURCE_DIR}/Build_ode
+${iRobot_DEPENDENCIES_DIR}/ode
+${iRobot_DEPENDENCIES_DIR}/build/ode
 ${ODE_SOURCE} 
 ${ODE_BUILD}
 ${ODE_SOURCE}/trunk ${ODE_SOURCE}/trunk/include
 ${ODE_SOURCE}/trunk/lib
 )
 
-set(ODE_INC_SEARCH_PATH ${ODE_PREFIX_PATH})
-set(ODE_LIB_SEARCH_PATH ${ODE_PREFIX_PATH})
+create_search_paths(ODE)
+#set(ODE_INC_SEARCH_PATH ${ODE_PREFIX_PATH})
+#set(ODE_LIB_SEARCH_PATH ${ODE_PREFIX_PATH})
 
-message(STATUS "FindLua ODE_SOURCE=${ODE_INC_SEARCH_PATH}")
+#message(STATUS "FindLua ODE_SOURCE=${ODE_INC_SEARCH_PATH}")
 
 #create_search_paths(ODE)
 # redo search if prefix path changed
@@ -57,7 +58,6 @@ findpkg_framework(ODE)
 #foreach(dir ${ODE_LIB_SEARCH_PATH})
 #	message(STATUS ${dir})
 #endforeach(dir)
-
 find_path(ODE_INCLUDE_DIR NAMES ode/ode.h HINTS ${ODE_INC_SEARCH_PATH} ${ODE_PKGC_INCLUDE_DIRS} PATH_SUFFIXES include)
 
 find_library(ODE_LIBRARY_REL NAMES ${ODE_LIBRARY_NAMES} HINTS ${ODE_LIB_SEARCH_PATH} ${ODE_PKGC_LIBRARY_DIRS} PATH_SUFFIXES Release

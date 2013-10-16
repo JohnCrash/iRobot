@@ -12,8 +12,8 @@ findpkg_begin(Lua)
 
 # construct search paths
 set(Lua_PREFIX_PATH 
-${PROJECT_SOURCE_DIR}/lua
-${PROJECT_SOURCE_DIR}/Build_lua
+${iRobot_DEPENDENCIES_DIR}/lua
+${iRobot_DEPENDENCIES_DIR}/Build_lua
 ${Lua_SOURCE} 
 ${Lua_BUILD}
 ${Lua_SOURCE}/trunk 
@@ -32,7 +32,7 @@ clear_if_changed(
   Lua_OGRPLATFORM_DBG
   Lua_OGRPLATFORM_FWK
 )
-
+create_search_paths(Lua)
 if(APPLE)
  set(Lua_LIBRARY_NAMES Lua)
  set(Lua_LIBRARY_NAMES_DBG Lua)
