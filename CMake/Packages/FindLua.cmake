@@ -13,7 +13,7 @@ findpkg_begin(Lua)
 # construct search paths
 set(Lua_PREFIX_PATH 
 ${iRobot_DEPENDENCIES_DIR}/lua
-${iRobot_DEPENDENCIES_DIR}/Build_lua
+${iRobot_DEPENDENCIES_DIR}/build/lua
 ${Lua_SOURCE} 
 ${Lua_BUILD}
 ${Lua_SOURCE}/trunk 
@@ -33,13 +33,9 @@ clear_if_changed(
   Lua_OGRPLATFORM_FWK
 )
 create_search_paths(Lua)
-if(APPLE)
- set(Lua_LIBRARY_NAMES Lua)
- set(Lua_LIBRARY_NAMES_DBG Lua)
-else()
- set(Lua_LIBRARY_NAMES Lua)
- get_debug_names(Lua_LIBRARY_NAMES)
-endif()
+
+set(Lua_LIBRARY_NAMES_REL Lua)
+set(Lua_LIBRARY_NAMES_DBG Lua)
 
 use_pkgconfig(Lua_PKGC Lua)
 
@@ -52,13 +48,13 @@ set(Lua_LIB_SEARCH_PATH ${Lua_PREFIX_PATH})
 #foreach(dir ${Lua_INC_SEARCH_PATH})
 #	message(STATUS ${dir})
 #endforeach(dir)
-
+set(NO_DEFAULT_PATH 1)
 find_path(Lua_INCLUDE_DIR NAMES lua.h HINTS ${Lua_INC_SEARCH_PATH} ${Lua_PKGC_INCLUDE_DIRS} PATH_SUFFIXES "" src)
 
-find_library(Lua_LIBRARY_REL NAMES ${Lua_LIBRARY_NAMES} HINTS ${Lua_LIB_SEARCH_PATH} ${Lua_PKGC_LIBRARY_DIRS} PATH_SUFFIXES
-		lib/release lib/Release)
-find_library(Lua_LIBRARY_DBG NAMES ${Lua_LIBRARY_NAMES_DBG} HINTS ${Lua_LIB_SEARCH_PATH} ${Lua_PKGC_LIBRARY_DIRS} PATH_SUFFIXES
-		lib/Debug lib/debug)
+find_library(Lua_LIBRARY_REL NAMES ${Lua_LIBRARY_NAMES_REL} HINTS ${Lua_LIB_SEARCH_PATH} ${Lua_PKGC_LIBRARY_DIRS} PATH_SUFFIXES release
+		lib/release lib/Release    NO_CMAKE_SYSTEM_PATH )
+find_library(Lua_LIBRARY_DBG NAMES ${Lua_LIBRARY_NAMES_DBG} HINTS ${Lua_LIB_SEARCH_PATH} ${Lua_PKGC_LIBRARY_DIRS} PATH_SUFFIXES debug
+		lib/Debug lib/debug NO_CMAKE_SYSTEM_PATH)
 
 make_library_set(Lua_LIBRARY)
 

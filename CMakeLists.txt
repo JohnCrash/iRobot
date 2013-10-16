@@ -156,9 +156,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${iRobot_BINARY_DIR}/bin)
 set(Boost_USE_MULTITHREADED ON)
 
 set(iRobot_DEPENDENCIES_DIR "" CACHE PATH "iRobot dependencies")
+#告诉FindBoost模块boost位置
+set(BOOST_ROOT ${iRobot_DEPENDENCIES_DIR}/boost)
 
 #find_package(Freetype)	
-#find_package(OIS)
+find_package(OIS)
 find_package(OGRE)	
 find_package(MyGUI)
 find_package(Boost)
@@ -185,7 +187,7 @@ if(WIN32)
 		add_definitions(/Yu"stdheader.h")
 		add_definitions(/D_CRT_SECURE_NO_WARNINGS)
 		add_definitions(/D_SCL_SECURE_NO_WARNINGS)
-		add_definitions(/DdDOUBLE)
+	#	add_definitions(/DdDOUBLE)
 		set_source_files_properties(src/stdheader.cpp PPROPERTIES COMPILE_FLAGS "/Ycstdheader.h")
 	endif()
 	add_executable(iRobot WIN32 ${HEADER_FILES} ${SOURCE_FILES} ${RESOURCE_FILES})
@@ -199,7 +201,7 @@ elseif(APPLE)
 	set(SOURCE_FILES ${SOURCE_FILES} src/mac/InputManager.mm)
 	set(HEADER_FILES ${HEADER_FILES} include/mac/InputManager.h)
 
-	add_definitions(/DdDOUBLE)
+	#add_definitions(/DdDOUBLE)
 	#这个苹果Ogre使用了boost，注意其他的未必有
 	
 	set_source_files_properties(src/Main.cpp PROPERTIES COMPILE_FLAGS "-x objective-c++")

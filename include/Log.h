@@ -44,11 +44,11 @@ public:
 
 	}
 	//Ogre虚函数
-#if OGRE_VERSION_MINOR<8
-	virtual void messageLogged(const Ogre::String &message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String &logName){
-#else
+//#if OGRE_VERSION_MINOR<8
+//	virtual void messageLogged(const Ogre::String &message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String &logName){
+//#else
 	virtual void messageLogged(const Ogre::String &message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String &logName, bool& skipThisMessage){
-#endif
+//#endif
 		MSG( "#008000Ogre:#000000"<< message )
 	}
 };

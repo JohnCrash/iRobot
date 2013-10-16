@@ -30,11 +30,11 @@
 
 using namespace std;
 
-#if OGRE_VERSION_MINOR<8
-#define SINGLETON( T ) template<> T* Ogre::Singleton<T>::ms_Singleton = 0;
-#else
+//#if OGRE_VERSION_MINOR<8
+//#define SINGLETON( T ) template<> T* Ogre::Singleton<T>::ms_Singleton = 0;
+//#else
 #define SINGLETON( T ) template<> T* Ogre::Singleton<T>::msSingleton = 0;
-#endif
+//#endif
 
 #include "gettext.h"
 #include "Log.h"

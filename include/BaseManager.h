@@ -15,6 +15,7 @@
 #include "Console.h"
 #include "Controlet.h"
 #include "InputFilter.h"
+#include "Log.h"
 
 namespace base
 {
