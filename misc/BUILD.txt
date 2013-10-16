@@ -1,0 +1,95 @@
+iRobot组织结构
+iRobot编译依赖Ogre,MyGUI,Lua,ODE,OIS,boost等库
+这些库放在同一个目录里面,如下组织
+Dependencies\
+		mygui
+		ogre
+		boost
+		ode
+		lua
+		ogredeps
+		build
+其中ogredeps是Ogre依赖库,OIS包括在内
+这些库都使用CMake进行建造
+build是建造目录,boost编译的库放置在boost/lib中
+在建造iRobot时仅仅设置CMakeiRobot_DEPENDENCIES_DIR就可以了.
+
+依赖库的版本于组织
+依赖库都有一个work分支.而主分支更新没有修改的依赖库.
+用主分支追踪库的版本更新,而work分支是为iRobot做的修改.
+	lua 5.2 从lua.org下载源码
+	ode 源位置 svn://svn.code.sf.net/p/opende/code/trunk
+	mygui 源位置 svn://svn.code.sf.net/p/my-gui/code/trunk
+	boost 从boost.org下载源代码
+	ogre 源码位置https://bitbucket.org/sinbad/ogre
+	ogredeps 源码位置https://bitbucket.org/cabalistic/ogredeps
+
+同时lua,ode,mygui的分支放置在https://github.com/JohnCrash
+用户JohnCrash 密码nv30ati2
+ogre,ogredeps的分支放置在https://bitbucket.org/dashboard/overview
+用户jcrash 密码nv30ati1
+都使用udsn@icloud.com邮件注册
+
+BOOST
+======================
+boost 在osX 下的编译
+./b2 toolset=darwin architecture=x86 threading=multi address-model=64 variant=release link=static thread system date_time chrono
+简单的使用architecture=x86产生的库总是被xcode忽略.
+需要在boost/tools/build/user-config.jam中加入下面行
+using darwin 
+    : 4.2 # this version number is probably unnecessary 
+    : # omitted command 
+    : <cflags>"-arch x86_64 -arch i386" 
+       <cxxflags>"-arch x86_64 -arch i386" 
+       <linkflags>"-arch x86_64 -arch i386" 
+    ; 
+
+
+http://lists.boost.org/boost-build/2009/02/21290.php
+http://www.boost.org/boost-build2/doc/html/bbv2/overview/invocation.html
+
+boost 编译ios下的库
+先调用./bootstrap.sh --with-libraries=thread,regex,date_time
+设置boost/tools/build/user-config.jam
+如果出现ISO C++ not support 'long long' 的错误.尝试加入-Wno-long-long 
+using darwin 
+: 4.2.1 #编译器版本号
+: /Applications/Xcode4.4.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/llvm-gcc -arch armv6 -mthumb -fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS
+: <striper>
+: <architecture>arm <target-os>iphone
+;
+#using darwin 
+#	: 4.2.1 
+#	: /Applications/Xcode4.4.1.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/llvm-gcc -arch i386 -fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS
+#	: <striper>
+#	: <architecture>x86 <target-os>iphone
+#	;
+
+需要加入include指定iPhone SDK的头文件.define=_LITTLE_ENDIAN也是必须的,解决一个Bug.
+./bjam toolset=darwin architecture=arm target-os=iphone define=_LITTLE_ENDIAN include=/Applications/Xcode4.4.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.1.sdk/usr/include link=static threading=multi
+
+使用ar -x Alib.a 可以释放Alib.a中的全部.o文件.使用ar -rc Alib.a *.o 可以将它们收拢起来.
+使用这个方法可以合并多个.a文件为一个.a.
+这有时候在使用lipo创建多架构库时有用.因为lipo不能合并相同架构的库文件.
+
+为了创建一个框架:
+创建一个下面结构的目录
+boost.framework
+	Versions
+		A
+			Resources
+				Info.plist
+			Headers
+				boost #头文件
+			boost #库
+然后在加入符号连接
+使用ln -s source target 命令来创建符号连接
+你需要加入下面的连接
+在Versions目录下
+ln -s A Current
+在boost.framework目录下
+ln -s Versions/A/Resources Resources
+ln -s Versions/A/boost boost
+ln -s Versions/A/Headers Headers
+
+
