@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Resource" version="1.1">
 	<Resource type="ResourceDynamicFont" name="simfang">
-		<Property key="Source" value="mygui/simkai.ttf"/>
+		<Property key="Source" value="mygui/fonts/simkai.ttf"/>
 		<Property key="Size" value="22"/>
 		<Property key="Resolution" value="50"/>
 		<Property key="Antialias" value="false"/>

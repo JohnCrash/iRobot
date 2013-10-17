@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Resource" version="1.1">
 	<Resource type="ResourceTrueTypeFont" name="DejaVuSansFont.17">
-		<Property key="Source" value="mygui/DejaVuSans.ttf"/>
+		<Property key="Source" value="mygui/fonts/Digital Sans EF Medium.ttf"/>
 		<Property key="Size" value="19"/>
 		<Property key="Resolution" value="50"/>
 		<Property key="Antialias" value="false"/>
