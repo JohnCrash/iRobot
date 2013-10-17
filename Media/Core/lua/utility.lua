@@ -84,7 +84,7 @@ local function loadDirectory(path)
 	for f,_path in lfs.dir(realPath(path)) do
 		if f ~= "." then
 			if lfs.attributes(path.."/"..f,lfs.mode).mode == "directory" then
-				_filelist:addItem( "#<B>#00Af00["..f.."]" )
+				_filelist:addItem( "#<B>#000000["..f.."]" )
 				_filelist:setItemDataAt(_index,f)
 				_index = _index + 1
 			end

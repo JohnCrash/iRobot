@@ -4,7 +4,7 @@
 		<Property key="Source" value="mygui/fonts/Digital Sans EF Medium.ttf"/>
 		<Property key="Size" value="19"/>
 		<Property key="Resolution" value="50"/>
-		<Property key="Antialias" value="false"/>
+		<Property key="Antialias" value="true"/>
 		<Property key="SpaceWidth" value="4"/>
 		<Property key="TabWidth" value="8"/>
 		<Property key="CursorWidth" value="2"/>
