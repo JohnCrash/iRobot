@@ -132,6 +132,7 @@ protected:
 	void GetLuaSource(lua_State* L,lua_Debug* ar);
 	void LuaWait(lua_State* L,lua_Debug* ar,int level,bool b);
 	void TraceBack(bool b);
+    void StackInfo();
 	void FillStep(lua_State* L,lua_Debug* ar);
 	string lowerFileName( const char* s );
 

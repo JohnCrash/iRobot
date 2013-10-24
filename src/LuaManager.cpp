@@ -903,6 +903,7 @@ void LuaManager::debugMsgLoop()
 	if( !e )
 	{
 		mIsDebug = true;
+        mContinueCondition.notify_one();
 		CommandLoop();
 	}else
 	{
@@ -979,6 +980,10 @@ void LuaManager::async_readHandler( const boost::system::error_code& e,size_t si
 		{
 			TraceBack(false);
 		}
+        else if( cmd == "stack" )
+        {
+            StackInfo();
+        }
 		else
 		{
 			boost::xpressive::smatch what;
@@ -1022,6 +1027,9 @@ void LuaManager::CommandLoop()
 
 	//异步事件循环
 	mIos.run();
+    //如果调试器主动关闭连接
+    if( mSocket.is_open() )
+        mSocket.close();
 }
 
 void LuaManager::releaseDebug()
@@ -1105,7 +1113,7 @@ void LuaManager::notifyErrorpoint(const string& source,int line )
 	}
 }
 
-//使用\r来表示换行，因为发送命令用\n结尾
+//使用\t来表示换行，因为发送命令用\n结尾
 //取得栈顶变量的信息
 string LuaManager::getVarInfo( lua_State* L,const string& name,bool b )
 {
@@ -1115,11 +1123,11 @@ string LuaManager::getVarInfo( lua_State* L,const string& name,bool b )
 	{
 		lua_Number d = lua_tonumber(L,-1);
 		info += boost::lexical_cast<string>(d);
-		info += "(number)\r";
+		info += "(number)\t";
 	}
 	else if( lua_istable(L,-1) )
 	{
-		info += "(table)\r";
+		info += "(table)\t";
 		if( b )
 		{
 			lua_pushnil(L); //push nil key
@@ -1134,7 +1142,7 @@ string LuaManager::getVarInfo( lua_State* L,const string& name,bool b )
 				{
 					info += "[";
 					info += c;
-					info += "]\t\t=";
+					info += "]=";
 					tn = c;
 				}
 				lua_pop(L,1);
@@ -1145,7 +1153,7 @@ string LuaManager::getVarInfo( lua_State* L,const string& name,bool b )
 				if( ++count > 48 )
 				{
 					lua_pop(L,1);
-					info += "...\r";
+					info += "...\t";
 					break;
 				}
 			}
@@ -1154,17 +1162,17 @@ string LuaManager::getVarInfo( lua_State* L,const string& name,bool b )
 	else if( lua_isfunction(L,-1) )
 	{
 		info += boost::lexical_cast<string>(lua_topointer(L,-1));
-		info += "(function)\r";
+		info += "(function)\t";
 	}
 	else if( lua_iscfunction(L,-1) )
 	{
 		info += boost::lexical_cast<string>(lua_topointer(L,-1));
-		info += "(cfunction)\r";
+		info += "(cfunction)\t";
 	}
 	else if( lua_isboolean(L,-1) )
 	{
 		info += lua_toboolean(L,-1)?"true":"false";
-		info += "(boolean)\r";
+		info += "(boolean)\t";
 	}
 	else if( lua_isuserdata(L,-1) )
 	{
@@ -1174,27 +1182,27 @@ string LuaManager::getVarInfo( lua_State* L,const string& name,bool b )
 			if( lb )
 				info += lb->matetable;
 		}catch(...){}
-		info += "(userdata)\r";
+		info += "(userdata)\t";
 	}
 	else if( lua_isnil(L,-1) )
 	{
-		info += "(nil)\r";
+		info += "(nil)\t";
 	}
 	else if( lua_isnone(L,-1) )
 	{
-		info += "(none)\r";
+		info += "(none)\t";
 	}
 	else if( lua_isthread(L,-1) )
 	{
-		info += "(thread)\r";
+		info += "(thread)\t";
 	}
 	else if( lua_isnoneornil(L,-1) )
 	{
-		info += "(nonernil)\r";
+		info += "(nonernil)\t";
 	}
 	else if( lua_islightuserdata(L,-1) )
 	{
-		info += "(lightuserdata)\r";
+		info += "(lightuserdata)\t";
 	}
 	else if( lua_isstring(L,-1) )
 	{
@@ -1202,7 +1210,7 @@ string LuaManager::getVarInfo( lua_State* L,const string& name,bool b )
 		info += "\"";
 		info += s;
 		info += "\"";
-		info += "(string)\r";
+		info += "(string)\t";
 	}
 	
 	return info;
@@ -1391,6 +1399,31 @@ bool LuaManager::_luaErrorNotify(lua_State* L)
 	return true; //让traceback做进一步处理
 }
 
+//返回给调试器堆栈信息
+void LuaManager::StackInfo()
+{
+    if( mIsBreaking )
+    {
+        string msg = "info:";
+        int level = 0;
+        while( lua_getstack(mDL, level, mAR) == 1 )
+        {
+            lua_getinfo(mDL,"n",mAR);
+            if( mAR->name )
+            {
+                msg += level==mStackLevel?'*':' ';
+                msg += mAR->name;
+                msg +='\t';
+            }
+            level++;
+        }
+        if( mSocket.is_open() )
+        {
+            msg += '\n';
+            mSocket.write_some(boost::asio::buffer(msg));
+        }
+    }
+}
 void LuaManager::TraceBack(bool b)
 {
 	if( mIsBreaking )
