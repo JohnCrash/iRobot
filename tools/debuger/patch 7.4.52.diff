@@ -1,0 +1,462 @@
+diff --git a/src/MacVim/MMBackend.h b/src/MacVim/MMBackend.h
+index ee63123..fea2723 100644
+--- a/src/MacVim/MMBackend.h
++++ b/src/MacVim/MMBackend.h
+@@ -58,6 +58,8 @@ extern NSTimeInterval MMBalloonEvalInternalDelay;
+     BOOL                imState;
+     CFSocketRef         netbeansSocket;
+     CFRunLoopSourceRef  netbeansRunLoopSource;
++    CFSocketRef		luaSocket;
++    CFRunLoopSourceRef	luaSocketRunLoopSource;
+     int                 winposX;
+     int                 winposY;
+ #ifdef FEAT_BEVAL
+@@ -157,6 +159,7 @@ extern NSTimeInterval MMBalloonEvalInternalDelay;
+ 
+ - (void)messageFromNetbeans;
+ - (void)setNetbeansSocket:(int)socket;
++- (void)setLuaSocket:(int)socket;
+ 
+ #ifdef FEAT_BEVAL
+ - (void)setLastToolTip:(NSString *)toolTip;
+diff --git a/src/MacVim/MMBackend.m b/src/MacVim/MMBackend.m
+index 7a4cded..4e2b64f 100644
+--- a/src/MacVim/MMBackend.m
++++ b/src/MacVim/MMBackend.m
+@@ -1707,6 +1707,51 @@ static void netbeansReadCallback(CFSocketRef s,
+                        kCFRunLoopCommonModes);
+ }
+ 
++static void luaSocketReadCallback(CFSocketRef s,
++                                 CFSocketCallBackType callbackType,
++                                 CFDataRef address,
++                                 const void *data,
++                                 void *info)
++{
++    // luaSocket socket is readable.
++    [[MMBackend sharedInstance] messageFromluaSocket];
++}
++
++- (void)messageFromluaSocket
++{
++    [inputQueue addObject:[NSNumber numberWithInt:LuaSocketMsgID]];
++    [inputQueue addObject:[NSNull null]];
++}
++
++- (void)setLuaSocket:(int)socket
++{
++    if (luaSocket) {
++        CFRelease(luaSocket);
++        luaSocket = NULL;
++    }
++
++    if (luaSocketRunLoopSource) {
++        CFRunLoopSourceInvalidate(luaSocketRunLoopSource);
++        luaSocketRunLoopSource = NULL;
++    }
++
++    if (socket == -1)
++        return;
++
++    // Tell CFRunLoop that we are interested in NetBeans socket input.
++    luaSocket = CFSocketCreateWithNative(kCFAllocatorDefault,
++                                              socket,
++                                              kCFSocketReadCallBack,
++                                              &luaSocketReadCallback,
++                                              NULL);
++    luaSocketRunLoopSource = CFSocketCreateRunLoopSource(NULL,
++                                                        luaSocket,
++                                                        0);
++    CFRunLoopAddSource(CFRunLoopGetCurrent(),
++                       luaSocketRunLoopSource,
++                       kCFRunLoopCommonModes);
++}
++
+ #ifdef FEAT_BEVAL
+ - (void)setLastToolTip:(NSString *)toolTip
+ {
+@@ -2063,6 +2108,8 @@ static void netbeansReadCallback(CFSocketRef s,
+ #ifdef FEAT_NETBEANS_INTG
+         netbeans_read();
+ #endif
++    } else if (LuaSocketMsgID == msgid ) {
++	lua_read_event();
+     } else if (ZoomMsgID == msgid) {
+         if (!data) return;
+         const void *bytes = [data bytes];
+diff --git a/src/MacVim/MacVim.h b/src/MacVim/MacVim.h
+index 691c9b4..652703d 100644
+--- a/src/MacVim/MacVim.h
++++ b/src/MacVim/MacVim.h
+@@ -184,6 +184,7 @@ enum {
+     BrowseForFileMsgID,
+     ShowDialogMsgID,
+     NetBeansMsgID,
++    LuaSocketMsgID,
+     SetMarkedTextMsgID,
+     ZoomMsgID,
+     SetWindowPositionMsgID,
+diff --git a/src/MacVim/gui_macvim.m b/src/MacVim/gui_macvim.m
+index 73751a0..432b583 100644
+--- a/src/MacVim/gui_macvim.m
++++ b/src/MacVim/gui_macvim.m
+@@ -2222,6 +2222,10 @@ gui_macvim_set_netbeans_socket(int socket)
+     [[MMBackend sharedInstance] setNetbeansSocket:socket];
+ }
+ 
++void gui_macvim_set_luasocket(int socket)
++{
++    [[MMBackend sharedInstance] setLuaSocket:socket];
++}
+ #endif // FEAT_NETBEANS_INTG
+ 
+ 
+diff --git a/src/ex_docmd.c b/src/ex_docmd.c
+index 4fb5764..d123b6c 100644
+--- a/src/ex_docmd.c
++++ b/src/ex_docmd.c
+@@ -8402,6 +8402,7 @@ do_sleep(msec)
+ 	 * call to ui_breakcheck() when the GUI is in use. This may occur when
+ 	 * running a test case. */
+ 	netbeans_parse_messages();
++	lua_parse_messages();
+ #endif
+     }
+ }
+diff --git a/src/getchar.c b/src/getchar.c
+index 12914b4..89178e0 100644
+--- a/src/getchar.c
++++ b/src/getchar.c
+@@ -2977,6 +2977,7 @@ inchar(buf, maxlen, wait_time, tb_change_cnt)
+ #if defined(FEAT_NETBEANS_INTG)
+ 	/* Process the queued netbeans messages. */
+ 	netbeans_parse_messages();
++	lua_parse_messages();
+ #endif
+ 
+ 	if (got_int || (script_char = getc(scriptin[curscript])) < 0)
+diff --git a/src/gui_gtk_x11.c b/src/gui_gtk_x11.c
+index 05295bf..469a67c 100644
+--- a/src/gui_gtk_x11.c
++++ b/src/gui_gtk_x11.c
+@@ -5464,6 +5464,7 @@ gui_mch_wait_for_chars(long wtime)
+ #if defined(FEAT_NETBEANS_INTG)
+ 	/* Process any queued netbeans messages. */
+ 	netbeans_parse_messages();
++	lua_parse_messages();
+ #endif
+ 
+ 	/*
+diff --git a/src/gui_w48.c b/src/gui_w48.c
+index d8ffc15..d22ab29 100644
+--- a/src/gui_w48.c
++++ b/src/gui_w48.c
+@@ -2020,6 +2020,7 @@ gui_mch_wait_for_chars(int wtime)
+ #ifdef FEAT_NETBEANS_INTG
+ 	/* Process the queued netbeans messages. */
+ 	netbeans_parse_messages();
++	lua_parse_messages();
+ #endif
+ 
+ 	/*
+diff --git a/src/gui_x11.c b/src/gui_x11.c
+index ed71b26..72b8cf1 100644
+--- a/src/gui_x11.c
++++ b/src/gui_x11.c
+@@ -2898,6 +2898,7 @@ gui_mch_wait_for_chars(wtime)
+ #if defined(FEAT_NETBEANS_INTG)
+ 	/* Process any queued netbeans messages. */
+ 	netbeans_parse_messages();
++	lua_parse_messages();
+ #endif
+ 
+ 	/*
+diff --git a/src/if_lua.c b/src/if_lua.c
+index 35e9106..594cf3e 100644
+--- a/src/if_lua.c
++++ b/src/if_lua.c
+@@ -163,7 +163,9 @@ static luaV_Dict *luaV_pushdict (lua_State *L, dict_T *dic);
+ #define luaopen_package dll_luaopen_package
+ #define luaopen_debug dll_luaopen_debug
+ #define luaL_openlibs dll_luaL_openlibs
+-
++#define luaL_ref dll_luaL_ref
++#define luaL_unref dll_luaL_unref
++#define luaL_checkudata dll_luaL_checkudata
+ /* lauxlib */
+ #if LUA_VERSION_NUM <= 501
+ void (*dll_luaL_register) (lua_State *L, const char *libname, const luaL_Reg *l);
+@@ -189,6 +191,9 @@ lua_State *(*dll_luaL_newstate) (void);
+ void (*dll_luaL_buffinit) (lua_State *L, luaL_Buffer *B);
+ void (*dll_luaL_addlstring) (luaL_Buffer *B, const char *s, size_t l);
+ void (*dll_luaL_pushresult) (luaL_Buffer *B);
++int (*dll_luaL_ref)(lua_State *L,int t);
++void (*dll_luaL_unref)(lua_State *L,int t,int ref);
++void* (*dll_luaL_checkudata)(lua_State *L,int arg,const char* tname);
+ /* lua */
+ #if LUA_VERSION_NUM <= 501
+ lua_Number (*dll_lua_tonumber) (lua_State *L, int idx);
+@@ -249,6 +254,7 @@ int (*dll_luaopen_os) (lua_State *L);
+ int (*dll_luaopen_package) (lua_State *L);
+ int (*dll_luaopen_debug) (lua_State *L);
+ void (*dll_luaL_openlibs) (lua_State *L);
++void (*dll_luaopen_lfs)(lua_State *L);
+ 
+ typedef void **luaV_function;
+ typedef struct {
+@@ -272,6 +278,9 @@ static const luaV_Reg luaV_dll[] = {
+     {"luaL_loadbufferx", (luaV_function) &dll_luaL_loadbufferx},
+     {"luaL_argerror", (luaV_function) &dll_luaL_argerror},
+ #endif
++    {"luaL_ref", (luaV_function) &dll_luaL_ref},
++    {"luaL_unref",(luaV_function) &dll_luaL_unref},
++    {"luaL_checkudata", (luaV_function) &dll_luaL_checkudata},
+     {"luaL_checkany", (luaV_function) &dll_luaL_checkany},
+     {"luaL_checklstring", (luaV_function) &dll_luaL_checklstring},
+     {"luaL_checkinteger", (luaV_function) &dll_luaL_checkinteger},
+@@ -339,6 +348,7 @@ static const luaV_Reg luaV_dll[] = {
+     {"luaopen_os", (luaV_function) &dll_luaopen_os},
+     {"luaopen_package", (luaV_function) &dll_luaopen_package},
+     {"luaopen_debug", (luaV_function) &dll_luaopen_debug},
++    {"luaopen_lfs",(luaV_function)&dll_luaopen_lfs},
+     {"luaL_openlibs", (luaV_function) &dll_luaL_openlibs},
+     {NULL, NULL}
+ };
+@@ -384,7 +394,8 @@ lua_link_init(char *libname, int verbose)
+     int
+ lua_enabled(int verbose)
+ {
+-    return lua_link_init(DYNAMIC_LUA_DLL, verbose) == OK;
++   /* return lua_link_init(DYNAMIC_LUA_DLL, verbose) == OK; */
++    return lua_link_init("/usr/lib/liblua.dylib",verbose)==OK;
+ }
+ 
+ #endif /* DYNAMIC_LUA */
+@@ -595,6 +606,7 @@ luaV_msgfunc(lua_State *L, msgfunc_T mf)
+     luaL_pushresult(&b);
+     /* break string */
+     p = s = lua_tolstring(L, -1, &l);
++    msg_scroll=TRUE;
+     while (l--)
+     {
+ 	if (*p++ == '\0') /* break? */
+@@ -1469,6 +1481,9 @@ luaV_type(lua_State *L)
+     return 1;
+ }
+ 
++static int luaV_vim_msg(lua_State *L);
++static int luaV_asyn_socket(lua_State *L);
++
+ static const luaL_Reg luaV_module[] = {
+     {"command", luaV_command},
+     {"eval", luaV_eval},
+@@ -1480,6 +1495,8 @@ static const luaL_Reg luaV_module[] = {
+     {"window", luaV_window},
+     {"open", luaV_open},
+     {"type", luaV_type},
++    {"vim_msg", luaV_vim_msg},
++    {"asyn_socket", luaV_asyn_socket},
+     {NULL, NULL}
+ };
+ 
+@@ -1779,4 +1796,126 @@ set_ref_in_lua (int copyID)
+     lua_call(L, 1, 0);
+ }
+ 
++/*
++    从luaSocket auxiliar.c中拷贝而来
++ */
++/*-------------------------------------------------------------------------*\
++* Get a userdata pointer if object belongs to a given class. Return NULL 
++* otherwise
++\*-------------------------------------------------------------------------*/
++void *auxiliar_getclassudata(lua_State *L, const char *classname, int objidx) {
++    return luaL_checkudata(L, objidx, classname);
++}
++/*
++    拷贝至luaSocket tcp.h
++*/
++#ifdef WIN32
++typedef SOCKET t_socket;
++typedef t_socket *p_socket;
++#else
++typedef int t_socket;
++typedef t_socket *p_socket;
++#endif
++typedef struct t_tcp_ {
++    t_socket sock;
++    /* 后面还有很多数据,如果不引用应该没问题 */
++} t_tcp;
++
++typedef t_tcp *p_tcp;
++static int sLuaFunctionRef = LUA_REFNIL;
++static int sLuaLoopRef = LUA_REFNIL;
++void lua_parse_messages(void)
++{
++    if(sLuaLoopRef!=LUA_REFNIL)
++    {
++	lua_rawgeti(L,LUA_REGISTRYINDEX,sLuaLoopRef);
++	lua_call(L,0,0);
++    }
++}
++/*
++   当有网络数据时调用该函数
++*/
++void lua_read_event()
++{
++    if(sLuaFunctionRef!=LUA_REFNIL)
++    {
++	lua_rawgeti(L,LUA_REGISTRYINDEX,sLuaFunctionRef);
++	lua_call(L,0,0);
++    }
++}
++/*
++    设置回调入口   
++*/
++static void register_socket_receiver( t_socket sock )
++{
++#ifdef FEAT_GUI_MACVIM
++    gui_macvim_set_luasocket(sock);
++#elif defined(FEAT_GUI_W32)
++    //....
++#endif
++}
++static void unregister_socket_receiver( t_socket sock )
++{
++#ifdef FEAT_GUI_MACVIEW
++    gui_macvim_set_luasocket(-1);
++#elif defined(FEAT_GUI_W32)
++    //....
++#endif    
++}
++static int luaV_vim_msg(lua_State *L)
++{
++    if( lua_isfunction(L,1) )
++    {
++	lua_pushvalue(L,1);
++	sLuaLoopRef= luaL_ref(L,LUA_REGISTRYINDEX);
++	lua_pushboolean(L,true);
++    }
++    else
++    {
++	luaL_unref(L,LUA_REGISTRYINDEX,sLuaLoopRef);
++	sLuaLoopRef = LUA_REFNIL;
++	lua_pushnil(L);
++    }
++    return 1;
++}
++/* 异步网络模式
++   asyn_socket(socket,receiver_func)
++   当建立好一个tcp连接后,调用该函数.可以建立一种异步的接收模式
++   当有网络数据时,函数receiver_func将被调用
++ */
++static int luaV_asyn_socket(lua_State *L)
++{
++    //测试第一个参数是一个socket
++    p_tcp tcp;
++    tcp = (p_tcp) auxiliar_getclassudata(L, "tcp{client}", 1);
++    if(!tcp)
++    {
++	luaL_argerror(L,1,"arg #1 'is not socket.tcp object'");
++	return 1;
++    }
++    //测试第二个参数是一个lua函数
++    if( lua_isfunction(L,2) )
++    {
++	//这里使用引用来保存这个函数
++	lua_pushvalue(L,2);
++	sLuaFunctionRef = luaL_ref(L,LUA_REGISTRYINDEX);
++	register_socket_receiver(tcp->sock);
++	lua_pushboolean(L,true);
++    }
++    else if( lua_isnil(L,2) )
++    { //解除注册
++	if( sLuaFunctionRef != LUA_REFNIL )
++	{
++	    unregister_socket_receiver(tcp->sock);
++	    luaL_unref(L,LUA_REGISTRYINDEX,sLuaFunctionRef);
++	    sLuaFunctionRef = LUA_REFNIL;
++	}
++    }
++    else
++    {
++	luaL_argerror(L,2,"arg #2 'is not function'");
++    }
++    return 1;
++}
++
+ #endif
+diff --git a/src/nbdebug.c b/src/nbdebug.c
+old mode 100644
+new mode 100755
+index 1b61c58..38d3fd9
+--- a/src/nbdebug.c
++++ b/src/nbdebug.c
+@@ -106,12 +106,12 @@ nbdbg(
+ {
+ 	va_list		 ap;
+ 
+-	if (nb_debug != NULL && nb_dlevel & NB_TRACE) {
++	if (nb_debug != NULL && nb_dlevel & NB_TRACE) { 
+ 		va_start(ap, fmt);
+ 		vfprintf(nb_debug, fmt, ap);
+ 		va_end(ap);
+ 		fflush(nb_debug);
+-	}
++	} 
+ 
+ }    /* end nbdbg */
+ 
+diff --git a/src/os_unix.c b/src/os_unix.c
+old mode 100644
+new mode 100755
+index 2d8de51..27943f2
+--- a/src/os_unix.c
++++ b/src/os_unix.c
+@@ -383,6 +383,7 @@ mch_inchar(buf, maxlen, wtime, tb_change_cnt)
+ #ifdef FEAT_NETBEANS_INTG
+     /* Process the queued netbeans messages. */
+     netbeans_parse_messages();
++    lua_parse_messages();
+ #endif
+ 
+     /* Check if window changed size while we were busy, perhaps the ":set
+@@ -400,6 +401,7 @@ mch_inchar(buf, maxlen, wtime, tb_change_cnt)
+ #ifdef FEAT_NETBEANS_INTG
+ 	    /* Process the queued netbeans messages. */
+ 	    netbeans_parse_messages();
++	    lua_parse_messages();
+ #endif
+ 	}
+     }
+@@ -434,6 +436,7 @@ mch_inchar(buf, maxlen, wtime, tb_change_cnt)
+ #ifdef FEAT_NETBEANS_INTG
+ 	/* Process the queued netbeans messages. */
+ 	netbeans_parse_messages();
++	lua_parse_messages();
+ #endif
+ #ifndef VMS  /* VMS: must try reading, WaitForChar() does nothing. */
+ 	/*
+diff --git a/src/proto/gui_macvim.pro b/src/proto/gui_macvim.pro
+index 40b2951..f5ef37c 100644
+--- a/src/proto/gui_macvim.pro
++++ b/src/proto/gui_macvim.pro
+@@ -228,6 +228,8 @@ im_set_control(int enable);
+     void
+ gui_macvim_set_netbeans_socket(int socket);
+ 
++void gui_macvim_set_luasocket(int socket);
++
+     void
+ gui_mch_drawsign(int row, int col, int typenr);
+ 
+diff --git a/src/proto/if_lua.pro b/src/proto/if_lua.pro
+index 8db66a6..191a23f 100644
+--- a/src/proto/if_lua.pro
++++ b/src/proto/if_lua.pro
+@@ -1,4 +1,5 @@
+ /* if_lua.c */
++void lua_parse_messages __ARGS((void));
+ int lua_enabled __ARGS((int verbose));
+ void lua_end __ARGS((void));
+ void ex_lua __ARGS((exarg_T *eap));
