@@ -364,10 +364,10 @@ function dbgs()
 		end
 		print("connect:127.0.0.1:3030")
 		--这里发生阻塞
-		server:settimeout(0)
+		server:settimeout(10)
 		connect,err = server:accept()
 		if connect then
-			connect:settimeout(10)
+			connect:settimeout(0)
 			vim.asyn_socket(connect,receiver)
 			--同步以前设置的断点
 			asynbps()
@@ -381,10 +381,10 @@ function dbgs()
 			connect = nil
 		end
 		print('connect:127.0.0.1:3030')
-		server:settimeout(0)
+		server:settimeout(10)
 		connect,err = server:accept()
 		if connect then
-			connect:settimeout(10)
+			connect:settimeout(0)
 			vim.asyn_socket(connect,receiver)
 			--同步以前断点
 			asynbps()

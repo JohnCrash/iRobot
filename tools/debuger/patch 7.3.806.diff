@@ -1,3 +1,16 @@
+diff --git a/src/MacVim/gui_macvim.m b/src/MacVim/gui_macvim.m
+--- a/src/MacVim/gui_macvim.m
++++ b/src/MacVim/gui_macvim.m
+@@ -2222,6 +2222,10 @@ gui_macvim_set_netbeans_socket(int socket)
+     [[MMBackend sharedInstance] setNetbeansSocket:socket];
+ }
+ 
++void gui_macvim_set_luasocket(int socket)
++{
++    [[MMBackend sharedInstance] setLuaSocket:socket];
++}
+ #endif // FEAT_NETBEANS_INTG
+
 diff --git a/src/MacVim/MMBackend.h b/src/MacVim/MMBackend.h
 index ee63123..fea2723
 --- a/src/MacVim/MMBackend.h
