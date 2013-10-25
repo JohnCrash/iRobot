@@ -58,18 +58,34 @@ RigidPtr Joint::getJointRigid( int i ) const
 	}
 }
 
-void Joint::breakJoint()
-{
-	dJointAttach(mJointID,0,0);
-	mRigid1.reset();
-	mRigid2.reset();
-}
-
 void Joint::linkRigid(RigidPtr b1,RigidPtr b2)
 {
 	dJointAttach(mJointID,b1->getBodyID(),b2->getBodyID());
 	mRigid1 = b1;
 	mRigid2 = b2;
+}
+
+void Joint::save(MyGUI::xml::ElementPtr node)
+{
+    
+}
+
+void Joint::load(MyGUI::xml::ElementPtr node)
+{
+    
+}
+
+void Joint::breakAllRigid()
+{
+    if( mRigid1 )mRigid1->breakJoint(JointPtr(this));
+    if( mRigid2 )mRigid2->breakJoint(JointPtr(this));
+    mRigid1.reset();
+    mRigid2.reset();
+}
+
+void Joint::breakRigid( RigidPtr p )
+{
+    if( p )p->breakJoint(JointPtr(this));
 }
 
 JointBall::JointBall()

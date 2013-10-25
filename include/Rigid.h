@@ -11,6 +11,7 @@ class Rigid
 	:public VisualObject
 {
 	friend class Joint;
+    friend class Framework;
 public:
 	Rigid();
 	Rigid(GeometryObjectPtr geo);
@@ -37,6 +38,10 @@ public:
 	*/
 	virtual void _update();
 
+	//和所有的铰链Joint断开,使得对方也不引用我
+	void breakAllJoint();
+    void breakJoint(JointPtr jp);
+
 	dBodyID getBodyID() const;
 
 	//遍历Joint
@@ -50,6 +55,7 @@ public:
 protected:
 	void _init();
 	void _visual2physic();
+    int mid; //一个确保在Framework内部不同的id
 	/*下面是物体的物理属性
 	*/
 	dBodyID mBodyID;

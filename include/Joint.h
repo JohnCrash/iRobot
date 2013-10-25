@@ -11,6 +11,8 @@ typedef boost::shared_ptr<Rigid> RigidPtr;
 
 class Joint:public Object
 {
+    friend class Framework;
+    friend class Rigid;
 public:
 	Joint();
 	virtual ~Joint();
@@ -29,16 +31,21 @@ public:
 	RigidPtr getJointRigid( int i ) const;
 
 	//断开连接
-	void breakJoint();
+	void breakAllRigid();
+    void breakRigid( RigidPtr p );
 	/*
 		建立相关的数据关联
 	*/
 	void linkRigid(RigidPtr b1,RigidPtr b2);
+    
+	virtual void load( MyGUI::xml::ElementPtr node );
+	virtual void save( MyGUI::xml::ElementPtr node );
 
 	RTTI_DERIVED(Joint);
 protected:
 	string mName;
-
+    int mid; //一个确保在Framework内部不同的id
+    
 	dJointID mJointID;
 	/*和这个Joint相连接的刚体，当然ODE中已经有相关的信息
 	这里这么做是为了数据结构的便利

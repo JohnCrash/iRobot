@@ -132,6 +132,41 @@ void Rigid::save( MyGUI::xml::ElementPtr node )
 	VisualObject::save(node);
 }
 
+void Rigid::breakAllJoint()
+{
+    for(JointMap::iterator i=mJoints.begin();
+        i!=mJoints.end();++i)
+    {
+        if( this==(*i)->mRigid1.get() )
+        {
+            (*i)->mRigid1.reset();
+            continue;
+        }
+        if( this==(*i)->mRigid2.get() )
+        {
+            (*i)->mRigid2.reset();
+        }
+    }
+    mJoints.clear();
+}
+
+void Rigid::breakJoint(JointPtr jp)
+{
+    BOOST_AUTO(it,find(mJoints.begin(),mJoints.end(),jp));
+    if(it!=mJoints.end())
+    {
+        mJoints.erase(it);
+        if(jp->mRigid1.get()==this)
+        {
+            jp->mRigid1.reset();
+        }
+        if(jp->mRigid2.get()==this)
+        {
+            jp->mRigid2.reset();
+        }
+    }
+}
+
 void registerCoreObject()
 {
 	ObjectFactory& factory = ObjectFactory::getSingleton();

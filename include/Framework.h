@@ -6,25 +6,25 @@
 /*
 	用来描述刚体和铰链组成的结构
 */
-class Framework
+class Framework:public Object
 {
 public:
 	Framework();
 	virtual ~Framework();
 
-	virtual void load( MyGUI::xml::Document doc );
-	virtual void save( MyGUI::xml::Document doc );
+	virtual void load( MyGUI::xml::ElementPtr doc );
+	virtual void save( MyGUI::xml::ElementPtr doc );
 
-	void addRigidNode( RigidPtr b );
-	void addJointNode( JointPtr j );
+	void addJoint( JointPtr j );
+	void removeJoint( JointPtr j );
 protected:
-	RigidPtr _getRoot();
+    void idAll(); //标记全部部件
+    void reConstruct(); //重新构造框架,在load后调用
+
 	string mName;
-	/* 该框架包括的全部Rigid和Joint
+	/* 该框架包括的全部的Joint
 	*/
-	typedef vector<RigidPtr> RigidMap;
 	typedef vector<JointPtr> JointMap;
-	RigidMap mRigids;
 	JointMap mJoints;
 };
 

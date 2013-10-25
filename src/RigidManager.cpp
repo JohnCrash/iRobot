@@ -126,7 +126,13 @@ void RigidManager::removeNode( VisualObjectPtr rp )
 		//从模拟表中删除对象
 		BOOST_AUTO(it,find(mObjects.begin(),mObjects.end(),rp) );
 		if( it != mObjects.end() )
+		{
+			//如果是一个刚体,断开和它相连接的铰链
+			Rigid* rigp = rp->castType<Rigid>();
+			if( rigp )rigp->breakAllJoint();
+
 			mObjects.erase(it);
+		}
 	}
 }
 

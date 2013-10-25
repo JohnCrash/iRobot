@@ -9,47 +9,41 @@ Framework::~Framework()
 {
 }
 
-void Framework::load( MyGUI::xml::Document doc )
+void Framework::load( MyGUI::xml::ElementPtr node )
 {
 }
 
-/*
-	将具有最多连接的刚体当成根节点
-*/
-void Framework::save( MyGUI::xml::Document doc )
+void Framework::idAll()
 {
-	RigidPtr rootRigid = _getRoot();
-	doc.createDeclaration();
-	MyGUI::xml::ElementPtr root = doc.createRoot("Framework");
+}
 
+void Framework::reConstruct()
+{
+}
+
+void Framework::save( MyGUI::xml::ElementPtr node )
+{
 	if( !mName.empty() )
-		root->addAttribute("name",mName);
-	if( rootRigid )
-	{
-		rootRigid->save( root );
-	}
+		node->addAttribute("name",mName);
+    for(JointMap::iterator i=mJoints.begin();i!=mJoints.end();++i)
+    {
+        MyGUI::xml::ElementPtr child = node->createChild("Joint");
+        child->addAttribute("id", (*i)->mid);
+        (*i)->save(child);
+    }
 }
 
-RigidPtr Framework::_getRoot()
+void Framework::addJoint( JointPtr j )
 {
-	RigidPtr root;
-	int jmax = -1;
-	for( RigidMap::iterator i = mRigids.begin();i!=mRigids.end();++i )
-	{
-		int n = (*i)->getJointsCount();
-		if( n > jmax )
-		{
-			jmax = n;
-			root = (*i);
-		}
-	}
-	return root;
+    mJoints.push_back(j);
 }
 
-void Framework::addRigidNode( RigidPtr b )
+void Framework::removeJoint( JointPtr j )
 {
-}
-
-void Framework::addJointNode( JointPtr j )
-{
+    BOOST_AUTO(it,find(mJoints.begin(),mJoints.end(),j) );
+	if(it!=mJoints.end())
+    {
+        j->breakAllRigid(); //断开
+        mJoints.erase(it);
+    }
 }
