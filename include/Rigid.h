@@ -6,6 +6,8 @@
 
 class RigidManager;
 
+typedef vector<RigidPtr> RigidMap;
+
 //刚体首先是一个碰撞体
 class Rigid
 	:public VisualObject
@@ -55,7 +57,7 @@ public:
 protected:
 	void _init();
 	void _visual2physic();
-    int mid; //一个确保在Framework内部不同的id
+
 	/*下面是物体的物理属性
 	*/
 	dBodyID mBodyID;
@@ -64,8 +66,8 @@ protected:
 	/*和该Rigid相连的Joint，当然ODE中已经有相关的信息
 		这里这么做是为了数据结构的便利
 	*/
-	typedef vector<JointPtr> JointMap;
 	JointMap mJoints;
+
 };
 
 void registerCoreObject();

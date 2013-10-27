@@ -123,13 +123,19 @@ JointPtr Rigid::getJointAt( int i )
 
 void Rigid::load( MyGUI::xml::ElementPtr node )
 {
+    string ms;
 	VisualObject::load(node);
+    if(node->findAttribute("mass", ms))
+    {
+        mMassDensity = toValue(ms,(dReal)1);
+    }
 	_visual2physic();
 }
 
 void Rigid::save( MyGUI::xml::ElementPtr node )
 {
 	VisualObject::save(node);
+    node->addAttribute("mass", mMassDensity);
 }
 
 void Rigid::breakAllJoint()

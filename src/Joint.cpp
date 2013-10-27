@@ -67,7 +67,6 @@ void Joint::linkRigid(RigidPtr b1,RigidPtr b2)
 
 void Joint::save(MyGUI::xml::ElementPtr node)
 {
-    
 }
 
 void Joint::load(MyGUI::xml::ElementPtr node)

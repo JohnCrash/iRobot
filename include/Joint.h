@@ -6,6 +6,7 @@
 	ODE关节
 */
 class Rigid;
+
 typedef boost::weak_ptr<Rigid> RigidWeakPtr;
 typedef boost::shared_ptr<Rigid> RigidPtr;
 
@@ -44,7 +45,6 @@ public:
 	RTTI_DERIVED(Joint);
 protected:
 	string mName;
-    int mid; //一个确保在Framework内部不同的id
     
 	dJointID mJointID;
 	/*和这个Joint相连接的刚体，当然ODE中已经有相关的信息
@@ -56,6 +56,7 @@ protected:
 
 typedef boost::shared_ptr<Joint> JointPtr;
 typedef boost::weak_ptr<Joint> JointWeakPtr;
+typedef vector<JointPtr> JointMap;
 
 /*
 	球形关节
