@@ -26,7 +26,8 @@ public:
 protected:
     void saveRigid(MyGUI::xml::ElementPtr node,RigidPtr rgd);
     void saveJoint(MyGUI::xml::ElementPtr node,JointPtr joint,RigidPtr other);
-
+    void loadRigid( MyGUI::xml::ElementPtr node,JointPtr parent );
+    void loadJoint( MyGUI::xml::ElementPtr node,RigidPtr parent );
 	string mName;
 	/* 该框架包括的全部的Joint
 	*/

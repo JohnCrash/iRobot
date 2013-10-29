@@ -16,19 +16,70 @@ void Framework::load( MyGUI::xml::ElementPtr node )
     MyGUI::xml::ElementEnumerator e=node->getElementEnumerator();
     while(e.next())
     {
-        string name = e->getName();
-        if( name == "body" )
+        MyGUI::xml::ElementPtr node = e.current();
+        if( node->getName() == "body" )
         {
-            ObjectFactory& factory = ObjectFactory::getSingleton();
-            ObjectPtr p = factory.createObject("Rigid");
-            if( p )
-            {
-                p->load(e.current());
-            }
+            loadRigid(node, nil);
         }
+        break;
     }
 }
 
+void Framework::loadRigid( MyGUI::xml::ElementPtr node,JointPtr parent )
+{
+    ObjectFactory& factory = ObjectFactory::getSingleton();
+    RigidPtr rgp = boost::dynamic_pointer_cast<Rigid>(factory.createObject("Rigid"));
+    if(rgp)
+    {
+        if( parent )
+        {
+            parent->mRigid2 = rgp;
+        }
+        rgp->load(node);
+        MyGUI::xml::ElementEnumerator ce = node->getElementEnumerator();
+        while(ce.next())
+        {
+            MyGUI::xml::ElementPtr child = ce.current();
+            if( child->getName() == "joint" )
+            {
+                loadJoint( child,rgp );
+            }
+        }
+    }
+    else
+    {
+        WARNING_LOG("Factory can't make Rigid object!");
+    }
+}
+
+void Framework::loadJoint( MyGUI::xml::ElementPtr node,RigidPtr parent )
+{
+    ObjectFactory& factory = ObjectFactory::getSingleton();
+    JointPtr jpt = boost::dynamic_pointer_cast<Joint>(factory.createObject("Joint"));
+    if(jpt)
+    {
+        if( parent )
+        {
+            jpt->mRigid1 = parent;
+        }
+        addJoint(jpt);
+        jpt->load(node);
+        MyGUI::xml::ElementEnumerator ce = node->getElementEnumerator();
+        while(ce.next())
+        {
+            MyGUI::xml::ElementPtr child = ce.current();
+            if( child->getName() == "rigid" )
+            {
+                loadRigid(child, jpt);
+            }
+            break;
+        }
+    }
+    else
+    {
+        WARNING_LOG("Factory can't make Joint object!");
+    }
+}
 /*
     注意:这里要保证没有循环连接
  */
