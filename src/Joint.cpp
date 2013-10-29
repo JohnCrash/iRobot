@@ -156,7 +156,7 @@ void JointHinge::setHingeAxis( const Ogre::Vector3& v3 )
 	dJointSetHingeAxis(mJointID,v3.x,v3.y,v3.z);
 }
 
-Ogre::Vector3 JointHinge::getHingAxis()
+Ogre::Vector3 JointHinge::getHingeAxis()
 {
 	dVector3 v;
 	dJointGetHingeAxis(mJointID,v);
@@ -174,7 +174,7 @@ void JointHinge::save( MyGUI::xml::ElementPtr node )
 {
     Joint::save(node);
     node->addAttribute("anchor", vec3toString(getHingeAnchor()));
-    node->addAttribute("axis", vec3toString(getHingAxis()));
+    node->addAttribute("axis", vec3toString(getHingeAxis()));
 }
 
 JointSlider::JointSlider()

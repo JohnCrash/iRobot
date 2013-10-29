@@ -86,7 +86,7 @@ public:
 	void setHingeAnchor( const Ogre::Vector3& v3 );
 	Ogre::Vector3 getHingeAnchor();
 	void setHingeAxis( const Ogre::Vector3& v3 );
-	Ogre::Vector3 getHingAxis();
+	Ogre::Vector3 getHingeAxis();
 
 	virtual void load( MyGUI::xml::ElementPtr node );
 	virtual void save( MyGUI::xml::ElementPtr node );

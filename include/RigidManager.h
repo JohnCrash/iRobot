@@ -2,6 +2,7 @@
 #define _RIGID_MANAGER_H_
 #include "Rigid.h"
 #include "Joint.h"
+#include "Framework.h"
 
 /*除了管理刚体还管理铰链等和物理相关的对象
 */
@@ -34,6 +35,8 @@ public:
 	void addNode( VisualObjectPtr rp );
 	void removeNode( VisualObjectPtr rptr );
 
+    void addFramework( const FrameworkPtr& pt);
+    void removeFramework( const FrameworkPtr& pt);
 	//清除全部模拟对象
 	void clearAllNode();
 
@@ -41,8 +44,6 @@ public:
 	void save(MyGUI::xml::ElementPtr node);
 	bool loadSceneFromFile(const string& name);
 	bool saveSceneFromFile(const string& name);
-private:
-
 protected:
 	void _simstep(); //模拟步
 	void _simLoop(); //多线程模拟循环
@@ -56,7 +57,8 @@ protected:
 	bool mIsSingle; //单线程还是多线程
 
 	ObjectMap mObjects;
-
+    FrameworkMap mFramework;
+    
 	/* RididManager的物理引擎部分
 	*/
 	dWorldID mWorld;

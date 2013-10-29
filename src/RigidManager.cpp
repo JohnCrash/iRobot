@@ -4,6 +4,7 @@
 #include "RigidManager.h"
 #include "VisualObject.h"
 #include "GeometryObject.h"
+#include "Framework.h"
 
 SINGLETON(RigidManager)
 
@@ -14,6 +15,7 @@ RigidManager::RigidManager():mBarrier(2){
 	registerCoreObject();
 	registerGeometryFactory();
 	registerJointFactory();
+	registerFrameworkFactory();
 
 	/*初始话ODE物理引擎
 	*/
@@ -260,4 +262,12 @@ VisualObjectPtr RigidManager::pickObject( int x,int y )
 			return (*it);
 	}
 	return VisualObjectPtr();
+}
+
+void RigidManager::addFramework( const FrameworkPtr& pt)
+{
+}
+
+void RigidManager::removeFramework( const FrameworkPtr& pt)
+{
 }

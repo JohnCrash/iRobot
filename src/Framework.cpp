@@ -200,3 +200,9 @@ RigidPtr Framework::getBodyRigid()
     }
     return RigidPtr();
 }
+
+void registerFrameworkFactory()
+{
+	ObjectFactory& factory = ObjectFactory::getSingleton();
+	factory.registerFactory<Framework>("Framework");
+}

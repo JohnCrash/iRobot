@@ -34,4 +34,9 @@ protected:
 	JointMap mJoints;
 };
 
+typedef boost::shared_ptr<Framework> FrameworkPtr;
+typedef vector<FrameworkPtr> FrameworkMap;
+
+void registerFrameworkFactory();
+
 #endif
