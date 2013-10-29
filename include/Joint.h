@@ -85,7 +85,7 @@ public:
 	//设置合页旋转轴上的一点
 	void setHingeAnchor( const Ogre::Vector3& v3 );
 	Ogre::Vector3 getHingeAnchor();
-	void setHingAxis( const Ogre::Vector3& v3 );
+	void setHingeAxis( const Ogre::Vector3& v3 );
 	Ogre::Vector3 getHingAxis();
 
 	virtual void load( MyGUI::xml::ElementPtr node );

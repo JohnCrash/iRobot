@@ -51,21 +51,21 @@ namespace MyGUI
 		{
 			GlyphInfo* info = iter->getInfo(_id);
 			if (info == nullptr) continue;
-			if( info->codePoint == 0 )//±íÊ¾Ã»ÓĞ×°Èë
+			if( info->codePoint == 0 )//è¡¨ç¤ºæ²¡æœ‰è£…å…¥
 				break;
 			return info;
 		}
-		if( _id != 0x20 ) //¿Õ¸ñµÄ»°×Ô¼º·µ»Ø
+		if( _id != 0x20 ) //ç©ºæ ¼çš„è¯è‡ªå·±è¿”å›
 		{
-			//Ã»ÓĞ·¢ÏÖµÄ±àÂë³¢ÊÔ¼ÓÈë
+			//æ²¡æœ‰å‘ç°çš„ç¼–ç å°è¯•åŠ å…¥
 			GlyphInfo* info = addGlyphInfo( _id );
 			if( info != nullptr )return info;
 		}
-		//¶¼Ã»ÓĞ·¢ÏÖ·µ»ØÒ»¸ö¿Õ¸ñ
+		//éƒ½æ²¡æœ‰å‘ç°è¿”å›ä¸€ä¸ªç©ºæ ¼
 		return &mSpaceGlyphInfo;
 	}
 
-	/*½«×ÖĞÍ»æÖÆ½øÈë²ÄÖÊ£¬²¢ÇÒÉèÖÃÕıÈ·µÄuv
+	/*å°†å­—å‹ç»˜åˆ¶è¿›å…¥æè´¨ï¼Œå¹¶ä¸”è®¾ç½®æ­£ç¡®çš„uv
 	*/
 	bool ResourceDynamicFont::newGlyphInfo( GlyphInfo* pgi,Char _id )
 	{
@@ -102,7 +102,7 @@ namespace MyGUI
 			mContext.length = mDistance;
 		}
 
-		/*½ö½öËø¶¨×Ö·û´óĞ¡µÄ¾ØĞÎ´óĞ¡£¬ÍêÈ«µÄËø¶¨µ¼ÖÂÍ¼Ïñ±»´İ»Ù
+		/*ä»…ä»…é”å®šå­—ç¬¦å¤§å°çš„çŸ©å½¢å¤§å°ï¼Œå®Œå…¨çš„é”å®šå¯¼è‡´å›¾åƒè¢«æ‘§æ¯
 		*/
 		/*
 		OgreTexture* pTexture = dynamic_cast<OgreTexture*>(mTexture);
@@ -112,23 +112,23 @@ namespace MyGUI
 			return false;
 		}
 		*/
-		//×ÖÌå²ÄÖÊÃ»ÓĞ×ã¹»µÄ¿Õ¼äÈİÄÉÕâ¸ö×Ö·û
+		//å­—ä½“æè´¨æ²¡æœ‰è¶³å¤Ÿçš„ç©ºé—´å®¹çº³è¿™ä¸ªå­—ç¬¦
 		if( mContext.height + mContext.max_height + mDistance > mContext.finalHeight )
 		{
-		/*ÕâÀï¼ÓÈëÒ»¸ö²ÄÖÊÔö³¤²Å²Ù×÷£¬ÈÃËûÔÚ¸ß¶ÈÉÏÔö³¤¡£
+		/*è¿™é‡ŒåŠ å…¥ä¸€ä¸ªæè´¨å¢é•¿æ‰æ“ä½œï¼Œè®©ä»–åœ¨é«˜åº¦ä¸Šå¢é•¿ã€‚
 			MYGUI_LOG(Warning, "Freetype texture not enough space " << _id << " in font " << getResourceName() 
 				<< " width:" << mContext.finalWidth << " height:"<< mContext.finalHeight );
-			mIsFull = true; //·ÀÖ¹·´¸´ÌáÊ¾
+			mIsFull = true; //é˜²æ­¢åå¤æç¤º
 			return false;
 			*/
 			int oldHeight = mContext.finalHeight;
 			mContext.finalHeight += mContext.finalHeight;
 			mTexture->resize(mContext.finalWidth,mContext.finalHeight);
-			//ÒòÎªÀ­Éì×÷ÓÃĞèÒªµ÷ÕûÒÑÓĞµÄ×ÖĞÍµÄÎÆÀí×ø±ê
+			//å› ä¸ºæ‹‰ä¼¸ä½œç”¨éœ€è¦è°ƒæ•´å·²æœ‰çš„å­—å‹çš„çº¹ç†åæ ‡
 			relocal( 1.0,
 				(float)(oldHeight)/(float)mContext.finalHeight
 				);
-			//ÖØĞÂÉèÖÃÒÑÓĞµÄÈ«²¿ÎÄ×ÖµÄuv×ø±ê
+			//é‡æ–°è®¾ç½®å·²æœ‰çš„å…¨éƒ¨æ–‡å­—çš„uvåæ ‡
 			EditTextManager::EnumeratorEditText e=EditTextManager::getInstance().getEnumerator();
 			while( e.next() )
 			{
@@ -138,7 +138,7 @@ namespace MyGUI
 
 		int bearingX = face->glyph->metrics.horiBearingX >> 6;
 
-		//Ëø¶¨Í¬Ê±»áÏú»ÙÒÔÇ°µÄÍ¼Ïñ
+		//é”å®šåŒæ—¶ä¼šé”€æ¯ä»¥å‰çš„å›¾åƒ
 		//uint8* imageData = (uint8*)mTexture->lock(TextureUsage::Write);
 		uint8* imageData = (uint8*)mTexture->lock(
 			mContext.length+bearingX,mContext.height+y_bearnig,
@@ -214,14 +214,14 @@ namespace MyGUI
 		gi.uvRect.bottom *= sy;
 	}
 
-	//¼ÓÈëÒ»¸öĞÂµÄ×ÖĞÍ
+	//åŠ å…¥ä¸€ä¸ªæ–°çš„å­—å‹
 	GlyphInfo* ResourceDynamicFont::addGlyphInfo( Char _id )
 	{
 		GlyphInfo gi;
 
 		if( !newGlyphInfo( &gi,_id ) )return nullptr;
 
-		//Ê×ÏÈ²éÕÒ¿´¿´ÓĞÃ»ÓĞºÏÊÊµÄRangeInfo£¬Èç¹ûÓĞ¾Í·ÅÈëÆäÖĞ
+		//é¦–å…ˆæŸ¥æ‰¾çœ‹çœ‹æœ‰æ²¡æœ‰åˆé€‚çš„RangeInfoï¼Œå¦‚æœæœ‰å°±æ”¾å…¥å…¶ä¸­
 		for( VectorRangeInfo::iterator iter = mVectorRangeInfo.begin(); iter != mVectorRangeInfo.end(); ++iter)
 		{
 			if( iter->isExist( _id ) )
@@ -230,8 +230,8 @@ namespace MyGUI
 				return iter->getInfo( _id );
 			}
 		}
-		/*Ã»ÓĞ·¢ÏÖºÏÊÊµÄRangeInfoÔò²úÉúÒ»¸öĞÂµÄ
-			½«unicode16·Ö³ÉÃ¿256(0-FF)ÎªÒ»¸öÇøRang£¬È»ºóÔÚºÍ¹ÌÓĞµÄ·¶Î§×öÒ»¸öÅÅ³ıÔËËã
+		/*æ²¡æœ‰å‘ç°åˆé€‚çš„RangeInfoåˆ™äº§ç”Ÿä¸€ä¸ªæ–°çš„
+			å°†unicode16åˆ†æˆæ¯256(0-FF)ä¸ºä¸€ä¸ªåŒºRangï¼Œç„¶ååœ¨å’Œå›ºæœ‰çš„èŒƒå›´åšä¸€ä¸ªæ’é™¤è¿ç®—
 		*/
 		Char begin,end;
 		begin = _id & 0xff00;
@@ -239,7 +239,7 @@ namespace MyGUI
 		for( VectorRangeInfo::iterator iter = mVectorRangeInfo.begin(); iter != mVectorRangeInfo.end(); ++iter)
 		{
 			if( iter->first >= begin && iter->first <= end &&
-				iter->last >= begin && iter->last <= end ) //Á½¶¼ÂäÔÚbegin,endÖĞ£¬½«begin,end·Ö³É3¸ö²¿·Ö
+				iter->last >= begin && iter->last <= end ) //ä¸¤éƒ½è½åœ¨begin,endä¸­ï¼Œå°†begin,endåˆ†æˆ3ä¸ªéƒ¨åˆ†
 			{
 				if( _id < iter->first )
 					end = iter->first-1;
@@ -305,8 +305,8 @@ namespace MyGUI
 
 #else // MYGUI_USE_FREETYPE
 
-		/* ÒÔÇ°µÄ¼ÓÔØ·½Ê½ÊÇÖ±½Ó¶Á³öÈ«²¿µÄ×ÖÌåÎÄ¼ş£¬Õâ¶Ô×ÖÄ¸ÎÄ×Ö¿ÉÒÔ¿ìËÙÍê³É¡£
-			µ«ÊÇ¶ÔÓÚÖĞÎÄ¾ÍÓĞĞ§ÂÊÎÊÌâ
+		/* ä»¥å‰çš„åŠ è½½æ–¹å¼æ˜¯ç›´æ¥è¯»å‡ºå…¨éƒ¨çš„å­—ä½“æ–‡ä»¶ï¼Œè¿™å¯¹å­—æ¯æ–‡å­—å¯ä»¥å¿«é€Ÿå®Œæˆã€‚
+			ä½†æ˜¯å¯¹äºä¸­æ–‡å°±æœ‰æ•ˆç‡é—®é¢˜
 		*/
 //		IDataStream* datastream = DataManager::getInstance().getData(mSource);
 //		if (!datastream)
@@ -330,7 +330,7 @@ namespace MyGUI
 //		delete datastream;
 		std::string fontFile = DataManager::getInstance().getDataPath(mSource);
 		
-		/*ÕâÀïÊ¹ÓÃÎÄ¼şÄ£Ê½£¬Èç¹ûÊ¹ÓÃÄÚ´æÄ£Ê½²»µÃ²»Ò»Ö±±£´ædataÊı¾İ¡£
+		/*è¿™é‡Œä½¿ç”¨æ–‡ä»¶æ¨¡å¼ï¼Œå¦‚æœä½¿ç”¨å†…å­˜æ¨¡å¼ä¸å¾—ä¸ä¸€ç›´ä¿å­˜dataæ•°æ®ã€‚
 		*/
 		//if ( FT_New_Memory_Face( mftLibrary, data, (FT_Long)datasize, 0, &face ) )
 		if( FT_New_Face( mftLibrary,fontFile.c_str(),0,&face) )
@@ -346,7 +346,7 @@ namespace MyGUI
 
 		int spec_len = mCursorWidth + mSelectionWidth + mSelectionWidth + mSpaceWidth + mTabWidth + (mDistance * 5);
 		int len = mDistance + spec_len;
-		int height = 0; // §Ù§Õ§Ö§ã§î §Ú§ã§á§à§İ§î§Ù§å§Ö§ä§ã§ñ §Ü§Ñ§Ü §Ü§à§İ§İ§Ú§é§Ö§ã§ä§Ó§à §ã§ä§â§à§Ü
+		int height = 0; // Ğ·Ğ´ĞµÑÑŒ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚ÑÑ ĞºĞ°Ğº ĞºĞ¾Ğ»Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ ÑÑ‚Ñ€Ğ¾Ğº
 
 		int finalWidth = MIN_FONT_TEXTURE_WIDTH;
 		// trying to guess necessary width for texture
@@ -357,7 +357,7 @@ namespace MyGUI
 			for (Char index = iter->first; index <= iter->last; ++index)
 			{
 
-				// §ã§Ú§Ş§Ó§à§İ §â§Ú§ã§à§Ó§Ñ§ä§î §ß§Ö§ß§å§Ø§ß§à
+				// ÑĞ¸Ğ¼Ğ²Ğ¾Ğ» Ñ€Ğ¸ÑĞ¾Ğ²Ğ°Ñ‚ÑŒ Ğ½ĞµĞ½ÑƒĞ¶Ğ½Ğ¾
 				if (checkHidePointCode(index)) continue;
 
 				if (FT_Load_Char( face, index, FT_LOAD_RENDER )) continue;
@@ -392,15 +392,15 @@ namespace MyGUI
 			finalWidth *= 2;
 		}
 
-		// §Ó§í§é§Ú§ã§İ§ñ§Ö§Ş §Ò§İ§Ú§Ø§Ñ§Û§ê§å§ğ §Ü§â§Ñ§ä§ß§å§ğ 2
+		// Ğ²Ñ‹Ñ‡Ğ¸ÑĞ»ÑĞµĞ¼ Ğ±Ğ»Ğ¸Ğ¶Ğ°Ğ¹ÑˆÑƒÑ ĞºÑ€Ğ°Ñ‚Ğ½ÑƒÑ 2
 		int needHeight = 1;
 		while (needHeight < finalHeight) needHeight <<= 1;
 		finalHeight = needHeight;
 
-		/*ÊÖ¶¯Éè¶¨¿í¸ß£¬Õâ¸öÉèÖÃÒÀÀµÓë×ÖÌåµÄxmlÎÄ¼ş
-			Í¬Ê±Õâ¸ö³ß´çÒ²²»ÊÇ¹Ì¶¨²»±äµÄ£¬Èç¹ûÔö¼ÓµÄ×Ö·ûÊ¹²ÄÖÊ²»ÄÜÈİÄÉ¡£²ÄÖÊ½«»á±»¼Ó³¤¡£
-			ÕâÓĞ×ö¿ÉÒÔ±£Ö¤ÒÑ¾­´æÔÚµÄ×Ö·û±»¿½±´µ½ĞÂµÄ²ÄÖÊ¡£
-			±»½¨ÒéµÄ²ÄÖÊ³ß´çµÄ³õÖµÊÇ512x512£¬ÔÚ¿Õ¼ä²»¹»µÄÊ±ºòËû»á±ä³É512x1024¡£
+		/*æ‰‹åŠ¨è®¾å®šå®½é«˜ï¼Œè¿™ä¸ªè®¾ç½®ä¾èµ–ä¸å­—ä½“çš„xmlæ–‡ä»¶
+			åŒæ—¶è¿™ä¸ªå°ºå¯¸ä¹Ÿä¸æ˜¯å›ºå®šä¸å˜çš„ï¼Œå¦‚æœå¢åŠ çš„å­—ç¬¦ä½¿æè´¨ä¸èƒ½å®¹çº³ã€‚æè´¨å°†ä¼šè¢«åŠ é•¿ã€‚
+			è¿™æœ‰åšå¯ä»¥ä¿è¯å·²ç»å­˜åœ¨çš„å­—ç¬¦è¢«æ‹·è´åˆ°æ–°çš„æè´¨ã€‚
+			è¢«å»ºè®®çš„æè´¨å°ºå¯¸çš„åˆå€¼æ˜¯512x512ï¼Œåœ¨ç©ºé—´ä¸å¤Ÿçš„æ—¶å€™ä»–ä¼šå˜æˆ512x1024ã€‚
 		*/
 		if( mWidth != 0 && mHeight != 0 )
 		{
@@ -433,17 +433,17 @@ namespace MyGUI
 			dest = writeData(dest, 0xFF, 0x00, rgbaMode);
 		}
 
-		// §ä§Ö§Ü§å§ë§Ö§Ö §á§à§İ§à§Ø§Ö§ß§Ú§Ö §Ó §ä§Ö§Ü§ã§ä§å§â§Ö
+		// Ñ‚ĞµĞºÑƒÑ‰ĞµĞµ Ğ¿Ğ¾Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğµ Ğ² Ñ‚ĞµĞºÑÑ‚ÑƒÑ€Ğµ
 		len = mDistance;
-		height = mDistance; // §Ù§Õ§Ö§ã§î §Ú§ã§á§à§İ§î§Ù§å§Ö§ä§ã§ñ §Ü§Ñ§Ü §ä§Ö§Ü§å§ë§Ö§Ö §á§à§İ§à§Ø§Ö§ß§Ú§Ö §Ó§í§ã§à§ä§í
+		height = mDistance; // Ğ·Ğ´ĞµÑÑŒ Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚ÑÑ ĞºĞ°Ğº Ñ‚ĞµĞºÑƒÑ‰ĞµĞµ Ğ¿Ğ¾Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğµ Ğ²Ñ‹ÑĞ¾Ñ‚Ñ‹
 		FT_Int advance = 0;
 
 		//------------------------------------------------------------------
-		// §ã§à§Ù§Õ§Ñ§Ö§Ş §ã§Ú§Ş§Ó§à§İ §á§â§à§Ò§Ö§İ§Ñ
+		// ÑĞ¾Ğ·Ğ´Ğ°ĞµĞ¼ ÑĞ¸Ğ¼Ğ²Ğ¾Ğ» Ğ¿Ñ€Ğ¾Ğ±ĞµĞ»Ğ°
 		//------------------------------------------------------------------
 		advance = mSpaceWidth;
 
-		// §á§Ö§â§Ö§Ó§à§Õ §ß§Ñ §ß§à§Ó§å§ğ §ã§ä§â§à§Ü§å
+		// Ğ¿ĞµÑ€ĞµĞ²Ğ¾Ğ´ Ğ½Ğ° Ğ½Ğ¾Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ
 		if ( finalWidth - 1 < (len + advance + mDistance) )
 		{
 			height += max_height + mDistance;
@@ -465,11 +465,11 @@ namespace MyGUI
 		len += (advance + mDistance);
 
 		//------------------------------------------------------------------
-		// §ã§à§Ù§Õ§Ñ§Ö§Ş §ä§Ñ§Ò§å§İ§ñ§è§Ú§ğ
+		// ÑĞ¾Ğ·Ğ´Ğ°ĞµĞ¼ Ñ‚Ğ°Ğ±ÑƒĞ»ÑÑ†Ğ¸Ñ
 		//------------------------------------------------------------------
 		advance = mTabWidth;
 
-		// §á§Ö§â§Ö§Ó§à§Õ §ß§Ñ §ß§à§Ó§å§ğ §ã§ä§â§à§Ü§å
+		// Ğ¿ĞµÑ€ĞµĞ²Ğ¾Ğ´ Ğ½Ğ° Ğ½Ğ¾Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ
 		if ( finalWidth - 1 < (len + advance + mDistance) )
 		{
 			height += max_height + mDistance;
@@ -490,7 +490,7 @@ namespace MyGUI
 		len += (advance + mDistance);
 
 		//------------------------------------------------------------------
-		// §ã§à§Ù§Õ§Ñ§Ö§Ş §Ó§í§Õ§Ö§İ§Ö§ß§Ú§Ö
+		// ÑĞ¾Ğ·Ğ´Ğ°ĞµĞ¼ Ğ²Ñ‹Ğ´ĞµĞ»ĞµĞ½Ğ¸Ğµ
 		//------------------------------------------------------------------
 		advance = mSelectionWidth+2*mDistance;
 		for (int j = 0; j < max_height; j++ )
@@ -503,7 +503,7 @@ namespace MyGUI
 			}
 		}
 
-		// §á§Ö§â§Ö§Ó§à§Õ §ß§Ñ §ß§à§Ó§å§ğ §ã§ä§â§à§Ü§å
+		// Ğ¿ĞµÑ€ĞµĞ²Ğ¾Ğ´ Ğ½Ğ° Ğ½Ğ¾Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ
 		if ( finalWidth - 1 < (len + advance + mDistance) )
 		{
 			height += max_height + mDistance;
@@ -514,11 +514,11 @@ namespace MyGUI
 		len += (advance + mDistance);
 
 		//------------------------------------------------------------------
-		// §ã§à§Ù§Õ§Ñ§Ö§Ş §ß§Ö§Ñ§Ü§ä§Ú§Ó§ß§à§Ö §Ó§í§Õ§Ö§İ§Ö§ß§Ú§Ö
+		// ÑĞ¾Ğ·Ğ´Ğ°ĞµĞ¼ Ğ½ĞµĞ°ĞºÑ‚Ğ¸Ğ²Ğ½Ğ¾Ğµ Ğ²Ñ‹Ğ´ĞµĞ»ĞµĞ½Ğ¸Ğµ
 		//------------------------------------------------------------------
 		advance = mSelectionWidth+2*mDistance;
 
-		// §á§Ö§â§Ö§Ó§à§Õ §ß§Ñ §ß§à§Ó§å§ğ §ã§ä§â§à§Ü§å
+		// Ğ¿ĞµÑ€ĞµĞ²Ğ¾Ğ´ Ğ½Ğ° Ğ½Ğ¾Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ
 		if ( finalWidth - 1 < (len + advance + mDistance) )
 		{
 			height += max_height + mDistance;
@@ -539,11 +539,11 @@ namespace MyGUI
 		len += (advance + mDistance);
 
 		//------------------------------------------------------------------
-		// §ã§à§Ù§Õ§Ñ§Ö§Ş §Ü§å§â§ã§à§â
+		// ÑĞ¾Ğ·Ğ´Ğ°ĞµĞ¼ ĞºÑƒÑ€ÑĞ¾Ñ€
 		//------------------------------------------------------------------
 		advance = mCursorWidth;
 
-		// §á§Ö§â§Ö§Ó§à§Õ §ß§Ñ §ß§à§Ó§å§ğ §ã§ä§â§à§Ü§å
+		// Ğ¿ĞµÑ€ĞµĞ²Ğ¾Ğ´ Ğ½Ğ° Ğ½Ğ¾Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ
 		if ( finalWidth - 1 < (len + advance + mDistance) )
 		{
 			height += max_height + mDistance;
@@ -564,7 +564,7 @@ namespace MyGUI
 		len += (advance + mDistance);
 
 		//------------------------------------------------------------------
-		// §ã§à§Ù§Õ§Ñ§Ö§Ş §Ó§ã§Ö §à§ã§ä§Ñ§İ§î§ß§í§Ö §ã§Ú§Ş§Ó§à§İ§í
+		// ÑĞ¾Ğ·Ğ´Ğ°ĞµĞ¼ Ğ²ÑĞµ Ğ¾ÑÑ‚Ğ°Ğ»ÑŒĞ½Ñ‹Ğµ ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ñ‹
 		//------------------------------------------------------------------
 		FT_Error ftResult;
 		for (VectorRangeInfo::iterator iter = mVectorRangeInfo.begin(); iter != mVectorRangeInfo.end(); ++iter)
@@ -572,7 +572,7 @@ namespace MyGUI
 			size_t pos = 0;
 			for (Char index = iter->first; index <= iter->last; ++index, ++pos)
 			{
-				// §ã§à§Ş§Ó§à§İ §â§Ú§ã§à§Ó§Ñ§ä§î §ß§Ö §ß§Ñ§Õ§Ñ
+				// ÑĞ¾Ğ¼Ğ²Ğ¾Ğ» Ñ€Ğ¸ÑĞ¾Ğ²Ğ°Ñ‚ÑŒ Ğ½Ğµ Ğ½Ğ°Ğ´Ğ°
 				if (checkHidePointCode(index)) continue;
 
 				GlyphInfo& info = iter->range.at(pos);
@@ -597,7 +597,7 @@ namespace MyGUI
 
 				int y_bearnig = max_bear - ( face->glyph->metrics.horiBearingY >> 6 );
 
-				// §á§Ö§â§Ö§Ó§à§Õ §ß§Ñ §ß§à§Ó§å§ğ §ã§ä§â§à§Ü§å
+				// Ğ¿ĞµÑ€ĞµĞ²Ğ¾Ğ´ Ğ½Ğ° Ğ½Ğ¾Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ
 				if ( finalWidth - 1 < (len + face->glyph->bitmap.width + mDistance) )
 				{
 					height += max_height + mDistance;
@@ -629,7 +629,7 @@ namespace MyGUI
 			}
 		}
 
-		{ //ÊÕ¼¯»æÖÆÉÏÏÂÎÄ£¬ÔÚÌí¼ÓĞÂµÄ×ÖĞÍÊ±ĞèÒªÕâĞ©ĞÅÏ¢
+		{ //æ”¶é›†ç»˜åˆ¶ä¸Šä¸‹æ–‡ï¼Œåœ¨æ·»åŠ æ–°çš„å­—å‹æ—¶éœ€è¦è¿™äº›ä¿¡æ¯
 			mContext.length = len;
 			mContext.height = height;
 			mContext.max_height = max_height;
@@ -642,8 +642,8 @@ namespace MyGUI
 			mContext.rgbaMode = rgbaMode;
 		}
 
-		// §¥§à§Ò§Ñ§Ó§İ§ñ§Ö§Ş §ã§á§Ö§è §ã§Ú§Ş§Ó§à§İ§í §Ó §à§ã§ß§à§Ó§ß§à§Û §ã§á§Ú§ã§à§Ü
-		// §á§â§à§Ò§Ö§İ §Ş§à§Ø§ß§à §ß§Ö §Õ§à§Ò§Ñ§Ó§İ§ñ§ä§î, §Ö§Ô§à §Ó§Ö§â§ß§Ö§ä §á§à §à§ê§Ú§Ò§Ü§Ö
+		// Ğ”Ğ¾Ğ±Ğ°Ğ²Ğ»ÑĞµĞ¼ ÑĞ¿ĞµÑ† ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ñ‹ Ğ² Ğ¾ÑĞ½Ğ¾Ğ²Ğ½Ğ¾Ğ¹ ÑĞ¿Ğ¸ÑĞ¾Ğº
+		// Ğ¿Ñ€Ğ¾Ğ±ĞµĞ» Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ Ğ½Ğµ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑÑ‚ÑŒ, ĞµĞ³Ğ¾ Ğ²ĞµÑ€Ğ½ĞµÑ‚ Ğ¿Ğ¾ Ğ¾ÑˆĞ¸Ğ±ĞºĞµ
 		RangeInfo info(FontCodeType::Selected, FontCodeType::Tab);
 		info.setInfo(FontCodeType::Selected, &mSelectGlyphInfo);
 		info.setInfo(FontCodeType::SelectedBack, &mSelectDeactiveGlyphInfo);
@@ -683,7 +683,7 @@ namespace MyGUI
 		mVectorHideCodePoint.push_back(PairCodePoint(_first, _second));
 	}
 
-	// §á§â§à§Ó§Ö§â§ñ§Ö§ä, §Ó§ç§à§Õ§Ú§ä §İ§Ú §ã§Ú§Ş§Ó§à§İ §Ó §Ù§à§ß§í §ß§Ö§ß§å§Ø§ß§í§ç §ã§Ú§Ş§Ó§à§İ§à§Ó
+	// Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµÑ‚, Ğ²Ñ…Ğ¾Ğ´Ğ¸Ñ‚ Ğ»Ğ¸ ÑĞ¸Ğ¼Ğ²Ğ¾Ğ» Ğ² Ğ·Ğ¾Ğ½Ñ‹ Ğ½ĞµĞ½ÑƒĞ¶Ğ½Ñ‹Ñ… ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ğ¾Ğ²
 	bool ResourceDynamicFont::checkHidePointCode(Char _id)
 	{
 		for (VectorPairCodePoint::iterator iter = mVectorHideCodePoint.begin(); iter != mVectorHideCodePoint.end(); ++iter)
@@ -729,7 +729,7 @@ namespace MyGUI
 				{
 					std::string range_value;
 					std::vector<std::string> parse_range;
-					// §Õ§Ú§Ñ§á§Ñ§Ù§à§ß §Ó§Ü§İ§ğ§é§Ö§ß§Ú§Û
+					// Ğ´Ğ¸Ğ°Ğ¿Ğ°Ğ·Ğ¾Ğ½ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½Ğ¸Ğ¹
 					if (range->findAttribute("range", range_value))
 					{
 						parse_range = utility::split(range_value);
@@ -740,7 +740,7 @@ namespace MyGUI
 							addCodePointRange(first, last);
 						}
 					}
-					// §Õ§Ú§Ñ§á§Ñ§Ù§à§ß §Ú§ã§Ü§İ§ğ§é§Ö§ß§Ú§Û
+					// Ğ´Ğ¸Ğ°Ğ¿Ğ°Ğ·Ğ¾Ğ½ Ğ¸ÑĞºĞ»ÑÑ‡ĞµĞ½Ğ¸Ğ¹
 					else if (range->findAttribute("hide", range_value))
 					{
 						parse_range = utility::split(range_value);
@@ -755,7 +755,7 @@ namespace MyGUI
 			}
 		}
 
-		// §Ú§ß§Ú§è§Ú§Ñ§İ§Ú§Ù§Ú§â§å§Ö§Ş
+		// Ğ¸Ğ½Ğ¸Ñ†Ğ¸Ğ°Ğ»Ğ¸Ğ·Ğ¸Ñ€ÑƒĞµĞ¼
 		initialise();
 	}
 
@@ -764,7 +764,7 @@ namespace MyGUI
 		return mTexture;
 	}
 
-	// §á§à§İ§å§é§Ú§Ó§ê§Ñ§ñ§ã§ñ §Ó§í§ã§à§ä§Ñ §á§â§Ú §Ô§Ö§ß§Ö§â§Ñ§è§Ú§Ú §Ó §á§Ú§Ü§ã§Ö§İ§ñ§ç
+	// Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ¸Ğ²ÑˆĞ°ÑÑÑ Ğ²Ñ‹ÑĞ¾Ñ‚Ğ° Ğ¿Ñ€Ğ¸ Ğ³ĞµĞ½ĞµÑ€Ğ°Ñ†Ğ¸Ğ¸ Ğ² Ğ¿Ğ¸ĞºÑĞµĞ»ÑÑ…
 	int ResourceDynamicFont::getDefaultHeight()
 	{
 		return mHeightPix;

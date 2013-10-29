@@ -18,7 +18,7 @@ public:
 
 	void addJoint( JointPtr j );
 	void removeJoint( JointPtr j );
-    
+    void removeAllJoint();
     //检测框架是否有循环连接,如果有返回true,否则返回false
     bool checkCycle();
     //找出框架中被连接最多的刚体部

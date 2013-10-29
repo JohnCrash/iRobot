@@ -18,7 +18,6 @@ template<typename T> T toValue( const string& s,T def )
 		value = boost::lexical_cast<T>(s);
 	}catch(boost::bad_lexical_cast& e )
 	{
-		ERROR_LOG(e.what());
 		return def;
 	}
 	return value;
@@ -26,7 +25,7 @@ template<typename T> T toValue( const string& s,T def )
 
 string vec3toString( const Ogre::Vector3& v );
 string quatoString( const Ogre::Quaternion& q );
-Ogre::Vector3 toVec3( const string& str );
-Ogre::Quaternion toQua( const string& str );
+Ogre::Vector3 toVec3( const string& str,const Ogre::Vector3& def=Ogre::Vector3() );
+Ogre::Quaternion toQua( const string& str,const Ogre::Quaternion& def=Ogre::Quaternion()  );
 
 #endif

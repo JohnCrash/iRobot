@@ -3,6 +3,7 @@
 #include "Joint.h"
 #include "RigidManager.h"
 #include "ObjectFactory.h"
+#include "StringUtility.h"
 
 Joint::Joint()
 {
@@ -60,18 +61,22 @@ RigidPtr Joint::getJointRigid( int i ) const
 
 void Joint::linkRigid(RigidPtr b1,RigidPtr b2)
 {
-	dJointAttach(mJointID,b1->getBodyID(),b2->getBodyID());
-	mRigid1 = b1;
-	mRigid2 = b2;
+    if( b1 && b2 )
+    {
+        dJointAttach(mJointID,b1->getBodyID(),b2->getBodyID());
+        mRigid1 = b1;
+        mRigid2 = b2;
+    }
 }
 
 void Joint::save(MyGUI::xml::ElementPtr node)
 {
+    node->addAttribute("name", mName);
 }
 
 void Joint::load(MyGUI::xml::ElementPtr node)
 {
-    
+    mName = node->findAttribute("name");
 }
 
 void Joint::breakAllRigid()
@@ -95,10 +100,14 @@ JointBall::JointBall()
 
 void JointBall::load( MyGUI::xml::ElementPtr node )
 {
+    Joint::load(node);
+    setBallAnchor(toVec3(node->findAttribute("anchor"),Ogre::Vector3()));
 }
 
 void JointBall::save( MyGUI::xml::ElementPtr node )
 {
+    Joint::save(node);
+    node->addAttribute("anchor", vec3toString(getBallAnchor(0)));
 }
 
 void JointBall::setBallAnchor( const Ogre::Vector3& v3 )
@@ -142,7 +151,7 @@ Ogre::Vector3 JointHinge::getHingeAnchor()
 	return Ogre::Vector3((Ogre::Real)v[0],(Ogre::Real)v[1],(Ogre::Real)v[2]);
 }
 
-void JointHinge::setHingAxis( const Ogre::Vector3& v3 )
+void JointHinge::setHingeAxis( const Ogre::Vector3& v3 )
 {
 	dJointSetHingeAxis(mJointID,v3.x,v3.y,v3.z);
 }
@@ -156,10 +165,16 @@ Ogre::Vector3 JointHinge::getHingAxis()
 
 void JointHinge::load( MyGUI::xml::ElementPtr node )
 {
+    Joint::load(node);
+    setHingeAnchor(toVec3(node->findAttribute("anchor"),Ogre::Vector3()));
+    setHingeAxis(toVec3(node->findAttribute("axis"),Ogre::Vector3()));
 }
 
 void JointHinge::save( MyGUI::xml::ElementPtr node )
 {
+    Joint::save(node);
+    node->addAttribute("anchor", vec3toString(getHingeAnchor()));
+    node->addAttribute("axis", vec3toString(getHingAxis()));
 }
 
 JointSlider::JointSlider()
@@ -170,10 +185,12 @@ JointSlider::JointSlider()
 
 void JointSlider::load( MyGUI::xml::ElementPtr node )
 {
+    Joint::load(node);
 }
 
 void JointSlider::save( MyGUI::xml::ElementPtr node )
 {
+    Joint::save(node);
 }
 
 void registerJointFactory()

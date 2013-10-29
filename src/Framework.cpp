@@ -8,10 +8,21 @@ Framework::Framework()
 
 Framework::~Framework()
 {
+    removeAllJoint();
+}
+
+void Framework::removeAllJoint()
+{
+    for(JointMap::iterator i=mJoints.begin();i!=mJoints.end();++i)
+    {
+        (*i)->breakAllRigid();
+    }
+    mJoints.clear();
 }
 
 void Framework::load( MyGUI::xml::ElementPtr node )
 {
+    removeAllJoint();
     mName = node->findAttribute("name");
     MyGUI::xml::ElementEnumerator e=node->getElementEnumerator();
     while(e.next())
@@ -19,7 +30,7 @@ void Framework::load( MyGUI::xml::ElementPtr node )
         MyGUI::xml::ElementPtr node = e.current();
         if( node->getName() == "body" )
         {
-            loadRigid(node, nil);
+            loadRigid(node, JointPtr());
         }
         break;
     }
@@ -34,6 +45,7 @@ void Framework::loadRigid( MyGUI::xml::ElementPtr node,JointPtr parent )
         if( parent )
         {
             parent->mRigid2 = rgp;
+            parent->linkRigid(parent->mRigid1, parent->mRigid2);
         }
         rgp->load(node);
         MyGUI::xml::ElementEnumerator ce = node->getElementEnumerator();
@@ -55,7 +67,8 @@ void Framework::loadRigid( MyGUI::xml::ElementPtr node,JointPtr parent )
 void Framework::loadJoint( MyGUI::xml::ElementPtr node,RigidPtr parent )
 {
     ObjectFactory& factory = ObjectFactory::getSingleton();
-    JointPtr jpt = boost::dynamic_pointer_cast<Joint>(factory.createObject("Joint"));
+    string typeName = node->findAttribute("type");
+    JointPtr jpt = boost::dynamic_pointer_cast<Joint>(factory.createObject(typeName));
     if(jpt)
     {
         if( parent )
@@ -77,7 +90,7 @@ void Framework::loadJoint( MyGUI::xml::ElementPtr node,RigidPtr parent )
     }
     else
     {
-        WARNING_LOG("Factory can't make Joint object!");
+        WARNING_LOG("Factory can't make "<<typeName);
     }
 }
 /*
@@ -106,6 +119,7 @@ void Framework::save( MyGUI::xml::ElementPtr node )
  */
 void Framework::saveJoint(MyGUI::xml::ElementPtr node,JointPtr joint,RigidPtr other)
 {
+    node->addAttribute("type", joint->getTypeName());
     joint->save(node);
     MyGUI::xml::ElementPtr child = node->createChild("rigid");
     if( joint->mRigid1 == other && joint->mRigid2 )
@@ -123,7 +137,7 @@ void Framework::saveRigid(MyGUI::xml::ElementPtr node,RigidPtr rgd)
     rgd->save(node);
     for(JointMap::iterator i=rgd->mJoints.begin();i!=rgd->mJoints.end();++i)
     {
-        MyGUI::xml::ElementPtr js = node->createChild("joint");
+        MyGUI::xml::ElementPtr js = node->createChild((*i)->getTypeName());
         saveJoint(js, *i,rgd);
     }
 }
