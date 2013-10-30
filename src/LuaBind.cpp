@@ -4,7 +4,7 @@
 /*
 	绑定的对象，从lua层面不能施放。
 	例如一个Button，如果Lua对应的userdata被建立那么它就不能
-	被回收，直到Button被销毁后对应的userdata才肯能被回收。
+	被回收，直到Button被销毁后对应的userdata才能被回收。
 	(这是因为该Lua对象有一个全局引用ref)
 	从Lua角度，如果被回收不能同时销毁窗口
 	从C++角度，窗口被销毁对应的Lua所指物被设置为nil，随后

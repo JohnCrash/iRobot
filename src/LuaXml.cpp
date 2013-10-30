@@ -19,6 +19,10 @@ static void notifyDelete( const MyGUI::xml::ElementPtr& obj )
 	LuaManager::getSingleton().unbind(obj);
 }
 
+/*
+ 注意ElementPtr 就是 Element*
+ setNotifyDelete()在析构的时候被调用
+ */
 static void bindElement(lua_State*L,const MyGUI::xml::ElementPtr& obj)
 {
 	if( obj )

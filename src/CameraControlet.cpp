@@ -26,9 +26,9 @@ void SimpleCameraControlet::injectMouseMove(int _absx, int _absy, int _absz){
 	if( mWheelZ != _absz ){
 		/*防止大的跳动
 		*/
-		if( mWheelZ!=-1 && abs(mWheelZ-_absz) <= 2*mPrevZoom ){
+		if( mWheelZ!=-1 ){
 			mPrevZoom = abs(mWheelZ-_absz);
-			Zoom( (mWheelZ-_absz)*0.3f );
+			Zoom( (mWheelZ-_absz) );
 		}
 		mWheelZ = _absz;
 	}

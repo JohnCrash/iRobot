@@ -107,6 +107,9 @@ public:
 	RTTI_DERIVED(JointSlider);
 };
 
+typedef boost::shared_ptr<JointBall> JointBallPtr;
+typedef boost::shared_ptr<JointHinge> JointHingePtr;
+typedef boost::shared_ptr<JointSlider> JointSliderPtr;
 void registerJointFactory();
 
 #endif

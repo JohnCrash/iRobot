@@ -18,12 +18,12 @@ static int fun( lua_State* L )\
 
 static void bindVisualObject(lua_State*L,const VisualObjectPtr& obj)
 {
-	lua_bindSharedPtr<VisualObject>(L,"geo.VisualObject",obj);
+	lua_bindSharedPtr<VisualObject>(L,"geo.Object.VisualObject",obj);
 }
 
 static void bindRigid(lua_State*L,const RigidPtr& obj)
 {
-	lua_bindSharedPtr<Rigid>(L,"geo.Rigid",obj);
+	lua_bindSharedPtr<Rigid>(L,"geo.Object.VisualObject.Rigid",obj);
 }
 
 /*
@@ -247,26 +247,27 @@ int saveScene(lua_State*L)
 
 static int createJointBall(lua_State*L)
 {
-    lua_bindSharedPtr<Joint>(L,"geo.JointBall",JointPtr(new JointBall()));
+    lua_bindSharedPtr<Joint>(L,"geo.Object.JointBall",JointPtr(new JointBall()));
     return 1;
 }
 
 static int createJointHinge(lua_State*L)
 {
-    lua_bindSharedPtr<Joint>(L,"geo.JointHinge",JointPtr(new JointHinge()));
+    lua_bindSharedPtr<Joint>(L,"geo.Object.JointHinge",JointPtr(new JointHinge()));
     return 1;
 }
 
 static int createJointSlider(lua_State*L)
 {
-    lua_bindSharedPtr<Joint>(L,"geo.JointSlider",JointPtr(new JointSlider()));
+    lua_bindSharedPtr<Joint>(L,"geo.Object.JointSlider",JointPtr(new JointSlider()));
     return 1;
 }
 static int createFramework(lua_State*L)
 {
-    lua_bindSharedPtr<Framework>(L,"geo.Framework",FrameworkPtr(new Framework()));
+    lua_bindSharedPtr<Framework>(L,"geo.Object.Framework",FrameworkPtr(new Framework()));
     return 1;
 }
+
 static const struct luaL_Reg rigidGlobalMethod[]=
 {
 	{"createSphere",createSphere},
@@ -301,6 +302,52 @@ static const struct luaL_Reg rigidGlobalMethod[]=
 
 	{"pickObject",pickObject},
 	{nullptr,nullptr}
+};
+
+/*
+    Object
+ */
+static int load(lua_State* L)
+{
+    ObjectPtr obj = cast_shared_ptr<Object>(L,1,"Object");
+    if( obj )
+    {
+        MyGUI::xml::Element* elp = (MyGUI::xml::Element*)lua_cast( L,2,"Element" );
+        if( elp )
+        {
+            obj->load(elp);
+        }
+    }
+    return 0;
+}
+
+static int save(lua_State* L)
+{
+    ObjectPtr obj = cast_shared_ptr<Object>(L,1,"Object");
+    if( obj )
+    {
+        MyGUI::xml::Element* elp = (MyGUI::xml::Element*)lua_cast( L,2,"Element" );
+        if( elp )
+        {
+            obj->save(elp);
+        }
+    }
+    return 0;
+}
+
+static int gcObject(lua_State* L)
+{
+	boost::shared_ptr<Object>* pobj = (boost::shared_ptr<Object>*)lua_cast( L,1,"Object" );
+	delete pobj;
+	return 0;
+}
+
+static const struct luaL_Reg objectMethod[]=
+{
+    {"load",load},
+    {"save",save},
+	{"__gc",gcObject},    
+    {nullptr,nullptr},
 };
 
 /*
@@ -358,14 +405,7 @@ OBJECT_METHOD(showBoundingBox)
 self->showBoundingBox(tobool(2));
 METHOD_END(0)
 
-static int gcObject(lua_State* L)
-{
-	boost::shared_ptr<Object>* pobj = (boost::shared_ptr<Object>*)lua_cast( L,1,"VisualObject" );
-	delete pobj;
-	return 0;
-}
-
-static const struct luaL_Reg objectMethod[]=
+static const struct luaL_Reg visualObjectMethod[]=
 {
 	{"updatePhysica",updatePhysica},
 	{"getPosition",getPosition},
@@ -379,7 +419,6 @@ static const struct luaL_Reg objectMethod[]=
 	{"setMaterialName",setMaterialName},
 	{"getMaterialName",getMaterialName},
 	{"showBoundingBox",showBoundingBox},
-	{"__gc",gcObject},
 	{nullptr,nullptr}
 };
 
@@ -392,17 +431,9 @@ RIGID_METHOD(updateRigid)
 self->updateRigid();
 METHOD_END(0)
 
-static int gcRigid(lua_State* L)
-{
-	boost::shared_ptr<Rigid>* wptr = (boost::shared_ptr<Rigid>*)lua_cast( L,1,"Rigid" );
-	delete wptr;
-	return 0;
-}
-
 static const struct luaL_Reg rigidMethod[]=
 {
 	{"updateRigid",updateRigid},
-	{"__gc",gcRigid},
 	{nullptr,nullptr}
 };
 
@@ -469,10 +500,31 @@ static const struct luaL_Reg jointMethod[]=
 };
 static int setBallAnchor(lua_State* L)
 {
-    return 1;
+    JointBallPtr jbp = cast_shared_ptr<JointBall>(L,1,"JointBall");
+    if(jbp)
+    {
+        Ogre::Vector3* v3 = (Ogre::Vector3*)lua_cast(L,2,"Vector3");
+        if( v3 )
+        {
+            jbp->setBallAnchor(*v3);
+        }
+    }
+    return 0;
 }
 static int getBallAnchor(lua_State* L)
 {
+    JointBallPtr jbp = cast_shared_ptr<JointBall>(L,1,"JointBall");
+    if(jbp)
+    {
+        int idx = 0;
+        if( lua_isnumber(L, 2) )
+            idx = lua_tointeger(L, 2);
+        lua_bindComplete(L, "mat.Vector3", new Ogre::Vector3(jbp->getBallAnchor(idx)));
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
     return 1;
 }
 static const struct luaL_Reg joinBallMethod[]=
@@ -483,18 +535,54 @@ static const struct luaL_Reg joinBallMethod[]=
 };
 static int setHingeAnchor(lua_State* L)
 {
-    return 1;
+    JointHingePtr jbp = cast_shared_ptr<JointHinge>(L,1,"JointHinge");
+    if(jbp)
+    {
+        Ogre::Vector3* v3 = (Ogre::Vector3*)lua_cast(L,2,"Vector3");
+        if( v3 )
+        {
+            jbp->setHingeAnchor(*v3);
+        }
+    }
+    return 0;
 }
 static int getHingeAnchor(lua_State* L)
 {
+    JointHingePtr jbp = cast_shared_ptr<JointHinge>(L,1,"JointHinge");
+    if(jbp)
+    {
+        lua_bindComplete(L, "mat.Vector3", new Ogre::Vector3(jbp->getHingeAnchor()));
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
     return 1;
 }
 static int setHingeAxis(lua_State* L)
 {
-    return 1;
+    JointHingePtr jbp = cast_shared_ptr<JointHinge>(L,1,"JointHinge");
+    if(jbp)
+    {
+        Ogre::Vector3* v3 = (Ogre::Vector3*)lua_cast(L,2,"Vector3");
+        if( v3 )
+        {
+            jbp->setHingeAxis(*v3);
+        }
+    }
+    return 0;
 }
 static int getHingeAxis(lua_State* L)
 {
+    JointHingePtr jbp = cast_shared_ptr<JointHinge>(L,1,"JointHinge");
+    if(jbp)
+    {
+        lua_bindComplete(L, "mat.Vector3", new Ogre::Vector3(jbp->getHingeAxis()));
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
     return 1;
 }
 static const struct luaL_Reg joinHingeMethod[]=
@@ -514,16 +602,44 @@ static const struct luaL_Reg joinSliderMethod[]=
  */
 static int addJoint(lua_State* L)
 {
-    return 1;
+    FrameworkPtr fwk = cast_shared_ptr<Framework>(L,1,"Framework");
+    if(fwk)
+    {
+        JointPtr jp = cast_shared_ptr<Joint>(L, 2, "Joint");
+        if( jp )
+        {
+            fwk->addJoint(jp);
+        }
+    }
+    return 0;
 }
 static int removeJoint(lua_State* L)
 {
-    return 1;
+    FrameworkPtr fwk = cast_shared_ptr<Framework>(L,1,"Framework");
+    if(fwk)
+    {
+        JointPtr jp = cast_shared_ptr<Joint>(L, 2, "Joint");
+        if( jp )
+        {
+            fwk->removeJoint(jp);
+        }
+    }
+    return 0;
+}
+static int removeAllJoint(lua_State* L)
+{
+    FrameworkPtr fwk = cast_shared_ptr<Framework>(L,1,"Framework");
+    if(fwk)
+    {
+        fwk->removeAllJoint();
+    }
+    return 0;
 }
 static const struct luaL_Reg frameworkMethod[]=
 {
     {"addJoint",addJoint},
     {"removeJoint",removeJoint},
+    {"removeAllJoint",removeAllJoint},
     {nullptr,nullptr}
 };
 
@@ -531,8 +647,15 @@ void luaopen_rigid( lua_State* L )
 {
 	LuaManager& lm=LuaManager::getSingleton();
 
-	lm.registerClass("geo.VisualObject",objectMethod);
-	lm.registerClass("geo.Rigid",objectMethod,rigidMethod);
+    lm.registerClass("geo.Object",objectMethod);
+	lm.registerClass("geo.Object.VisualObject",objectMethod,visualObjectMethod);
+	lm.registerClass("geo.Object.VisualObject.Rigid",objectMethod,visualObjectMethod,rigidMethod);
 
+    lm.registerClass("geo.Object.Joint",objectMethod,jointMethod);
+    lm.registerClass("geo.Object.Joint.JointBall",objectMethod,jointMethod,joinBallMethod);
+    lm.registerClass("geo.Object.Joint.JointHinge",objectMethod,jointMethod,joinHingeMethod);
+    lm.registerClass("geo.Object.Joint.JointSlider",objectMethod,jointMethod,joinSliderMethod);
+    
+    lm.registerClass("geo.Object.Framework",objectMethod,frameworkMethod);
 	lm.registerGlobal("geo",rigidGlobalMethod);
 }

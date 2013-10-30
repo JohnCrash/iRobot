@@ -13,8 +13,8 @@ public:
 	Framework();
 	virtual ~Framework();
 
-	virtual void load( MyGUI::xml::ElementPtr doc );
-	virtual void save( MyGUI::xml::ElementPtr doc );
+	virtual void load( MyGUI::xml::ElementPtr node );
+	virtual void save( MyGUI::xml::ElementPtr node );
 
 	void addJoint( JointPtr j );
 	void removeJoint( JointPtr j );
