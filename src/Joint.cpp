@@ -53,8 +53,8 @@ RigidPtr Joint::getJointRigid( int i ) const
 {
 	switch(i)
 	{
-	case 0:return mRigid1;
-	case 1:return mRigid2;
+	case 0:return mRigid[0];
+	case 1:return mRigid[1];
 	default:return RigidPtr();
 	}
 }
@@ -64,8 +64,8 @@ void Joint::linkRigid(RigidPtr b1,RigidPtr b2)
     if( b1 && b2 )
     {
         dJointAttach(mJointID,b1->getBodyID(),b2->getBodyID());
-        mRigid1 = b1;
-        mRigid2 = b2;
+        mRigid[0] = b1;
+        mRigid[1] = b2;
     }
 }
 
@@ -81,10 +81,19 @@ void Joint::load(MyGUI::xml::ElementPtr node)
 
 void Joint::breakAllRigid()
 {
-    if( mRigid1 )mRigid1->breakJoint(JointPtr(this));
-    if( mRigid2 )mRigid2->breakJoint(JointPtr(this));
-    mRigid1.reset();
-    mRigid2.reset();
+    if( mRigid[0] )mRigid[0]->breakJoint(JointPtr(this));
+    if( mRigid[1] )mRigid[1]->breakJoint(JointPtr(this));
+    mRigid[0].reset();
+    mRigid[1].reset();
+}
+
+RigidPtr Joint::other( const RigidPtr& g )
+{
+    if( mRigid[0] == g )
+        return mRigid[1];
+    else if( mRigid[1] == g )
+        return mRigid[0];
+    return RigidPtr(); //nullptr
 }
 
 void Joint::breakRigid( RigidPtr p )

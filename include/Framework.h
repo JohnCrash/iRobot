@@ -24,6 +24,7 @@ public:
     //找出框架中被连接最多的刚体部
     RigidPtr getBodyRigid();
 protected:
+    bool walkCycle(RigidPtr rp,JointPtr parent,JointMap& map);
     void saveRigid(MyGUI::xml::ElementPtr node,RigidPtr rgd);
     void saveJoint(MyGUI::xml::ElementPtr node,JointPtr joint,RigidPtr other);
     void loadRigid( MyGUI::xml::ElementPtr node,JointPtr parent );

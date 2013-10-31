@@ -143,14 +143,13 @@ void Rigid::breakAllJoint()
     for(JointMap::iterator i=mJoints.begin();
         i!=mJoints.end();++i)
     {
-        if( this==(*i)->mRigid1.get() )
+        for( int j=0;j<2;++j )
         {
-            (*i)->mRigid1.reset();
-            continue;
-        }
-        if( this==(*i)->mRigid2.get() )
-        {
-            (*i)->mRigid2.reset();
+            if( this==(*i)->mRigid[j].get() )
+            {
+                (*i)->mRigid[j].reset();
+                continue;
+            }
         }
     }
     mJoints.clear();
@@ -162,13 +161,12 @@ void Rigid::breakJoint(JointPtr jp)
     if(it!=mJoints.end())
     {
         mJoints.erase(it);
-        if(jp->mRigid1.get()==this)
+        for( int i=0;i<2;++i )
         {
-            jp->mRigid1.reset();
-        }
-        if(jp->mRigid2.get()==this)
-        {
-            jp->mRigid2.reset();
+            if(jp->mRigid[i].get()==this)
+            {
+                jp->mRigid[i].reset();
+            }
         }
     }
 }

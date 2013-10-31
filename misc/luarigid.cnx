@@ -22,23 +22,34 @@
 	
 *geo.createRigidCylinder* (r,h|,des)
 	创建一个刚体圆柱体
+*geo.createFramework* ()
+    创建一个框架
+
+*geo.createJointBall* ()
+    创建一个球形铰链
+
+*geo.createJointHinge* ()
+    创建一个合页铰链
+
+*geo.createJointSlider* ()
 
 *geo.simulation* (b)
 	开始或者停止模拟
 
 *geo.isSimulation* ()
-	返回当前是否在模拟
+	返回当前是否在模拟状态
 
 *geo.addNode* (o)
-	将对象加入模拟
+	将对象加入到场景中
 	
 *geo.removeNode* (o)
-	将一个对象撤出模拟
+	将一个对象移出场景
+
 *geo.addRigidNode* (o)
-	将刚体加入模拟
+	将刚体加入场景
 	
 *geo.clearAllNode* ()
-	撤销刚体和对象的模拟
+	从场景中撤销全部刚体和对象
 	
 *geo.loadScene* ( filename )
 	加载场景，返回一个boolean值表示是否成功
@@ -46,19 +57,43 @@
 *geo.saveScene* ( filename )
 	保存场景，返回一个boolean值表示是否成功
 	
-geo.*VisualObject*
-	updatePhysica
-	getPosition
-	getLocalAxis
-	setPosition
-	translate
-	rotate
-	Intersect
-	setCastShadows
-	getGeometryObject
-	setMaterialName
-	getMaterialName
+*geo.Object.VisualObject*
+	*VisualObject.updatePhysica* ()
+	*VisualObject.getPosition* ()
+	*VisualObject.getLocalAxis* ()
+	*VisualObject.setPosition* ()
+	*VisualObject.translate* ()
+	*VisualObject.rotate* ()
+	*VisualObject.Intersect* ()
+	*VisualObject.setCastShadows* ()
+	*VisualObject.getGeometryObject* ()
+	*VisualObject.setMaterialName* ()
+	*VisualObject.getMaterialName* ()
 	
-geo.VisualObject.*Rigid*
+*geo.Object.VisualObject.Rigid*
+	*geo.VisualObject.Rigid.updateRigid* ()
+
+*geo.Object.Framework*
+	*geo.Framework.addJoint* ()
+    	*geo.Framework.removeJoint* ()
+    	*geo.Framework.removeAllJoint* ()
+ 
+*geo.Object.Joint*
+	*Joint.breakRigid* ()
+    	*Joint.linkRigid* ()
+    	*Joint.enable* ()
+    	*Joint.isEnabled* ()
+
+*geo.Object.Joint.JointBall*
+	*JointBall.setBallAnchor* ()
+    	*JointBall.getBallAnchor* ()
+
+*geo.Object.Joint.JointHinge*
+	*JointHinge.setHingeAnchor* ()
+    	*JointHinge.getHingeAnchor* ()
+    	*JointHinge.setHingeAxis* ()
+    	*JointHinge.getHingeAxis* ()
+
+*geo.Object.Joint.JointSlider*
 
 vim:tw=78:ts=8:ft=help:norl:

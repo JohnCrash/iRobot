@@ -1,0 +1,96 @@
+*luaMat.cnx*	FOR VIM VERSION 7.3	LAST CHANGE: 2013 JUNE 4
+
+*mat.toRadian* (r)
+    将弧度转换成度
+
+*mat.toDegree* (d)
+    将度转换成弧度
+
+*mat.newVector3* (x,y,z) 或者() 或者(Vector3)
+    创建一个Vector3对象,三种调用方式:
+    1 给出x,y,z坐标
+    2 另一个Vector3
+    3 没有参数,返回一个原点(0,0,0)
+
+*mat.newMatrix3* () 或者 (Matrix3)
+    创建一个Matrix3对象,如果没有参数返回单位矩阵.
+
+*mat.newQuaternion* () 或者(Matrix3) 或者(x,y,z,w) 或者(Vector3,w)
+ 	创建一个四元数.
+
+*Vector3*
+	*Vector3.normalise* ()
+    	归一化向量,返回向量长度.
+	*Vector3.crossProduct* (vec3)
+    	返回向量叉积.
+	*Vector3.length* ()
+    	返回向量长度.
+	*Vector3.distance* (vec3)
+    	返回向量点间距离.
+	*Vector3.dotProduct* (vec3)
+    	计算和向量vec3的点积.
+	*Vector3.midPoint* (vec3)
+    	返回中间点.
+	*Vector3.angleBetween* (vec3)
+    	返回两个向量之间的夹角(弧度).
+	*Vector3.reflect* (vec3 normal)
+    	返回到平面的反射向量.normal为平面的法向量.
+	*Vector3.isZeroLength* ()
+    	返回true,如果向量长度为0.
+	*Vector3.isNaN* ()
+    	检测是否向量为可以值.
+	*Vector3.positionEquals* (vec3)
+    	两个向量是否相等.
+	*Vector3.positionCloses* (vec3)
+	*Vector3.getRotationTo* (vec3)
+	*Vector3.__sub*
+	*Vector3.__add*
+	*Vector3.__mul*
+	*Vector3.__div*
+	实现/操作
+	*Vector3.__eq*
+	实现==操作
+	*Vector3.__newindex* 
+	实现变量x,y,z得直接赋值.如vec3.x = 1
+	*Vector3.__index*
+	实现取x,y,z.
+*Matrix3*
+	*Matrix3.determinant* ()
+    	返回矩阵的行列式.
+	*Matrix3.getColumn* (n)
+    	返回第n列的3个值.
+	*Matrix3.setColumn* (n,a,b,c)
+    	设置第n列的3个值.
+	*Matrix3.hasScale* ()
+	*Matrix3.inverse* ()
+    	返回逆矩阵.
+	*Matrix3.identity* ()
+    	初始化自己为单位矩阵.
+	*Matrix3.__sub*
+	返回相减的矩阵.
+	*Matrix3.__add*
+	返回相加的矩阵.
+	*Matrix3.__mul*
+	可以做矩阵乘法,或者如果右边是vec3做变换.
+	*Matrix3.__eq*
+
+*Quaternion*
+	*Quaternion.getRoll*
+	*Quaternion.getPitch*
+	*Quaternion.getYaw*
+	*Quaternion.equals*
+	*Quaternion.isNaN*
+	*Quaternion.inverse*
+	*Quaternion.normalise*
+	*Quaternion.xAxis*
+	*Quaternion.yAxis*
+	*Quaternion.zAxis*
+	*Quaternion.dot*
+	*Quaternion.__sub*
+	*Quaternion.__add*
+	*Quaternion.__mul*
+	*Quaternion.__eq*
+	*Quaternion.__newindex*
+	*Quaternion.__index*
+
+vim:tw=78:ts=8:ft=help:norl:

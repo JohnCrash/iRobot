@@ -44,8 +44,8 @@ void Framework::loadRigid( MyGUI::xml::ElementPtr node,JointPtr parent )
     {
         if( parent )
         {
-            parent->mRigid2 = rgp;
-            parent->linkRigid(parent->mRigid1, parent->mRigid2);
+            parent->mRigid[1] = rgp;
+            parent->linkRigid(parent->mRigid[0], parent->mRigid[1]);
         }
         rgp->load(node);
         MyGUI::xml::ElementEnumerator ce = node->getElementEnumerator();
@@ -73,7 +73,7 @@ void Framework::loadJoint( MyGUI::xml::ElementPtr node,RigidPtr parent )
     {
         if( parent )
         {
-            jpt->mRigid1 = parent;
+            jpt->mRigid[0] = parent;
         }
         addJoint(jpt);
         jpt->load(node);
@@ -101,7 +101,7 @@ void Framework::save( MyGUI::xml::ElementPtr node )
 	if( !mName.empty() )
 		node->addAttribute("name",mName);
     //这里做检测保证框架没有循环连接的铰链
-    if(!checkCycle())
+    if(checkCycle())
     {
         WARNING_LOG("Framework have cycle.");
         return;
@@ -122,13 +122,13 @@ void Framework::saveJoint(MyGUI::xml::ElementPtr node,JointPtr joint,RigidPtr ot
     node->addAttribute("type", joint->getTypeName());
     joint->save(node);
     MyGUI::xml::ElementPtr child = node->createChild("rigid");
-    if( joint->mRigid1 == other && joint->mRigid2 )
+    if( joint->mRigid[0] == other && joint->mRigid[1] )
     {
-        saveRigid(child,joint->mRigid2);
+        saveRigid(child,joint->mRigid[1]);
     }
-    else if( joint->mRigid2 == other && joint->mRigid1 )
+    else if( joint->mRigid[1] == other && joint->mRigid[0] )
     {
-        saveRigid(child,joint->mRigid1);
+        saveRigid(child,joint->mRigid[0]);
     }
 }
 
@@ -157,10 +157,52 @@ void Framework::removeJoint( JointPtr j )
     }
 }
 
+//沿着连接搜索
+bool Framework::walkCycle(RigidPtr rp,JointPtr parent,JointMap& map)
+{
+    if(rp)
+    {
+        for(JointMap::iterator i=rp->mJoints.begin();i!=rp->mJoints.end();++i)
+        {
+            if(*i!=parent)
+            {
+                BOOST_AUTO(it,find(map.begin(),map.end(),*i));
+                if( it!=map.end() )
+                { //发现重复
+                    return false;
+                }
+                RigidPtr g = (*i)->other(rp);
+                if( g )
+                {
+                    map.push_back(*i);
+                    if( !walkCycle(g,*i,map) )
+                        return false; //发现
+                    map.pop_back();
+                }
+            }
+        }
+    }
+    return true;
+}
+
+/*
+返回false没有圈,返回true有圈
+这个算法不能确定所有的Joint都是相连接的
+ */
 bool Framework::checkCycle()
 {
-    RigidMap m;
-    //....
+    JointMap m;
+    JointPtr jp;
+    if( mJoints.empty() )
+        return false;
+    jp = mJoints[0];
+    for(int i=0;i<2;++i )
+    {
+        m.push_back(jp);
+        if( !walkCycle(jp->mRigid[0],jp,m) )
+            return true;
+        m.pop_back();
+    }
     return false;
 }
 
@@ -170,17 +212,20 @@ RigidPtr Framework::getBodyRigid()
     vector<int> c;
     for(JointMap::iterator i=mJoints.begin();i!=mJoints.end();++i)
     {
-        if( (*i)->mRigid1 )
+        for( int j=0;j<2;++j)
         {
-            BOOST_AUTO(it, find(m.begin(),m.end(),(*i)->mRigid1));
-            if(it!=m.end())
+            if( (*i)->mRigid[j] )
             {
-                c[it-m.begin()]++;
-            }
-            else
-            {
-                m.push_back(*it);
-                c.push_back(1);
+                BOOST_AUTO(it, find(m.begin(),m.end(),(*i)->mRigid[j]));
+                if(it!=m.end())
+                {
+                    c[it-m.begin()]++;
+                }
+                else
+                {
+                    m.push_back((*i)->mRigid[j]);
+                    c.push_back(1);
+                }
             }
         }
     }

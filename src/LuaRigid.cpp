@@ -589,8 +589,8 @@ static const struct luaL_Reg joinHingeMethod[]=
 {
     {"setHingeAnchor",setHingeAnchor},
     {"getHingeAnchor",getHingeAnchor},
-    {"setHingeAnchor",setHingeAxis},
-    {"getHingeAnchor",getHingeAxis},
+    {"setHingeAxis",setHingeAxis},
+    {"getHingeAxis",getHingeAxis},
     {nullptr,nullptr}
 };
 static const struct luaL_Reg joinSliderMethod[]=

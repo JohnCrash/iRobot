@@ -42,6 +42,7 @@ public:
 	virtual void load( MyGUI::xml::ElementPtr node );
 	virtual void save( MyGUI::xml::ElementPtr node );
 
+    RigidPtr other( const RigidPtr& g ); //返回不是g的那个Rigid
 	RTTI_DERIVED(Joint);
 protected:
 	string mName;
@@ -50,8 +51,7 @@ protected:
 	/*和这个Joint相连接的刚体，当然ODE中已经有相关的信息
 	这里这么做是为了数据结构的便利
 	*/
-	RigidPtr mRigid1;
-	RigidPtr mRigid2;
+	RigidPtr mRigid[2];
 };
 
 typedef boost::shared_ptr<Joint> JointPtr;
