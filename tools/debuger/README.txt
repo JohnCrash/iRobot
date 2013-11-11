@@ -1,5 +1,7 @@
 vim lua 调试器插件
 
+patch 7.4.52.diff对7.4的修改版本
+
 需要对vim进行修改,目前从macvim 7.3 806版本修改而来
 应用 path.7.3.806.diff.
 

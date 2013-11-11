@@ -42,13 +42,13 @@ public:
 
 	//和所有的铰链Joint断开,使得对方也不引用我
 	void breakAllJoint();
-    void breakJoint(JointPtr jp);
-
+    void breakJoint(Joint* jp);
+    
 	dBodyID getBodyID() const;
 
 	//遍历Joint
 	int getJointsCount(); //返回和该刚体相连接的铰链数目
-	JointPtr getJointAt( int i );
+	Joint* getJointAt( int i );
 
 	virtual void load( MyGUI::xml::ElementPtr node );
 	virtual void save( MyGUI::xml::ElementPtr node );
@@ -66,8 +66,7 @@ protected:
 	/*和该Rigid相连的Joint，当然ODE中已经有相关的信息
 		这里这么做是为了数据结构的便利
 	*/
-	JointMap mJoints;
-
+	JointVec mJoints;
 };
 
 void registerCoreObject();

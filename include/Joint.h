@@ -57,7 +57,7 @@ protected:
 typedef boost::shared_ptr<Joint> JointPtr;
 typedef boost::weak_ptr<Joint> JointWeakPtr;
 typedef vector<JointPtr> JointMap;
-
+typedef vector<Joint*> JointVec;
 /*
 	球形关节
 */

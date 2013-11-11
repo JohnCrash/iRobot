@@ -5,6 +5,8 @@ lua5.2 标准库文档~
 *_G*
 全局变量。Lua自己不使用这个变量。改变它的值不会影响任何环境。
 
+*_ENV*
+
 *_VERSION*
 全局变量（不是一个函数），存储当前Lua版本号。当前这个值是"Lua5.2"
 
@@ -89,7 +91,10 @@ main chunk，第一个upvalue将是|_ENV|变量。
 （二进制chunks），'t'（文本chunks），或者"bt"（混合方式）。默认是"bt"
 
 *chunk*
-一个Lua代码块
+lua将chunk当成一个无名函数,因此chunk可以定义局部变量,接收参数和返回.该无名函数被
+编译进一个叫扩展局部变量_ENV内._ENV将作为该无名函数的upvalue.
+chunk可以存储在一个文件或者字符串中.执行chunk时Lua先将chunk预编译为Lua虚拟机指令.
+chunk也能编译为二进制,见luac.
 
 *next* (table[,index])
 允许程序遍历整个表。第一个参数是一个表格，第二个参数是表格的一个索引。next返回

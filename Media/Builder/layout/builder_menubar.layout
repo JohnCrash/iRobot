@@ -1,132 +1,132 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <MyGUI type="Layout" version="3.2.0">
     <Widget type="MenuBar" skin="MenuBar" position="0 0 1024 25" align="HFull Top" layer="Overlapped" name="MainMenu">
-        <Widget type="MenuItem" skin="" position="0 0 41 21">
+        <Widget type="MenuItem" skin="" position="0 0 39 19">
             <Property key="Caption" value="File"/>
             <Property key="MenuItemType" value="Popup"/>
             <Property key="MenuItemId" value="_file"/>
-            <Widget type="PopupMenu" skin="PopupMenu" position="2 25 108 115" style="Popup" layer="Popup">
-                <Widget type="MenuItem" skin="" position="0 0 100 19" name="_new">
+            <Widget type="PopupMenu" skin="PopupMenu" position="2 25 107 105" style="Popup" layer="Popup">
+                <Widget type="MenuItem" skin="" position="0 0 99 17" name="_new">
                     <Property key="Caption" value="New"/>
                     <Property key="MenuItemType" value="Normal"/>
                     <Property key="MenuItemChecked" value="false"/>
                     <UserString key="hotkey" value="Ctrl+N"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 19 100 19" name="_open">
+                <Widget type="MenuItem" skin="" position="0 17 99 17" name="_open">
                     <Property key="Caption" value="Open..."/>
                     <Property key="MenuItemType" value="Normal"/>
                     <UserString key="hotkey" value="Ctrl+O"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 38 100 19" name="_save">
+                <Widget type="MenuItem" skin="" position="0 34 99 17" name="_save">
                     <Property key="Caption" value="Save"/>
                     <Property key="MenuItemType" value="Normal"/>
                     <UserString key="hotkey" value="Ctrl+S"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 57 100 19" name="_saveas">
+                <Widget type="MenuItem" skin="" position="0 51 99 17" name="_saveas">
                     <Property key="Caption" value="Save as..."/>
                     <Property key="MenuItemType" value="Normal"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 76 100 10">
+                <Widget type="MenuItem" skin="" position="0 68 99 10">
                     <Property key="MenuItemType" value="Separator"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 86 100 19" name="_quit">
+                <Widget type="MenuItem" skin="" position="0 78 99 17" name="_quit">
                     <Property key="Caption" value="Quit"/>
                     <Property key="MenuItemType" value="Normal"/>
                     <UserString key="hotkey" value="Ctrl+Q"/>
                 </Widget>
             </Widget>
         </Widget>
-        <Widget type="MenuItem" skin="" position="47 0 87 21">
+        <Widget type="MenuItem" skin="" position="45 0 82 19">
             <Property key="MenuItemType" value="Popup"/>
             <Property key="Caption" value="Geometry"/>
             <Property key="MenuItemId" value="_geometry"/>
-            <Widget type="PopupMenu" skin="PopupMenu" position="49 25 132 153" style="Popup" layer="Popup">
-                <Widget type="MenuItem" skin="" position="0 0 124 19" name="_rigid_sphere">
+            <Widget type="PopupMenu" skin="PopupMenu" position="47 25 127 139" style="Popup" layer="Popup">
+                <Widget type="MenuItem" skin="" position="0 0 119 17" name="_rigid_sphere">
                     <Property key="Caption" value="Rigid sphere"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 19 124 19" name="_rigid_box">
+                <Widget type="MenuItem" skin="" position="0 17 119 17" name="_rigid_box">
                     <Property key="Caption" value="Rigid box"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 38 124 19" name="_rigid_cylinder">
+                <Widget type="MenuItem" skin="" position="0 34 119 17" name="_rigid_cylinder">
                     <Property key="Caption" value="Rigid cylinder"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 57 124 10">
+                <Widget type="MenuItem" skin="" position="0 51 119 10">
                     <Property key="MenuItemType" value="Separator"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 67 124 19" name="_plane">
+                <Widget type="MenuItem" skin="" position="0 61 119 17" name="_plane">
                     <Property key="Caption" value="Plane"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 86 124 19" name="_sphere">
+                <Widget type="MenuItem" skin="" position="0 78 119 17" name="_sphere">
                     <Property key="Caption" value="Sphere"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 105 124 19" name="_box">
+                <Widget type="MenuItem" skin="" position="0 95 119 17" name="_box">
                     <Property key="Caption" value="Box"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 124 124 19" name="_cylinder">
+                <Widget type="MenuItem" skin="" position="0 112 119 17" name="_cylinder">
                     <Property key="Caption" value="Cylinder"/>
                 </Widget>
             </Widget>
         </Widget>
-        <Widget type="MenuItem" skin="" position="140 0 45 21">
+        <Widget type="MenuItem" skin="" position="133 0 42 19">
             <Property key="MenuItemType" value="Popup"/>
             <Property key="Caption" value="Edit"/>
             <Property key="MenuItemId" value="_modify"/>
-            <Widget type="PopupMenu" skin="PopupMenu" position="142 25 123 163" style="Popup" layer="Popup">
-                <Widget type="MenuItem" skin="" position="0 0 115 19" name="_select">
+            <Widget type="PopupMenu" skin="PopupMenu" position="135 25 119 149" style="Popup" layer="Popup">
+                <Widget type="MenuItem" skin="" position="0 0 111 17" name="_select">
                     <Property key="Caption" value="Select"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 19 115 10">
+                <Widget type="MenuItem" skin="" position="0 17 111 10">
                     <Property key="MenuItemType" value="Separator"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 29 115 19" name="_move">
+                <Widget type="MenuItem" skin="" position="0 27 111 17" name="_move">
                     <Property key="Caption" value="Move"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 48 115 19" name="_move2d">
+                <Widget type="MenuItem" skin="" position="0 44 111 17" name="_move2d">
                     <Property key="Caption" value="Plane move"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 67 115 19" name="_rotate">
+                <Widget type="MenuItem" skin="" position="0 61 111 17" name="_rotate">
                     <Property key="Caption" value="Rotate"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 86 115 19" name="_movelocal">
+                <Widget type="MenuItem" skin="" position="0 78 111 17" name="_movelocal">
                     <Property key="Caption" value="Move local"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 105 115 19" name="_modify">
+                <Widget type="MenuItem" skin="" position="0 95 111 17" name="_modify">
                     <Property key="Caption" value="Modify"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 124 115 10">
+                <Widget type="MenuItem" skin="" position="0 112 111 10">
                     <Property key="MenuItemType" value="Separator"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 134 115 19" name="_delete">
+                <Widget type="MenuItem" skin="" position="0 122 111 17" name="_delete">
                     <Property key="Caption" value="Delete"/>
                     <UserString key="hotkey" value="Delete"/>
                 </Widget>
             </Widget>
         </Widget>
-        <Widget type="MenuItem" skin="" position="191 0 61 21">
+        <Widget type="MenuItem" skin="" position="181 0 58 19">
             <Property key="Caption" value="Physic"/>
             <Property key="MenuItemType" value="Popup"/>
             <Property key="MenuItemId" value="_physic"/>
-            <Widget type="PopupMenu" skin="PopupMenu" position="193 25 85 48" style="Popup" layer="Popup">
-                <Widget type="MenuItem" skin="" position="0 0 77 19" name="_run">
+            <Widget type="PopupMenu" skin="PopupMenu" position="183 25 83 44" style="Popup" layer="Popup">
+                <Widget type="MenuItem" skin="" position="0 0 75 17" name="_run">
                     <Property key="Caption" value="Run"/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 19 77 19" name="_pause">
+                <Widget type="MenuItem" skin="" position="0 17 75 17" name="_pause">
                     <Property key="Caption" value="Pause"/>
                 </Widget>
             </Widget>
         </Widget>
-        <Widget type="MenuItem" skin="" position="258 0 48 21">
+        <Widget type="MenuItem" skin="" position="245 0 47 19">
             <Property key="Caption" value="Help"/>
             <Property key="MenuItemId" value="_help"/>
             <Property key="MenuItemType" value="Popup"/>
-            <Widget type="PopupMenu" skin="PopupMenu" position="260 25 119 67" style="Popup" layer="Popup" name="_translate">
-                <Widget type="MenuItem" skin="" position="0 0 111 19" name="_options">
+            <Widget type="PopupMenu" skin="PopupMenu" position="247 25 115 61" style="Popup" layer="Popup" name="_translate">
+                <Widget type="MenuItem" skin="" position="0 0 107 17" name="_options">
                     <Property key="Caption" value="Options..."/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 19 111 19" name="_translate">
+                <Widget type="MenuItem" skin="" position="0 17 107 17" name="_translate">
                     <Property key="Caption" value="Translate..."/>
                 </Widget>
-                <Widget type="MenuItem" skin="" position="0 38 111 19" name="_about">
+                <Widget type="MenuItem" skin="" position="0 34 107 17" name="_about">
                     <Property key="Caption" value="About"/>
                     <Property key="MenuItemType" value="Normal"/>
                     <UserString key="" value=""/>
@@ -134,5 +134,16 @@
                 </Widget>
             </Widget>
         </Widget>
+        <Widget type="MenuItem" skin="" position="298 0 45 19">
+            <Property key="MenuItemType" value="Popup"/>
+            <Property key="Caption" value="Test"/>
+            <Property key="MenuItemId" value="_test"/>
+            <Widget type="PopupMenu" skin="PopupMenu" position="300 25 81 27" style="Popup" layer="Popup">
+                <Widget type="MenuItem" skin="" position="0 0 73 17" name="_test1">
+                    <Property key="Caption" value="test 1"/>
+                </Widget>
+            </Widget>
+        </Widget>
     </Widget>
+    <CodeGeneratorSettings/>
 </MyGUI>

@@ -18,12 +18,12 @@ static int fun( lua_State* L )\
 
 static void bindVisualObject(lua_State*L,const VisualObjectPtr& obj)
 {
-	lua_bindSharedPtr<VisualObject>(L,"geo.Object.VisualObject",obj);
+	lua_bindSharedPtr<VisualObject>(L,"geo.VisualObject",obj);
 }
 
 static void bindRigid(lua_State*L,const RigidPtr& obj)
 {
-	lua_bindSharedPtr<Rigid>(L,"geo.Object.VisualObject.Rigid",obj);
+	lua_bindSharedPtr<Rigid>(L,"geo.Rigid",obj);
 }
 
 /*
@@ -247,24 +247,24 @@ int saveScene(lua_State*L)
 
 static int createJointBall(lua_State*L)
 {
-    lua_bindSharedPtr<Joint>(L,"geo.Object.JointBall",JointPtr(new JointBall()));
+    lua_bindSharedPtr<Joint>(L,"geo.JointBall",JointPtr(new JointBall()));
     return 1;
 }
 
 static int createJointHinge(lua_State*L)
 {
-    lua_bindSharedPtr<Joint>(L,"geo.Object.JointHinge",JointPtr(new JointHinge()));
+    lua_bindSharedPtr<Joint>(L,"geo.JointHinge",JointPtr(new JointHinge()));
     return 1;
 }
 
 static int createJointSlider(lua_State*L)
 {
-    lua_bindSharedPtr<Joint>(L,"geo.Object.JointSlider",JointPtr(new JointSlider()));
+    lua_bindSharedPtr<Joint>(L,"geo.JointSlider",JointPtr(new JointSlider()));
     return 1;
 }
 static int createFramework(lua_State*L)
 {
-    lua_bindSharedPtr<Framework>(L,"geo.Object.Framework",FrameworkPtr(new Framework()));
+    lua_bindSharedPtr<Framework>(L,"geo.Framework",FrameworkPtr(new Framework()));
     return 1;
 }
 
@@ -648,14 +648,14 @@ void luaopen_rigid( lua_State* L )
 	LuaManager& lm=LuaManager::getSingleton();
 
     lm.registerClass("geo.Object",objectMethod);
-	lm.registerClass("geo.Object.VisualObject",objectMethod,visualObjectMethod);
-	lm.registerClass("geo.Object.VisualObject.Rigid",objectMethod,visualObjectMethod,rigidMethod);
+	lm.registerClass("geo.VisualObject",objectMethod,visualObjectMethod);
+	lm.registerClass("geo.Rigid",objectMethod,visualObjectMethod,rigidMethod);
 
-    lm.registerClass("geo.Object.Joint",objectMethod,jointMethod);
-    lm.registerClass("geo.Object.Joint.JointBall",objectMethod,jointMethod,joinBallMethod);
-    lm.registerClass("geo.Object.Joint.JointHinge",objectMethod,jointMethod,joinHingeMethod);
-    lm.registerClass("geo.Object.Joint.JointSlider",objectMethod,jointMethod,joinSliderMethod);
+    lm.registerClass("geo.Joint",objectMethod,jointMethod);
+    lm.registerClass("geo.JointBall",objectMethod,jointMethod,joinBallMethod);
+    lm.registerClass("geo.JointHinge",objectMethod,jointMethod,joinHingeMethod);
+    lm.registerClass("geo.JointSlider",objectMethod,jointMethod,joinSliderMethod);
     
-    lm.registerClass("geo.Object.Framework",objectMethod,frameworkMethod);
+    lm.registerClass("geo.Framework",objectMethod,frameworkMethod);
 	lm.registerGlobal("geo",rigidGlobalMethod);
 }

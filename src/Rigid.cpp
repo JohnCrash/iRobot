@@ -27,6 +27,7 @@ Rigid::~Rigid(){
 	/*删除物理引擎中的刚体标识
 	*/
 	dBodyDestroy(mBodyID);
+    breakAllJoint();
 }
 
 void Rigid::_update(){
@@ -116,7 +117,7 @@ int Rigid::getJointsCount()
 	return mJoints.size();
 }
 
-JointPtr Rigid::getJointAt( int i )
+Joint* Rigid::getJointAt( int i )
 {
 	return mJoints.at(i);
 }
@@ -140,7 +141,7 @@ void Rigid::save( MyGUI::xml::ElementPtr node )
 
 void Rigid::breakAllJoint()
 {
-    for(JointMap::iterator i=mJoints.begin();
+    for(JointVec::iterator i=mJoints.begin();
         i!=mJoints.end();++i)
     {
         for( int j=0;j<2;++j )
@@ -155,18 +156,21 @@ void Rigid::breakAllJoint()
     mJoints.clear();
 }
 
-void Rigid::breakJoint(JointPtr jp)
+void Rigid::breakJoint(Joint* jp)
 {
-    BOOST_AUTO(it,find(mJoints.begin(),mJoints.end(),jp));
-    if(it!=mJoints.end())
+    for( JointVec::iterator it=mJoints.begin();it!=mJoints.end();++it)
     {
-        mJoints.erase(it);
-        for( int i=0;i<2;++i )
+        if( *it == jp )
         {
-            if(jp->mRigid[i].get()==this)
+            mJoints.erase(it);
+            for( int i=0;i<2;++i )
             {
-                jp->mRigid[i].reset();
+                if(jp->mRigid[i].get()==this)
+                {
+                    jp->mRigid[i].reset();
+                }
             }
+            break;
         }
     }
 }

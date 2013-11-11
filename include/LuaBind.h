@@ -146,7 +146,7 @@ template <typename T> void lua_bindSharedPtr( lua_State* L,
 
 template<typename T> boost::shared_ptr<T> cast_shared_ptr(lua_State*L,int n,const char* meta)
 {
-	boost::shared_ptr<T>* ptr = (boost::shared_ptr<T>*)lua_cast( L,1,meta );
+	boost::shared_ptr<T>* ptr = (boost::shared_ptr<T>*)lua_cast( L,n,meta );
 
 	if( !ptr )
 	{

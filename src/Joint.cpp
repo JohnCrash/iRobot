@@ -66,6 +66,8 @@ void Joint::linkRigid(RigidPtr b1,RigidPtr b2)
         dJointAttach(mJointID,b1->getBodyID(),b2->getBodyID());
         mRigid[0] = b1;
         mRigid[1] = b2;
+        b1->mJoints.push_back(this); //互相引用
+        b2->mJoints.push_back(this);
     }
 }
 
@@ -81,8 +83,8 @@ void Joint::load(MyGUI::xml::ElementPtr node)
 
 void Joint::breakAllRigid()
 {
-    if( mRigid[0] )mRigid[0]->breakJoint(JointPtr(this));
-    if( mRigid[1] )mRigid[1]->breakJoint(JointPtr(this));
+    if( mRigid[0] )mRigid[0]->breakJoint(this);
+    if( mRigid[1] )mRigid[1]->breakJoint(this);
     mRigid[0].reset();
     mRigid[1].reset();
 }
@@ -98,7 +100,7 @@ RigidPtr Joint::other( const RigidPtr& g )
 
 void Joint::breakRigid( RigidPtr p )
 {
-    if( p )p->breakJoint(JointPtr(this));
+    if( p )p->breakJoint(this);
 }
 
 JointBall::JointBall()

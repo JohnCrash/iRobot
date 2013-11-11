@@ -7,6 +7,7 @@ local utility = require "utility"
 local tool_gettext = require "tool_gettext"
 local mat = require "mat"
 local registry = require "registry"
+local xml = require "xml"
 
 local ipairs = ipairs
 
@@ -180,6 +181,8 @@ function command(sender)
 		utility.openFileDialog(true,open,"xml")
 	elseif name=="_translate" then
 		tool_gettext.translateDialog()
+	elseif name=="_test1" then
+		testFramework()
 	end
 	
 	if isc and rigid then
@@ -191,6 +194,20 @@ function command(sender)
 		checkControl(old)
 		currentControl(gCurrentObject)
 	end
+end
+
+function testFramework()
+	local fwk = geo.createFramework()
+	local jo = geo.createJointBall()
+	local r1 = geo.createRigidBox(10,10,40)
+	local r2 = geo.createRigidBox(10,10,60)
+	jo:linkRigid(r1,r2)
+	fwk:addJoint(jo)
+	local doc = xml.newDocument()
+	doc:createDeclaration()
+	local ele = doc:createRoot("Framework")
+	fwk:save(ele)
+	doc:save("/Users/zuzu/Desktop/test1.xml")
 end
 
 --创建主工具条place可以设置工具条位置Top或者Bottom

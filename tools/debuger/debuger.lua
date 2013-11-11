@@ -145,6 +145,7 @@ end
 function reset()
 	send('reset\n')
 	clear_match()
+	dbgs()
 end
 --打印最近的错误信息
 function err()

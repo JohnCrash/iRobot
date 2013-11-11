@@ -111,34 +111,32 @@ void Framework::save( MyGUI::xml::ElementPtr node )
     if(body)
     {
         MyGUI::xml::ElementPtr child = node->createChild("body");
-        saveRigid(child, body);
+        saveRigid(child, body,nullptr);
     }
 }
 
 /* 一组递归函数,用来保存
  */
-void Framework::saveJoint(MyGUI::xml::ElementPtr node,JointPtr joint,RigidPtr other)
+void Framework::saveJoint(MyGUI::xml::ElementPtr node,Joint* joint,RigidPtr other)
 {
     node->addAttribute("type", joint->getTypeName());
     joint->save(node);
     MyGUI::xml::ElementPtr child = node->createChild("rigid");
-    if( joint->mRigid[0] == other && joint->mRigid[1] )
-    {
-        saveRigid(child,joint->mRigid[1]);
-    }
-    else if( joint->mRigid[1] == other && joint->mRigid[0] )
-    {
-        saveRigid(child,joint->mRigid[0]);
-    }
+    RigidPtr rgp = joint->other(other);
+    if( rgp )
+        saveRigid(child,rgp,joint);
 }
 
-void Framework::saveRigid(MyGUI::xml::ElementPtr node,RigidPtr rgd)
+void Framework::saveRigid(MyGUI::xml::ElementPtr node,RigidPtr rgd,Joint* parent)
 {
     rgd->save(node);
-    for(JointMap::iterator i=rgd->mJoints.begin();i!=rgd->mJoints.end();++i)
+    for(JointVec::iterator i=rgd->mJoints.begin();i!=rgd->mJoints.end();++i)
     {
-        MyGUI::xml::ElementPtr js = node->createChild((*i)->getTypeName());
-        saveJoint(js, *i,rgd);
+        if( *i != parent )
+        {
+            MyGUI::xml::ElementPtr js = node->createChild((*i)->getTypeName());
+            saveJoint(js, *i,rgd);
+        }
     }
 }
 
@@ -158,11 +156,11 @@ void Framework::removeJoint( JointPtr j )
 }
 
 //沿着连接搜索
-bool Framework::walkCycle(RigidPtr rp,JointPtr parent,JointMap& map)
+bool Framework::walkCycle(RigidPtr rp,Joint* parent,JointVec& map)
 {
     if(rp)
     {
-        for(JointMap::iterator i=rp->mJoints.begin();i!=rp->mJoints.end();++i)
+        for(JointVec::iterator i=rp->mJoints.begin();i!=rp->mJoints.end();++i)
         {
             if(*i!=parent)
             {
@@ -191,15 +189,15 @@ bool Framework::walkCycle(RigidPtr rp,JointPtr parent,JointMap& map)
  */
 bool Framework::checkCycle()
 {
-    JointMap m;
+    JointVec m;
     JointPtr jp;
     if( mJoints.empty() )
         return false;
     jp = mJoints[0];
     for(int i=0;i<2;++i )
     {
-        m.push_back(jp);
-        if( !walkCycle(jp->mRigid[0],jp,m) )
+        m.push_back(jp.get());
+        if( !walkCycle(jp->mRigid[0],jp.get(),m) )
             return true;
         m.pop_back();
     }
@@ -239,7 +237,7 @@ RigidPtr Framework::getBodyRigid()
             maxi = i-c.begin();
         }
     }
-    if(maxi>0)
+    if(maxi!=-1)
     {
         return m[maxi];
     }
