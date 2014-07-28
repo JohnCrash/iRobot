@@ -5,9 +5,11 @@
 #include "GeometryObject.h"
 #include "StringUtility.h"
 
+/*
+    两种初始化方法,1给出一个几何对象,2通过load加载进行初始化
+ */
 Rigid::Rigid()
 {
-	_init();
 }
 
 Rigid::Rigid(GeometryObjectPtr geo):
@@ -21,6 +23,8 @@ void Rigid::_init()
 	mBodyID = dBodyCreate(RigidManager::getSingleton().getWorldID());
 	//默认质量密度
 	mMassDensity = 1;
+    if(mGeom)
+        dGeomSetBody(mGeom->getGeomID(), mBodyID);
 }
 
 Rigid::~Rigid(){
@@ -74,12 +78,16 @@ void Rigid::rotate( const Ogre::Vector3& axis,const Ogre::Real angle ){
 	dQ[2] = q.y;
 	dQ[3] = q.z;
 	dBodySetQuaternion(mBodyID,dQ);
+    
+    _visual2physic();
 }
 
 void Rigid::translate( const Ogre::Vector3& move ){
 	mNode->translate( move,Ogre::Node::TS_WORLD );
 	const Ogre::Vector3& v3 = mNode->getPosition();
 	dBodySetPosition(mBodyID,v3.x,v3.y,v3.z);
+    
+    _visual2physic();
 }
 
 void Rigid::updatePhysica()
@@ -130,6 +138,7 @@ void Rigid::load( MyGUI::xml::ElementPtr node )
     {
         mMassDensity = toValue(ms,(dReal)1);
     }
+    _init();
 	_visual2physic();
 }
 

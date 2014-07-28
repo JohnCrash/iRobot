@@ -1,0 +1,51 @@
+配置文件
+在Contents/Resources/下放入resources.xml文件,内容如下:
+=========================================
+<?xml version="1.0" encoding="UTF-8"?>
+<base>
+	<script do="init.lua" location="lua/" /> 
+	<script load="builder.xml" />
+	<group name="Core">
+		<repository 
+		type="FileSystem" 
+		recursive="true"
+		location="/Users/zuzu/Source/iRobot/Media/Core"/>	
+	</group>
+	<group name="Builder">
+		<repository 
+		type="FileSystem" 
+		recursive="true"
+		location="/Users/zuzu/Source/iRobot/Media/Builder"/>	
+	</group>
+</base>
+=========================================
+
+
+在Contents/Resources/下放入plugins.cfg文件,内容如下:
+=========================================
+# Defines plugins to load
+
+# Define plugin folder
+PluginFolder=
+# Define plugins
+#Plugin=RenderSystem_Direct3D9
+Plugin=RenderSystem_GL
+=========================================
+
+ogre.cfg
+=========================================
+Render System=OpenGL Rendering Subsystem
+
+[OpenGL Rendering Subsystem]
+Colour Depth=32
+FSAA=0
+Fixed Pipeline Enabled=Yes
+Full Screen=No
+RTT Preferred Mode=FBO
+Video Mode=800 x 600
+hidden=No
+macAPI=cocoa
+sRGB Gamma Conversion=No
+vsync=No
+=========================================
+

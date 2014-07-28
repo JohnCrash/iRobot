@@ -21,7 +21,10 @@ RigidManager::RigidManager():mBarrier(2){
 	*/
 	dInitODE2(0);
 	mWorld = dWorldCreate();
-	mSpace = dHashSpaceCreate(0);
+	//mSpace = dHashSpaceCreate(0);
+    //mSpace = dSimpleSpaceCreate( 0 );
+    mSpace = dSweepAndPruneSpaceCreate(0,dSAP_AXES_XYZ);
+    
 	mContactGroup = dJointGroupCreate(0);
 	//设置重力加速度
 	dWorldSetGravity(mWorld,0,-9.81,0);
@@ -130,7 +133,7 @@ void RigidManager::removeNode( VisualObjectPtr rp )
 		if( it != mObjects.end() )
 		{
 			//如果是一个刚体,断开和它相连接的铰链
-			Rigid* rigp = rp->castType<Rigid>();
+			Rigid* rigp = rp->castType<Rigid>(false);
 			if( rigp )rigp->breakAllJoint();
 
 			mObjects.erase(it);
@@ -246,8 +249,8 @@ void RigidManager::_simstep()
 	//检查碰撞，如果有将创建接触铰链
 	dSpaceCollide (mSpace,this,&CollideCallback);
 
-	dWorldQuickStep (mWorld,mSimStep);
-
+//	dWorldQuickStep (mWorld,mSimStep);
+    dWorldStep(mWorld,mSimStep);
 	//删除全部的接触铰链
 	dJointGroupEmpty (mContactGroup);
 }

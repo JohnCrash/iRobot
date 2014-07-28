@@ -4,6 +4,7 @@ local gui = require "gui"
 local game = require "game"
 local hotkey = require "hotkey"
 local utility = require "utility"
+local options = require "options"
 local tool_gettext = require "tool_gettext"
 local mat = require "mat"
 local registry = require "registry"
@@ -181,6 +182,10 @@ function command(sender)
 		utility.openFileDialog(true,open,"xml")
 	elseif name=="_translate" then
 		tool_gettext.translateDialog()
+	elseif name=='_options' then
+		options.dialog()
+	elseif name=="_test2" then
+		testFramework2()
 	elseif name=="_test1" then
 		testFramework()
 	end
@@ -196,13 +201,43 @@ function command(sender)
 	end
 end
 
+function testFramework2()
+	local fwk = geo.createFramework()
+	local doc = xml.newDocument()
+	if doc:open("/Users/zuzu/Desktop/test1.xml") then
+		local root = doc:getRoot()
+		fwk:load(root)
+		local doc2 = xml.newDocument()
+		doc:createDeclaration()
+		local ele = doc:createRoot("Framework")
+		fwk:save(ele)
+		doc:save("/Users/zuzu/Desktop/test2.xml")		
+	end
+end
+
 function testFramework()
 	local fwk = geo.createFramework()
-	local jo = geo.createJointBall()
-	local r1 = geo.createRigidBox(10,10,40)
+	local jo1 = geo.createJointBall()
+	local jo2 = geo.createJointBall()
+	local jo3 = geo.createJointBall()
+	local jo4 = geo.createJointBall()
+	
+	local r1 = geo.createRigidBox(10,10,60)
 	local r2 = geo.createRigidBox(10,10,60)
-	jo:linkRigid(r1,r2)
-	fwk:addJoint(jo)
+	local r3 = geo.createRigidBox(10,10,60)
+	local r4 = geo.createRigidBox(10,10,60)
+	local b = geo.createRigidBox(30,30,60)
+
+	jo1:linkRigid(b,r1)
+	jo2:linkRigid(b,r2)
+	jo3:linkRigid(b,r3)
+	jo4:linkRigid(b,r4)
+
+	fwk:addJoint(jo1)
+	fwk:addJoint(jo2)
+	fwk:addJoint(jo3)
+	fwk:addJoint(jo4)
+
 	local doc = xml.newDocument()
 	doc:createDeclaration()
 	local ele = doc:createRoot("Framework")
@@ -261,6 +296,7 @@ function openStage()
 	game.setCameraControlet("simple")
 	hotkey.load("hotkey.xml")
 	gMenuBar = gui.loadLayout("layout/builder_menubar.layout")
+	gMenuBar:getName()
 	SetCommandHandler(gMenuBar,command)
 	gCurrentTool = "_select"
 	--创建工具条

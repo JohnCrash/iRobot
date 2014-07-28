@@ -1,0 +1,5 @@
+dxGeom 实用一个双向链表.
+dxGeom *next; 指向下一个对象
+dxGeom **tome;上一个指向我的对象的next指针地址
+next告诉我下一个对象,而tome告诉我上一个对象的next指针.
+

@@ -42,12 +42,12 @@ void Framework::loadRigid( MyGUI::xml::ElementPtr node,JointPtr parent )
     RigidPtr rgp = boost::dynamic_pointer_cast<Rigid>(factory.createObject("Rigid"));
     if(rgp)
     {
+        rgp->load(node);
         if( parent )
         {
             parent->mRigid[1] = rgp;
             parent->linkRigid(parent->mRigid[0], parent->mRigid[1]);
         }
-        rgp->load(node);
         MyGUI::xml::ElementEnumerator ce = node->getElementEnumerator();
         while(ce.next())
         {
@@ -134,7 +134,7 @@ void Framework::saveRigid(MyGUI::xml::ElementPtr node,RigidPtr rgd,Joint* parent
     {
         if( *i != parent )
         {
-            MyGUI::xml::ElementPtr js = node->createChild((*i)->getTypeName());
+            MyGUI::xml::ElementPtr js = node->createChild("joint");//(*i)->getTypeName());
             saveJoint(js, *i,rgd);
         }
     }

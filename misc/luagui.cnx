@@ -142,7 +142,7 @@ name 部件名称可以没有
 		*eventToolTip*
 		*eventChangeProperty* 部件对应的属性改变, func(sender,key,value)
 	Window事件
-		*eventWindowButtonPressed* func(sender,id)
+		*eventWindowButtonPressed* func(sender,id) 窗口关闭按钮被按下
 		*eventWindowChangeCoord* func(sender)
 	EditBox事件
 		*eventEditSelectAccept* func(sender)

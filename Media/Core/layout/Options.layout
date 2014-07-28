@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Window" skin="WindowCX" position="218 305 588 413" align="Center" layer="Modal" name="Options">
+        <Property key="Caption" value="Options"/>
+        <Widget type="TabControl" skin="TabControl" position="0 0 580 330" name="MainTab">
+            <Widget type="TabItem" skin="" position="2 24 574 302">
+                <Property key="Caption" value="Ogre"/>
+                <Widget type="ScrollView" skin="ScrollView" position="0 0 575 305" align="Left Top" name="OgreView">
+                    <Property key="Colour" value="1 1 1"/>
+                </Widget>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 574 302">
+                <Property key="Caption" value="Shadow"/>
+                <Widget type="TextBox" skin="TextBox" position="25 15 165 20">
+                    <Property key="Caption" value="Shadow technique"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="25 40 165 25" name="shadow">
+                    <Property key="Static" value="true"/>
+                </Widget>
+                <Widget type="TextBox" skin="TextBox" position="25 70 165 20">
+                    <Property key="Caption" value="Lighting"/>
+                </Widget>
+                <Widget type="ComboBox" skin="ComboBox" position="25 95 165 25" name="lighting">
+                    <Property key="Static" value="true"/>
+                </Widget>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 574 302">
+                <Property key="Caption" value="Themes"/>
+            </Widget>
+            <Widget type="TabItem" skin="" position="2 24 574 302">
+                <Property key="Caption" value="Physica"/>
+            </Widget>
+        </Widget>
+        <Widget type="Button" skin="Button" position="475 340 90 30" name="Apply">
+            <Property key="Caption" value="Apply"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position="385 340 80 30" name="Cancel">
+            <Property key="Caption" value="Cancel"/>
+        </Widget>
+    </Widget>
+</MyGUI>

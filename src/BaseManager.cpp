@@ -93,9 +93,7 @@ namespace base
 			mCoutSource = new CoutSource();
 			plog->addListener( mCoutSource );
 		}
-
-		setupResources();
-
+        
 		//恢复Ogre配置，如果第一次配置启动一个Ogre配置对话框
 		if (!mRoot->restoreConfig())
 		{
@@ -118,11 +116,11 @@ namespace base
 		mSceneQuery = mSceneManager->createRayQuery( Ogre::Ray() );
 
 		createGui();
-
+        
 		createInput(handle);
 
 		createPointerManager(handle);
-
+        
 		createScene();
 
 		windowResized(mWindow);
@@ -235,7 +233,10 @@ namespace base
 	{
 		mPlatform = new MyGUI::OgrePlatform();
 		mPlatform->initialise(mWindow, mSceneManager,Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
-
+        
+        //setupResources()中使用了DataManager,而DataManager在OgrePlatform::initialise中初始化
+        setupResources();
+        
 		if( mCoutSource ){
 			//这里加入一个监听器，MyGUI并不负责删除监听器(BUG)
 			MyGUI::LogManager::getInstance().getDefaultSource()->addLogListener(mCoutSource);

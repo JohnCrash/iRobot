@@ -138,9 +138,12 @@
             <Property key="MenuItemType" value="Popup"/>
             <Property key="Caption" value="Test"/>
             <Property key="MenuItemId" value="_test"/>
-            <Widget type="PopupMenu" skin="PopupMenu" position="300 25 81 27" style="Popup" layer="Popup">
-                <Widget type="MenuItem" skin="" position="0 0 73 17" name="_test1">
-                    <Property key="Caption" value="test 1"/>
+            <Widget type="PopupMenu" skin="PopupMenu" position="300 25 77 44" style="Popup" layer="Popup">
+                <Widget type="MenuItem" skin="" position="0 0 69 17" name="_test1">
+                    <Property key="Caption" value="test1"/>
+                </Widget>
+                <Widget type="MenuItem" skin="" position="0 17 69 17" name="_test2">
+                    <Property key="Caption" value="test2"/>
                 </Widget>
             </Widget>
         </Widget>

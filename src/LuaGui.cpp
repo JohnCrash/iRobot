@@ -459,6 +459,18 @@ WIDGET_METHOD( lua_child )
 	}
 METHOD_END(1)
 
+WIDGET_METHOD( lua_widget__index )
+    MyGUI::Widget* w = self->findWidget(tostring(2));
+    if( w )
+    {
+        lua_bindWidget(L,w);
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
+METHOD_END(1)
+
 WIDGET_METHOD( lua_childs )
 	lua_newtable(L);
 	for( size_t i = 0;i<self->getChildCount();i++ )
@@ -1206,6 +1218,7 @@ static const struct luaL_Reg widgetMethod[]=
 	{"getWidgetStyle",getWidgetStyle},
 	{"setProperty",setProperty},
 	{"createChild",createChild},
+    {"__index",lua_widget__index},
 	{nullptr,nullptr}
 };
 

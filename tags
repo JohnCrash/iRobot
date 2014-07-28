@@ -1,0 +1,252 @@
+ADD_ITEM	src/LuaGui.cpp	/^#define ADD_ITEM() \\$/
+BPVector	include/LuaManager.h	/^	typedef vector<pair<int,string> > BPVector;$/
+BUTTON_METHOD	src/LuaGui.cpp	/^#define BUTTON_METHOD(fun) METHOD( fun,Button)$/
+COMBOBOX_METHOD	src/LuaGui.cpp	/^#define COMBOBOX_METHOD(fun) METHOD( fun,ComboBox)/
+CalcResult	include/Math3d.h	/^	typedef pair<bool,Ogre::Vector3> CalcResult;$/
+CalcTextWidth	src/SimpleUI.cpp	/^MyGUI::IntSize CalcTextWidth( MyGUI::UString text,/
+CalcWidgetSize	src/SimpleUI.cpp	/^MyGUI::IntSize CalcWidgetSize(MyGUI::Widget* pw){/
+ContinueType	include/LuaManager.h	/^	enum ContinueType$/
+Controlet	src/Controlet.cpp	/^Controlet::~Controlet(){$/
+ControletPtr	include/Controlet.h	/^typedef boost::shared_ptr<Controlet> ControletPtr;/
+ControletVector	include/InputFilter.h	/^	typedef vector<Controlet*> ControletVector;$/
+CreateObjectFunc	include/ClassInfo.h	/^typedef boost::function<Object* ()> CreateObjectFu/
+DDContainer_METHOD	src/LuaGui.cpp	/^#define DDContainer_METHOD(fun) METHOD( fun,DDCont/
+DOCUMENT_METHOD	src/LuaXml.cpp	/^#define DOCUMENT_METHOD( fun ) XML_METHOD(fun,Docu/
+EDITBOX_METHOD	src/LuaGui.cpp	/^#define EDITBOX_METHOD(fun) METHOD( fun,EditBox)$/
+ERROR_LOG	include/Log.h	/^#define ERROR_LOG( msg )\\$/
+EVENT_SET	src/LuaGui.cpp	/^#define EVENT_SET( ev,func ) EVENT_SET2(Widget,ev,/
+EVENT_SET2	src/LuaGui.cpp	/^#define EVENT_SET2( cls,ev,func ) lua_setfield(L,-/
+EVENT_SET3	src/LuaGui.cpp	/^#define EVENT_SET3( cls,ev,func ) lua_setfield(L,-/
+Element_METHOD	src/LuaXml.cpp	/^#define Element_METHOD( fun ) XML_METHOD( fun,Elem/
+EventHandle_SimpleDataChange	include/SimpleUI.h	/^typedef MyGUI::delegates::CMultiDelegate1<SimpleDa/
+FOREACH_CONTROLET	src/InputFilter.cpp	/^#define FOREACH_CONTROLET( function )\\$/
+FOREACH_CONTROLET2	src/InputFilter.cpp	/^#define FOREACH_CONTROLET2( function )\\$/
+GET_ITEM_DATA_AT	src/LuaGui.cpp	/^#define GET_ITEM_DATA_AT() \\$/
+Geometry	src/Geometry.cpp	/^Geometry::~Geometry(){$/
+GeometryObjectPtr	include/VisualObject.h	/^typedef boost::shared_ptr<GeometryObject> Geometry/
+GeometryParamMap	include/Geometry.h	/^	typedef map<Ogre::Resource*, Param> GeometryParam/
+GeometryPoint	src/Geometry.cpp	/^void Geometry::GeometryPoint(float*& pReal,const O/
+GeometryPoint2	src/Geometry.cpp	/^void Geometry::GeometryPoint2(float*& pReal,const /
+GeometryPoint3	src/Geometry.cpp	/^void Geometry::GeometryPoint3(float*& pReal,const /
+GeometryTriangle	src/Geometry.cpp	/^void Geometry::GeometryTriangle(unsigned short*& p/
+HotkeyTable	include/HotkeyManager.h	/^	typedef vector<hotkey> HotkeyTable;$/
+INSERT_ITEM_AT	src/LuaGui.cpp	/^#define INSERT_ITEM_AT() \\$/
+ITEMBOX_METHOD	src/LuaGui.cpp	/^#define ITEMBOX_METHOD(fun) METHOD( fun,ItemBox)$/
+Inherit	include/LuaManager.h	/^	typedef pair<const luaL_Reg*,vector<string> > Inh/
+Intersect	src/VisualObject.cpp	/^vector<Ogre::Real> VisualObject::Intersect( const /
+IsKeyFocus	src/InputFilter.cpp	/^bool InputFilter::IsKeyFocus(){$/
+IsMouseFocus	src/InputFilter.cpp	/^bool InputFilter::IsMouseFocus(){$/
+JointGroupPtr	include/JointGroup.h	/^typedef boost::shared_ptr<JointGroup> JointGroupPt/
+JointMap	include/Framework.h	/^	typedef vector<JointPtr> JointMap;$/
+JointPtr	include/Joint.h	/^typedef boost::shared_ptr<Joint> JointPtr;$/
+JointWeakPtr	include/Joint.h	/^typedef boost::weak_ptr<Joint> JointWeakPtr;$/
+L	include/gettext.h	/^#define L( msg ) GettextManager::getSingleton().ge/
+LISTBOX_METHOD	src/LuaGui.cpp	/^#define LISTBOX_METHOD(fun) METHOD( fun,ListBox)$/
+LinearControlet	src/RigidControlet.cpp	/^LinearControlet::~LinearControlet(){$/
+LinearControletPtr	include/RigidControlet.h	/^typedef boost::shared_ptr<LinearControlet> LinearC/
+LinearNotifyEvent	include/RigidControlet.h	/^typedef boost::function<void (const string&,const /
+LocationVector	include/LuaManager.h	/^	typedef vector<string> LocationVector;$/
+LuaBind	include/LuaBind.h	/^struct LuaBind$/
+LuaVector	include/BaseManager.h	/^		typedef vector<string> LuaVector;$/
+MAT3_METHOD	src/LuaMat.cpp	/^#define MAT3_METHOD( fun ) METHOD(fun,Matrix3)$/
+MENUCONTROL_METHOD	src/LuaGui.cpp	/^#define MENUCONTROL_METHOD(fun) METHOD( fun,MenuCo/
+MENUITEM_METHOD	src/LuaGui.cpp	/^#define MENUITEM_METHOD(fun) METHOD( fun,MenuItem)/
+METHOD	src/LuaGui.cpp	/^#define METHOD( fun,T ) \\$/
+METHOD_END	src/LuaGui.cpp	/^#define METHOD_END( ret ) \\$/
+MMain.cpp	src/Main.cpp	/^int main(int argc, char *argv[])$/
+MSG	include/Log.h	/^#define MSG( msg )\\$/
+MainMenu	src/MainMenu.cpp	/^MainMenu::MainMenu(){$/
+ModifyToolPtr	include/RigidTool.h	/^typedef boost::shared_ptr<ModifyTool> ModifyToolPt/
+MoveTool	src/RigidTool.cpp	/^MoveTool::~MoveTool(){$/
+MoveTool2dPtr	include/RigidTool.h	/^typedef boost::shared_ptr<MoveTool2d> MoveTool2dPt/
+MoveToolPtr	include/RigidTool.h	/^typedef boost::shared_ptr<MoveTool> MoveToolPtr;$/
+Normal2	src/Geometry.cpp	/^Ogre::Vector3 Geometry::Normal2( const Ogre::Vecto/
+NotifyObjectMove	src/RigidTool.cpp	/^void MoveTool::NotifyObjectMove( const string& nam/
+NotifyObjectOrient	src/TestStage.cpp	/^void TestStage::NotifyObjectOrient( const string& /
+NotifyObjectRotate	src/TestStage.cpp	/^void TestStage::NotifyObjectRotate( const string& /
+NotifyWindowButtonPressed	src/TestStage.cpp	/^void TestStage::NotifyWindowButtonPressed(MyGUI::W/
+OBJECT_METHOD	src/LuaRigid.cpp	/^#define OBJECT_METHOD(fun) METHOD(fun,VisualObject/
+ObjectMap	include/RigidManager.h	/^	typedef list<VisualObjectPtr> ObjectMap;$/
+ObjectPtr	include/ClassInfo.h	/^typedef boost::shared_ptr<Object> ObjectPtr;$/
+OrientationControlet	src/RigidControlet.cpp	/^OrientationControlet::~OrientationControlet(){$/
+OrientationControletPtr	include/RigidControlet.h	/^typedef boost::shared_ptr<OrientationControlet> Or/
+OrientationNotifyEvent	include/RigidControlet.h	/^			OrientationNotifyEvent;$/
+PROGRESSBAR_METHOD	src/LuaGui.cpp	/^#define PROGRESSBAR_METHOD(fun) METHOD( fun,Progre/
+Para	include/Geometry.h	/^	struct Param{$/
+PathNormal	src/Geometry.cpp	/^Geometry::tPath Geometry::PathNormal( const tPath&/
+PhysicaEngine	src/Physica.cpp	/^PhysicaEngine::PhysicaEngine(){$/
+PlaneControletPtr	include/RigidControlet.h	/^typedef boost::shared_ptr<PlaneControlet> PlaneCon/
+Q_METHOD	src/LuaMat.cpp	/^#define Q_METHOD( fun ) METHOD(fun,Quaternion)$/
+RIGID_METHOD	src/LuaRigid.cpp	/^#define RIGID_METHOD(fun) METHOD(fun,Rigid)$/
+RTTI_DERIVED	include/ClassInfo.h	/^#define RTTI_DERIVED(cls) \\$/
+RaduisControlet	src/RigidControlet.cpp	/^RaduisControlet::~RaduisControlet(){$/
+RaduisControletPtr	include/RigidControlet.h	/^typedef boost::shared_ptr<RaduisControlet> RaduisC/
+RaduisNotifyEvent	include/RigidControlet.h	/^			RaduisNotifyEvent;$/
+RegMap	include/Registry.h	/^	typedef map<string,string> RegMap;$/
+ResetType	include/BaseManager.h	/^		enum ResetType$/
+Rigid	src/Rigid.cpp	/^Rigid::~Rigid(){$/
+RigidControlet	src/RigidControlet.cpp	/^RigidControlet::~RigidControlet(){$/
+RigidManager	src/RigidManager.cpp	/^RigidManager::~RigidManager(){$/
+RigidMap	include/Framework.h	/^	typedef vector<RigidPtr> RigidMap;$/
+RigidPtr	include/Joint.h	/^typedef boost::shared_ptr<Rigid> RigidPtr;$/
+RigidToolEnu	include/TestStage.h	/^	enum RigidToolEnum{$/
+RigidToolManager	src/RigidToolManager.cpp	/^RigidToolManager::RigidToolManager(){$/
+RigidWeakPtr	include/Joint.h	/^typedef boost::weak_ptr<Rigid> RigidWeakPtr;$/
+RotatXZ	src/CameraControlet.cpp	/^void SimpleCameraControlet::RotatXZ( Ogre::Real s /
+RotatY	src/CameraControlet.cpp	/^void SimpleCameraControlet::RotatY( Ogre::Real s )/
+RotateControlet	src/RigidControlet.cpp	/^RotateControlet::~RotateControlet(){$/
+RotateControletPtr	include/RigidControlet.h	/^typedef boost::shared_ptr<RotateControlet> RotateC/
+RotateNotifyEvent	include/RigidControlet.h	/^typedef boost::function<void (const string&,const /
+RotateTool	src/RigidTool.cpp	/^RotateTool::RotateTool(){$/
+RotateToolPtr	include/RigidTool.h	/^typedef boost::shared_ptr<RotateTool> RotateToolPt/
+SCROLLBAR_METHOD	src/LuaGui.cpp	/^#define SCROLLBAR_METHOD(fun) METHOD( fun,ScrollBa/
+SCROLLVIEW_METHOD	src/LuaGui.cpp	/^#define SCROLLVIEW_METHOD(fun) METHOD( fun,ScrollV/
+SET_ITEM_DATA_AT	src/LuaGui.cpp	/^#define SET_ITEM_DATA_AT() \\$/
+SINGLETON	include/stdheader.h	/^\/\/#define SINGLETON( T ) template<> T* Ogre::Sin/
+SimpleCameraControlet	src/CameraControlet.cpp	/^SimpleCameraControlet::~SimpleCameraControlet(){$/
+SimpleCameraControletPtr	include/CameraControlet.h	/^typedef boost::shared_ptr<SimpleCameraControlet> S/
+SimpleDataChangeIDelegate	include/SimpleUI.h	/^typedef EventHandle_SimpleDataChange::IDelegate  S/
+SimulationFrame	src/RigidManager.cpp	/^void RigidManager::SimulationFrame( Ogre::Real t )/
+TABCONTROL_METHOD	src/LuaGui.cpp	/^#define TABCONTROL_METHOD(fun) METHOD( fun,TabCont/
+TEXTBOX_METHOD	src/LuaGui.cpp	/^#define TEXTBOX_METHOD( fun ) METHOD( fun,TextBox /
+TextMap	include/gettext.h	/^	typedef map<string,string> TextMap;$/
+Typ	include/Geometry.h	/^	enum Type{$/
+TypeMap	include/ObjectFactory.h	/^	typedef map<string,CreateObjectFunc> TypeMap;$/
+USTRING_METHOD	src/LuaGui.cpp	/^#define USTRING_METHOD( fun ) METHOD(fun,UString)/
+UseDefaultFormat	src/Geometry.cpp	/^void Geometry::UseDefaultFormat(Ogre::VertexDeclar/
+VEC3_METHOD	src/LuaMat.cpp	/^#define VEC3_METHOD( fun ) METHOD(fun,Vector3)$/
+VisualObject	src/VisualObject.cpp	/^VisualObject::~VisualObject(){$/
+VisualObjectPtr	include/VisualObject.h	/^typedef boost::shared_ptr<VisualObject> VisualObje/
+WARNING_LOG	include/Log.h	/^#define WARNING_LOG( msg )\\$/
+WIDGET_METHOD	src/LuaGui.cpp	/^#define WIDGET_METHOD( fun ) METHOD( fun,Widget )/
+WINDOW_METHOD	src/LuaGui.cpp	/^#define WINDOW_METHOD(fun) METHOD( fun,Window)$/
+WinMain	src/Main.cpp	/^INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LP/
+XML_METHOD	src/LuaXml.cpp	/^#define XML_METHOD( fun,T ) \\$/
+Zoom	src/CameraControlet.cpp	/^void SimpleCameraControlet::Zoom( Ogre::Real s ){/
+_simpleDataChange	src/SimpleUI.cpp	/^static void _simpleDataChange(MyGUI::ComboBox* _se/
+_simpleDataCheckChange	src/SimpleUI.cpp	/^static void _simpleDataCheckChange(MyGUI::Widget* /
+_simpleDataEditTextChange	src/SimpleUI.cpp	/^static void _simpleDataEditTextChange(MyGUI::EditB/
+_update	src/Rigid.cpp	/^void Rigid::_update(){$/
+add	src/SimpleUI.cpp	/^void SimpleDataUI::add( const MyGUI::UString& capt/
+addObject	src/TestStage.cpp	/^void TestStage::addObject( const string& name ){$/
+applicationDidFinishLaunching	include/Main.h	/^- (void)applicationDidFinishLaunching:(NSNotificat/
+assert_rang	src/LuaGui.cpp	/^#define assert_rang(n) \\$/
+assert_ustring_rang	src/LuaGui.cpp	/^#define assert_ustring_rang( n ) \\$/
+assert_ustring_rang_open	src/LuaGui.cpp	/^#define assert_ustring_rang_open( n ) \\$/
+buttonPressed	include/Main.h	/^- (void) buttonPressed:(id)sender$/
+clear	src/SimpleUI.cpp	/^void SimpleDataUI::clear(){$/
+clearAllNode	src/RigidManager.cpp	/^void RigidManager::clearAllNode(){$/
+closeStage	src/MainMenu.cpp	/^void MainMenu::closeStage(){$/
+controlRigid	src/RigidTool.cpp	/^void RotateTool::controlRigid( const VisualObjectP/
+createBox	src/Geometry.cpp	/^Ogre::MeshPtr Geometry::createBox( const string& n/
+createCylinder	src/Geometry.cpp	/^Ogre::MeshPtr Geometry::createCylinder( const stri/
+createEntity	src/RigidControlet.cpp	/^void RigidControlet::createEntity(){$/
+createPull	src/Geometry.cpp	/^Ogre::MeshPtr Geometry::createPull( const string& /
+createSphere	src/Geometry.cpp	/^Ogre::MeshPtr Geometry::createSphere( const string/
+createSpin	src/Geometry.cpp	/^Ogre::MeshPtr Geometry::createSpin( const string& /
+destroyAll	src/Geometry.cpp	/^void Geometry::destroyAll(){$/
+destroyEntity	src/RigidControlet.cpp	/^void RigidControlet::destroyEntity(){$/
+destroyGemetry	src/Geometry.cpp	/^void Geometry::destroyGemetry( Ogre::MeshPtr& pt )/
+frameStarted	src/CameraControlet.cpp	/^bool SimpleCameraControlet::frameStarted(const Ogr/
+get	src/SimpleUI.cpp	/^SimpleData SimpleDataUI::get( string name ){$/
+getBodyID	src/Rigid.cpp	/^dBodyID Rigid::getBodyID() const$/
+getComboBoxSize	src/SimpleUI.cpp	/^static bool getComboBoxSize( MyGUI::Widget* pw,MyG/
+getEntity	src/GeometryObject.cpp	/^Ogre::Entity* GeometryObject::getEntity() const$/
+getEntityName	src/VisualObject.cpp	/^string VisualObject::getEntityName() const$/
+getGeomID	src/GeometryObject.cpp	/^dGeomID GeometryObject::getGeomID() const$/
+getGeometryMeshDensity	src/GeometryObject.cpp	/^int GeometryObject::getGeometryMeshDensity() const/
+getGeometryObject	src/VisualObject.cpp	/^GeometryObjectPtr VisualObject::getGeometryObject(/
+getGeometryParam	src/Geometry.cpp	/^Geometry::Param* Geometry::getGeometryParam( const/
+getHotkeyAt	src/HotkeyManager.cpp	/^HotkeyManager::hotkey HotkeyManager::getHotkeyAt( /
+getHotkeyCount	src/HotkeyManager.cpp	/^int HotkeyManager::getHotkeyCount() const$/
+getJointID	src/Joint.cpp	/^dJointID Joint::getJointID() const$/
+getJointRigid	src/Joint.cpp	/^RigidPtr Joint::getJointRigid( int i ) const$/
+getJointType	src/Joint.cpp	/^dJointType Joint::getJointType() const$/
+getLength	src/GeometryObject.cpp	/^Ogre::Real Cylinder::getLength() const$/
+getLocalAxis	src/VisualObject.cpp	/^Ogre::Matrix3 VisualObject::getLocalAxis() const$/
+getLuaLocations	src/LuaManager.cpp	/^const LuaManager::LocationVector& LuaManager::getL/
+getMaterialName	src/GeometryObject.cpp	/^string GeometryObject::getMaterialName() const$/
+getMesh	src/GeometryObject.cpp	/^Ogre::MeshPtr GeometryObject::getMesh() const$/
+getName	src/VisualObject.cpp	/^string VisualObject::getName() const$/
+getPosition	src/VisualObject.cpp	/^Ogre::Vector3 VisualObject::getPosition() const$/
+getRadius	src/GeometryObject.cpp	/^Ogre::Real Sphere::getRadius() const$/
+getShadowMode	src/Game.cpp	/^Ogre::ShadowTechnique Game::getShadowMode( size_t /
+getShadowTechnique	src/Game.cpp	/^Ogre::ShadowTechnique Game::getShadowTechnique( si/
+getSpaceID	src/RigidManager.cpp	/^dSpaceID RigidManager::getSpaceID() const$/
+getSpinParam	src/GeometryObject.cpp	/^pair<Ogre::Ray,Ogre::Real> GeometryObject::getSpin/
+getStandardHotkeyName	src/HotkeyManager.cpp	/^string HotkeyManager::getStandardHotkeyName( const/
+getVolume	src/GeometryObject.cpp	/^const Ogre::Real* Box::getVolume() const$/
+getWidgetSize	src/SimpleUI.cpp	/^bool getWidgetSize( MyGUI::Widget* pw,MyGUI::IntSi/
+getWorldID	src/RigidManager.cpp	/^dWorldID RigidManager::getWorldID() const$/
+goSimulation	src/RigidManager.cpp	/^void RigidManager::goSimulation( bool b ){$/
+hasGeomID	src/GeometryObject.cpp	/^bool GeometryObject::hasGeomID() const$/
+hotkey	include/HotkeyManager.h	/^	struct hotkey$/
+if	src/LuaGui.cpp	/^if( (size_t)toint(n)>=self->getItemCount() || (siz/
+injectKeyPress	src/CameraControlet.cpp	/^void SimpleCameraControlet::injectKeyPress(MyGUI::/
+injectKeyRelease	src/CameraControlet.cpp	/^void SimpleCameraControlet::injectKeyRelease(MyGUI/
+injectMouseMove	src/CameraControlet.cpp	/^void SimpleCameraControlet::injectMouseMove(int _a/
+injectMousePress	src/CameraControlet.cpp	/^void SimpleCameraControlet::injectMousePress(int _/
+injectMouseRelease	src/CameraControlet.cpp	/^void SimpleCameraControlet::injectMouseRelease(int/
+isEnable	src/Controlet.cpp	/^bool Controlet::isEnable(){$/
+isEnabled	src/Joint.cpp	/^bool Joint::isEnabled() const$/
+isExist	src/ObjectFactory.cpp	/^bool ObjectFactory::isExist( const string& type) c/
+isGlobal	src/Controlet.cpp	/^bool Controlet::isGlobal() const$/
+isSimulation	src/RigidManager.cpp	/^bool RigidManager::isSimulation() const$/
+loadBox	src/Geometry.cpp	/^void Geometry::loadBox( Ogre::Mesh* msh,Param& gp /
+loadCylinder	src/Geometry.cpp	/^void Geometry::loadCylinder( Ogre::Mesh* msh,Param/
+loadPull	src/Geometry.cpp	/^void Geometry::loadPull( Ogre::Mesh* msh,Param& gp/
+loadResource	src/Geometry.cpp	/^void Geometry::loadResource(Ogre::Resource* resour/
+loadSphere	src/Geometry.cpp	/^void Geometry::loadSphere( Ogre::Mesh* msh,Param& /
+loadSpin	src/Geometry.cpp	/^void Geometry::loadSpin( Ogre::Mesh* msh,Param& gp/
+mBarrier	src/RigidManager.cpp	/^RigidManager::RigidManager():mBarrier(2){$/
+mGroup	src/Geometry.cpp	/^Geometry::Geometry():mGroup(Ogre::ResourceGroupMan/
+mRaduis	src/RigidControlet.cpp	/^	mRaduis(raduis){$/
+modifyControl	src/RigidToolManager.cpp	/^void RigidToolManager::modifyControl( const Visual/
+mouseFocus	src/RigidControlet.cpp	/^void RigidControlet::mouseFocus( int x,int y ){$/
+notifyButtonClick	src/Game.cpp	/^void Game::notifyButtonClick(MyGUI::Widget* _sende/
+notifyComboChange	src/Game.cpp	/^void Game::notifyComboChange(MyGUI::ComboBox* _sen/
+notifyListChangePosition	src/TestStage.cpp	/^void TestStage::notifyListChangePosition(MyGUI::Li/
+notifyWindowButtonPressed	src/Game.cpp	/^void Game::notifyWindowButtonPressed(MyGUI::Window/
+openStage	src/MainMenu.cpp	/^bool MainMenu::openStage(){$/
+pbool	include/LuaBind.h	/^#define pbool( x ) lua_pushboolean(L,x)$/
+pint	include/LuaBind.h	/^#define pint( x ) lua_pushinteger(L,x)$/
+pnumber	include/LuaBind.h	/^#define pnumber( x ) lua_pushnumber(L,x)$/
+pstring	include/LuaBind.h	/^#define pstring( x ) lua_pushstring(L,x)$/
+reLayout	src/SimpleUI.cpp	/^void Grid::reLayout(){$/
+readerStruct	src/LuaManager.cpp	/^struct readerStruct$/
+rebuildEntity	src/RigidControlet.cpp	/^void RigidControlet::rebuildEntity(){$/
+rebuildGeometry	src/GeometryObject.cpp	/^void GeometryObject::rebuildGeometry(){$/
+releaseCapture	src/InputFilter.cpp	/^void InputFilter::releaseCapture(){$/
+renderOneFrame	include/Main.h	/^- (void)renderOneFrame:(id)sender;$/
+rotate	src/Rigid.cpp	/^void Rigid::rotate( const Ogre::Vector3& axis,cons/
+rotateControl	src/RigidToolManager.cpp	/^void RigidToolManager::rotateControl( const Visual/
+s_len	include/LuaBind.h	/^#define s_len( x ) \\$/
+setCapture	src/InputFilter.cpp	/^void InputFilter::setCapture(){$/
+setCurrentObject	src/TestStage.cpp	/^void TestStage::setCurrentObject( const string& na/
+setEnable	src/Controlet.cpp	/^void Controlet::setEnable( bool b ){$/
+setLastFrameTime	include/Main.h	/^- (void)setLastFrameTime:(NSTimeInterval)frameInte/
+setLimit	src/RigidControlet.cpp	/^void LinearControlet::setLimit( Ogre::Real mi,Ogre/
+setMaterialName	src/GeometryObject.cpp	/^void GeometryObject::setMaterialName( const string/
+setPosition	src/Rigid.cpp	/^void Rigid::setPosition( const Ogre::Vector3& v ){/
+setShadowTechnique	src/Game.cpp	/^void Game::setShadowTechnique(Ogre::ShadowTechniqu/
+setVisible	src/RigidControlet.cpp	/^void RigidControlet::setVisible( bool b ){$/
+setupResources	src/Game.cpp	/^void Game::setupResources(){$/
+showOptionsDialog	src/Game.cpp	/^void Game::showOptionsDialog(){$/
+simpleDataChange	src/Game.cpp	/^void Game::simpleDataChange(SimpleData* psd){$/
+stopControl	src/RigidToolManager.cpp	/^void RigidToolManager::stopControl(){$/
+tBo	include/Geometry.h	/^	struct tBox{$/
+tCylinde	include/Geometry.h	/^	struct tCylinder{$/
+tGame	include/Game.h	/^typedef Game tGame;$/
+tPath	include/Geometry.h	/^	typedef vector<Ogre::Vector3> tPath;$/
+tPul	include/Geometry.h	/^	struct tPull{$/
+tSpher	include/Geometry.h	/^	struct tSphere{$/
+tSpi	include/Geometry.h	/^	struct tSpin{$/
+toUTF8	src/utf8.cpp	/^std::string toUTF8( const std::string& s ){$/
+tobool	include/LuaBind.h	/^#define tobool( x ) lua_toboolean(L,x)?true:false/
+toint	include/LuaBind.h	/^#define toint( x ) luaL_checkinteger(L,x)$/
+tonumber	include/LuaBind.h	/^#define tonumber( x ) (float)luaL_checknumber(L,x)/
+tostring	include/LuaBind.h	/^#define tostring( x ) luaL_checkstring(L,x)$/
+tovec3	src/LuaMat.cpp	/^#define tovec3(n) get_vector3(L,n)$/
+traceback	src/LuaManager.cpp	/^static int traceback (lua_State *L) {$/
+translate	src/Rigid.cpp	/^void Rigid::translate( const Ogre::Vector3& move )/
+updateGeometry	src/GeometryObject.cpp	/^void Sphere::updateGeometry(){$/
