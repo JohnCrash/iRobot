@@ -14,8 +14,9 @@
 //You should have received a copy of the GNU General Public License
 //along with this program; if not, write to the Free Software
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-#include "LuaDebug.h"
-
+#include "mobDebug.h"
+//#include "MobDebug.h"
+#include "utf8.h"
 //#define WIN32_LEAN_AND_MEAN
 #include "PluginDefinition.h"
 #include "menuCmdID.h"
@@ -30,9 +31,11 @@ FuncItem funcItem[nbFunc];
 // The data of Notepad++ that you can use in your plugin commands
 //
 NppData nppData;
-LuaDebug dbg;
+//const char *ipaddr = "192.168.2.116";
+LuaMobDebug *dbg;//("192.168.2.116",8172);
+
 int LastLine = -1;
-string LastSource;
+std::string LastSource;
 HINSTANCE ghThisInstance;
 HWND getCurrentSCI();
 
@@ -43,7 +46,7 @@ std::string getCurrentFile()
 	name.resize(256);
 	LRESULT BufferID = ::SendMessage(nppData._nppHandle,NPPM_GETCURRENTBUFFERID,0,0);
 	::SendMessage(nppData._nppHandle,NPPM_GETFULLPATHFROMBUFFERID,BufferID,(LPARAM)name.c_str());
-	return LuaDebug::toUTF8(name);
+	return toUTF8(name);
 }
 
 //取得当前编辑窗口光标所在行
@@ -99,7 +102,7 @@ int CurrentBookNext( int line )
 
 bool gotoLine( std::string source,int line )
 {
-	std::wstring us = LuaDebug::toUnicode(source);
+	std::wstring us = toUnicode(source);
 	//open file
 	bool b = (bool)::SendMessage(nppData._nppHandle, NPPM_DOOPEN, 0,(WPARAM)us.c_str());
 	if( b )
@@ -113,10 +116,10 @@ bool gotoLine( std::string source,int line )
 
 int lastMakeLineType;
 
-void makeLine( string source,int line,int type )
+void makeLine( std::string source,int line,int type )
 {
 	int start,len;
-	wstring us = LuaDebug::toUnicode(source);
+	std::wstring us = toUnicode(source);
 	//切换到文件
 	SendMessage(nppData._nppHandle,NPPM_DOOPEN,0,(LPARAM)us.c_str());
 
@@ -142,10 +145,10 @@ HWND getCurrentSCI()
 		return nppData._scintillaMainHandle;
 }
 
-void clearMakeLine( string source, int line )
+void clearMakeLine( std::string source, int line )
 {
 	int start,len;
-	wstring us = LuaDebug::toUnicode(source);
+	std::wstring us = toUnicode(source);
 	//切换到文件
 	SendMessage(nppData._nppHandle,NPPM_DOOPEN,0,(LPARAM)us.c_str());
 
@@ -161,17 +164,17 @@ void clearMakeLine( string source, int line )
 //NPPM_GETNBOPENFILES
 //NPPM_GETCURRENTSCINTILLA
 //NPPM_GETOPENFILENAMES
-vector<wstring> GetAllFileName()
+std::vector<std::wstring> GetAllFileName()
 {
-	vector<wstring> vps;
-	vector<TCHAR*> wps;
+	std::vector<std::wstring> vps;
+	std::vector<TCHAR*> wps;
 	int n = SendMessage(nppData._nppHandle,NPPM_GETNBOPENFILES,0,ALL_OPEN_FILES);
 	if( n > 0 && n <128 )
 	{
 		wps.resize(n);
 		for( int i = 0;i < n;i++ )
 		{
-			wstring ws;
+			std::wstring ws;
 			ws.resize(512);
 			vps.push_back(ws);
 			wps[i] = (TCHAR*)vps[i].c_str();
@@ -191,10 +194,10 @@ bool GetMark( int line )
 	return (int)SendMessage(getCurrentSCI(),SCI_MARKERGET,line-1,0)==0x1000000?true:false;
 }
 
-string lastBreakSource;
+std::string lastBreakSource;
 int lastBreakline;
 
-void breakPoint( string source,int line )
+void breakPoint( std::string source,int line )
 {
 	SetActiveWindow(nppData._nppHandle);
 	SetForegroundWindow(nppData._nppHandle);
@@ -214,7 +217,7 @@ void breakPoint( string source,int line )
 	}
 }
 
-void Error(string source,int line)
+void Error(std::string source,int line)
 {
 	SetActiveWindow(nppData._nppHandle);
 	SetForegroundWindow(nppData._nppHandle);
@@ -234,42 +237,45 @@ void Error(string source,int line)
 	}
 }
 
-void SwitchTo(wstring filename )
+void SwitchTo(std::wstring filename )
 {
 	SendMessage(nppData._nppHandle,NPPM_SWITCHTOFILE,0,(LPARAM)filename.c_str());
 }
 
 void newDebug()
 {
-	//同步当前文档中的全部BookMark为断点
-	vector<wstring> wsv = GetAllFileName();
-	for( vector<wstring>::iterator i = wsv.begin();i!=wsv.end();++i )
+	if(dbg )
 	{
-		SwitchTo(*i);
-		int line = 0;
-		do
+		//同步当前文档中的全部BookMark为断点
+		std::vector<std::wstring> wsv = GetAllFileName();
+		for( std::vector<std::wstring>::iterator i = wsv.begin();i!=wsv.end();++i )
 		{
-			line = GetNextMark(line);
-			if( line==-1 )break;
-			line++;
-			dbg.addBreakpoint(LuaDebug::toUTF8(*i),line);
-		}while( line>=0 );
+			SwitchTo(*i);
+			int line = 0;
+			do
+			{
+				line = GetNextMark(line);
+				if( line==-1 )break;
+				line++;
+				dbg->addBreakpoint(toUTF8(*i),line);
+			}while( line>=0 );
+		}
 	}
 }
 
 #define SHOW_INFO WM_USER+101
-string lastInfo;
-string errorMsg;
+std::string lastInfo;
+std::string errorMsg;
 int  errorLine;
-string errorSource;
+std::string errorSource;
 
-void showInfo(string info)
+void showInfo(std::string info)
 {
 	lastInfo = info;
 	PostMessage(nppData._scintillaMainHandle,SHOW_INFO,0,0);
 }
 
-void ErrorInfo( string msg)
+void ErrorInfo( std::string msg)
 {
 	//格式大概是这样的H:/s/s.lua:1:msg
 	xpressive::sregex setbp = xpressive::sregex::compile("([^|]+):(\\d+):([^|]+)");
@@ -295,12 +301,26 @@ void ErrorInfo( string msg)
 // It will be called while plugin loading   
 void pluginInit(HANDLE hModule)
 {
-	dbg.run();
-	dbg.setBreakNotify(breakPoint);
-	dbg.setNewDebug(newDebug);
-	dbg.setGetInfoNotify(showInfo);
-	dbg.setErrorNotify(ErrorInfo);
-	dbg.setErrorPointNotify(Error);
+	if( !dbg )
+	{
+		try
+		{
+			dbg=new LuaMobDebug("192.168.2.113",8172);
+		}catch(...)
+		{
+			dbg = nullptr;
+			MessageBox(NULL,TEXT("不能在指定的IP地址上监听"),TEXT("Lua Debuger initialization failed"),MB_OK);
+		}
+	}
+	if(dbg)
+	{
+		dbg->run();
+		dbg->setBreakNotify(breakPoint);
+		dbg->setNewDebug(newDebug);
+		dbg->setGetInfoNotify(showInfo);
+		dbg->setErrorNotify(ErrorInfo);
+		dbg->setErrorPointNotify(Error);
+	}
 }
 
 //
@@ -308,78 +328,97 @@ void pluginInit(HANDLE hModule)
 //
 void pluginCleanUp()
 {
-	dbg.stop();
+	if(dbg )
+	dbg->stop();
 }
 
 void run()
 {
-	if( LastLine != -1 )
+	if(dbg )
 	{
-		clearMakeLine(LastSource,LastLine);
+		if( LastLine != -1 )
+		{
+			clearMakeLine(LastSource,LastLine);
+		}
+		dbg->doContinue();
 	}
-	dbg.doContinue();
 }
 
 void setBreakpoint()
 {
-	string file = getCurrentFile();
-	int line = getCurrentLine();
-	if( GetMark(line) )
+	if(dbg )
 	{
-		//有删除
-		clearCurrentBookLine(line);
-		dbg.removeBreakpoint(file,line);
-	}
-	else
-	{
-		dbg.addBreakpoint( file,line );
-		setCurrentBookLine( line );
+		std::string file = getCurrentFile();
+		int line = getCurrentLine();
+		if( GetMark(line) )
+		{
+			//有删除
+			clearCurrentBookLine(line);
+			dbg->removeBreakpoint(file,line);
+		}
+		else
+		{
+			dbg->addBreakpoint( file,line );
+			setCurrentBookLine( line );
+		}
 	}
 }
 
 void step()
 {
-	if( LastLine != -1 )
+	if(dbg )
 	{
-		clearMakeLine(LastSource,LastLine);
+		if( LastLine != -1 )
+		{
+			clearMakeLine(LastSource,LastLine);
+		}
+		dbg->doStep();
 	}
-	dbg.doStep();
 }
 
 void stepin()
 {
-	if( LastLine != -1 )
+	if(dbg )
 	{
-		clearMakeLine(LastSource,LastLine);
+		if( LastLine != -1 )
+		{
+			clearMakeLine(LastSource,LastLine);
+		}
+		dbg->doStepIn();
 	}
-	dbg.doStepIn();
 }
 
 void clearAll()
 {
-	vector<wstring> wsv = GetAllFileName();
-	for( vector<wstring>::iterator i = wsv.begin();i!=wsv.end();++i )
+	if(dbg )
 	{
-		SwitchTo(*i);
-		int line = 0;
-		do
+		std::vector<std::wstring> wsv = GetAllFileName();
+		for( std::vector<std::wstring>::iterator i = wsv.begin();i!=wsv.end();++i )
 		{
-			line = GetNextMark(line);
-			if( line==-1 )break;
-			line++;
-			clearCurrentBookLine(line);
-		}while( line>=0 );
+			SwitchTo(*i);
+			int line = 0;
+			do
+			{
+				line = GetNextMark(line);
+				if( line==-1 )break;
+				line++;
+				clearCurrentBookLine(line);
+			}while( line>=0 );
+		}
+		dbg->removeAll();
 	}
-	dbg.removeAll();
 }
 
 void reset()
 {
-	if( LastLine != -1 )
+	if( dbg )
 	{
-		clearMakeLine(LastSource,LastLine);
+		if( LastLine != -1 )
+		{
+			clearMakeLine(LastSource,LastLine);
+		}
+		dbg->doReset();
 	}
-	dbg.doReset();
 }
 
 WNDPROC oldProc;
@@ -387,8 +426,8 @@ int oldx,oldy;
 int x,y;
 int lastx,lasty;
 HWND mouseWnd;
-string lastStr;
-map<HWND,HWND> wndMap;
+std::string lastStr;
+std::map<HWND,HWND> wndMap;
 
 /* CREATE A TOOLTIP CONTROL OVER THE ENTIRE WINDOW AREA */
 void CreateMyTooltip (HWND hwnd)
@@ -495,45 +534,48 @@ bool isNameCharRight( char c )
 	return false;
 }
 
-void lineHandle(string line,int pos,string source,int l)
+void lineHandle(std::string line,int pos,std::string source,int l)
 {
-	if( pos >= 0 && pos < line.size() )
+	if(dbg )
 	{
-		string left,right;
-		if( pos + 1 < line.size() && pos > 0 )
+		if( pos >= 0 && pos < line.size() )
 		{
-			for( int i = pos+1;i<line.size();++i )
+			std::string left,right;
+			if( pos + 1 < line.size() && pos > 0 )
 			{
-				if( isNameCharRight(line.at(i)) )
+				for( int i = pos+1;i<line.size();++i )
 				{
-					right += line.at(i);
+					if( isNameCharRight(line.at(i)) )
+					{
+						right += line.at(i);
+					}else
+					{
+						break;
+					}
+				}
+			}
+			for( int j = pos;j>=0;j-- )
+			{
+				if( isNameChar(line.at(j)) )
+				{
+					left.insert(left.begin(),line.at(j));
 				}else
 				{
 					break;
 				}
 			}
+			lastStr = left + right;
+			if( !lastStr.empty() )
+				dbg->doGetVariable(lastStr);
 		}
-		for( int j = pos;j>=0;j-- )
+		//如果有错误显示错误信息
+		if( !errorMsg.empty() && 
+			errorLine == l
+			)
 		{
-			if( isNameChar(line.at(j)) )
-			{
-				left.insert(left.begin(),line.at(j));
-			}else
-			{
-				break;
-			}
+			lastInfo = errorMsg;
+			PostMessage(nppData._scintillaMainHandle,SHOW_INFO,0,0);
 		}
-		lastStr = left + right;
-		if( !lastStr.empty() )
-			dbg.doGetVariable(lastStr);
-	}
-	//如果有错误显示错误信息
-	if( !errorMsg.empty() && 
-		errorLine == l
-		)
-	{
-		lastInfo = errorMsg;
-		PostMessage(nppData._scintillaMainHandle,SHOW_INFO,0,0);
 	}
 }
 
@@ -552,13 +594,13 @@ VOID CALLBACK TimerProc( HWND hWnd,UINT uMsg,UINT_PTR id,DWORD dwTime)
 					int len = SendMessage(mouseWnd,SCI_GETLINE,line,0);
 					if( len > 0 )
 					{
-						string str;
+						std::string str;
 						str.resize(len);
 						SendMessage(mouseWnd,SCI_GETLINE,line,(LPARAM)str.data());
 						int startpos = SendMessage(mouseWnd,SCI_POSITIONFROMLINE,line,0);
 						if( startpos>= 0 )
 						{
-							string source = getCurrentFile();
+							std::string source = getCurrentFile();
 							boost::to_lower(source);
 							lineHandle(str,pos-startpos,source,line);
 						}
@@ -576,7 +618,7 @@ VOID CALLBACK TimerProc( HWND hWnd,UINT uMsg,UINT_PTR id,DWORD dwTime)
 	}
 }
 
-wstring wStr;
+std::wstring wStr;
 
 LRESULT PASCAL SCWndProc(
 						 HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) 
@@ -600,7 +642,7 @@ LRESULT PASCAL SCWndProc(
 			{
 				LPNMTTDISPINFO lpttd = (LPNMTTDISPINFO)lpnmhdr;
 				SendMessage(lpnmhdr->hwndFrom, TTM_SETMAXTIPWIDTH, 0, 1024);
-				wStr = LuaDebug::utf8ToUnicode(lastInfo);
+				wStr = utf8ToUnicode(lastInfo);
 				lpttd->lpszText = (LPTSTR)wStr.c_str();
 				return 0;
 			}
@@ -620,13 +662,15 @@ void SubClass(HWND hWnd)
 //回溯一级调用堆栈
 void traceback()
 {
-	dbg.doTraceback();
+	if(dbg )
+		dbg->doTraceback();
 }
 
 //向前一级
 void tracefront()
 {
-	dbg.doTracefront();
+	if(dbg )
+		dbg->doTracefront();
 }
 
 ShortcutKey mySK[nbFunc] = 
@@ -663,7 +707,7 @@ void commandMenuInit()
 	setCommand(2,TEXT("Step in"),stepin,&mySK[2],false);
 	setCommand(3,TEXT("Set Breakpoint"),setBreakpoint,&mySK[3],false);
 	setCommand(4,TEXT("Clear all Breakpoint"),clearAll,NULL,false);
-	setCommand(5,TEXT("Reset iRobot"),reset,&mySK[5],false);
+	setCommand(5,TEXT("Reset"),reset,&mySK[5],false);
 	setCommand(6,TEXT("Trace back"),traceback,&mySK[6],false);
 	setCommand(7,TEXT("Trace front"),tracefront,&mySK[7],false);
 
@@ -680,7 +724,7 @@ void commandMenuCleanUp()
 	// Don't forget to deallocate your shortcut here
 	KillTimer(nppData._nppHandle,1002);
 	//destory tooltip
-	for( map<HWND,HWND>::iterator i = wndMap.begin();i!=wndMap.end();++i )
+	for( std::map<HWND,HWND>::iterator i = wndMap.begin();i!=wndMap.end();++i )
 		DestroyWindow(i->second);
 	wndMap.clear();
 }

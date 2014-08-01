@@ -1,0 +1,103 @@
+﻿生成启动时间为 2014/8/1 15:11:31。
+     1>项目“F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\LuaDebug\LuaDebug.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IF:\Source\boost_1_55_0 /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D LUADEBUG_EXPORTS /D _SCL_SECURE_NO_WARNING /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\mobdebug.cpp
+         mobdebug.cpp
+         Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+         - add -D_WIN32_WINNT=0x0501 to the compiler command line; or
+         - add _WIN32_WINNT=0x0501 to your project's Preprocessor Definitions.
+         Assuming _WIN32_WINNT=0x0501 (i.e. Windows XP target).
+     1>f:\source\irobot\tools\luadebug plugins notepad++\mobdebug.cpp(102): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\stdio.h(218) : 参见“fopen”的声明
+     1>f:\source\irobot\tools\luadebug plugins notepad++\mobdebug.cpp(146): warning C4129: “s”: 不可识别的字符转义序列
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2761): warning C4996: 'std::_Fill_n': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2747) : 参见“std::_Fill_n”的声明
+                 f:\source\boost_1_55_0\boost\xpressive\detail\utility\sequence_stack.hpp(235): 参见对正在编译的函数 模板 实例化“_OutIt std::fill_n<T*,size_t,T>(_OutIt,_Diff,const _Ty &)”的引用
+                 with
+                 [
+                     _OutIt=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>> *,
+                     T=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>,
+                     _Diff=size_t,
+                     _Ty=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\detail\utility\sequence_stack.hpp(233): 编译类 模板 成员函数“boost::xpressive::detail::sub_match_impl<BidiIter> *boost::xpressive::detail::sequence_stack<T>::push_sequence(size_t,const T &,boost::xpressive::detail::fill_t)”时
+                 with
+                 [
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>,
+                     T=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\detail\core\state.hpp(292): 参见对正在编译的函数 模板 实例化“boost::xpressive::detail::sub_match_impl<BidiIter> *boost::xpressive::detail::sequence_stack<T>::push_sequence(size_t,const T &,boost::xpressive::detail::fill_t)”的引用
+                 with
+                 [
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>,
+                     T=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\match_results.hpp(96): 参见对正在编译的类 模板 实例化“boost::xpressive::detail::sequence_stack<T>”的引用
+                 with
+                 [
+                     T=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\smart_ptr\intrusive_ptr.hpp(97): 参见对正在编译的类 模板 实例化“boost::xpressive::detail::results_extras<BidiIter>”的引用
+                 with
+                 [
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\smart_ptr\intrusive_ptr.hpp(96): 编译类 模板 成员函数“boost::intrusive_ptr<T>::~intrusive_ptr(void)”时
+                 with
+                 [
+                     T=boost::xpressive::detail::results_extras<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\match_results.hpp(388): 参见对正在编译的函数 模板 实例化“boost::intrusive_ptr<T>::~intrusive_ptr(void)”的引用
+                 with
+                 [
+                     T=boost::xpressive::detail::results_extras<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\match_results.hpp(1346): 参见对正在编译的类 模板 实例化“boost::intrusive_ptr<T>”的引用
+                 with
+                 [
+                     T=boost::xpressive::detail::results_extras<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>>
+                 ]
+                 f:\source\irobot\tools\luadebug plugins notepad++\mobdebug.cpp(150): 参见对正在编译的类 模板 实例化“boost::xpressive::match_results<BidiIter>”的引用
+                 with
+                 [
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>
+                 ]
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2747) : 参见“std::_Fill_n”的声明
+     1>c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2176): warning C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+                 c:\program files (x86)\microsoft visual studio 11.0\vc\include\xutility(2157) : 参见“std::_Copy_impl”的声明
+                 f:\source\boost_1_55_0\boost\xpressive\detail\core\sub_match_vector.hpp(162): 参见对正在编译的函数 模板 实例化“_OutIt std::copy<boost::xpressive::detail::sub_match_impl<BidiIter>*,boost::xpressive::detail::sub_match_impl<BidiIter>*>(_InIt,_InIt,_OutIt)”的引用
+                 with
+                 [
+                     _OutIt=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>> *,
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>,
+                     _InIt=boost::xpressive::detail::sub_match_impl<std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>> *
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\detail\core\sub_match_vector.hpp(158): 编译类 模板 成员函数“void boost::xpressive::detail::sub_match_vector<BidiIter>::init_(boost::xpressive::detail::sub_match_impl<BidiIter> *,boost::xpressive::detail::sub_match_vector<BidiIter>::size_type,const boost::xpressive::detail::sub_match_vector<BidiIter> &)”时
+                 with
+                 [
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\detail\core\access.hpp(68): 参见对正在编译的函数 模板 实例化“void boost::xpressive::detail::sub_match_vector<BidiIter>::init_(boost::xpressive::detail::sub_match_impl<BidiIter> *,boost::xpressive::detail::sub_match_vector<BidiIter>::size_type,const boost::xpressive::detail::sub_match_vector<BidiIter> &)”的引用
+                 with
+                 [
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>
+                 ]
+                 f:\source\boost_1_55_0\boost\xpressive\match_results.hpp(369): 参见对正在编译的类 模板 实例化“boost::xpressive::detail::sub_match_vector<BidiIter>”的引用
+                 with
+                 [
+                     BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>
+                 ]
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(1137,5): warning MSB8012: TargetPath(F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.dll) does not match the Linker's OutputFile property value (C:\Program Files (x86)\Notepad++\plugins\LuaDebug.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Program Files (x86)\Notepad++\plugins\LuaDebug.dll" /INCREMENTAL /NOLOGO /LIBPATH:F:\Source\boost_1_55_0\stage\lib shlwapi.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.lib" /MACHINE:X86 /SAFESEH /DLL Debug\mobdebug.obj
+         Debug\NppPluginDemo.obj
+         Debug\PluginDefinition.obj
+         Debug\utf8.obj
+     1>mobdebug.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/SAFESEH”规范)
+            正在创建库 F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.lib 和对象 F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.exp
+         LuaDebug.vcxproj -> F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.dll
+     1>已完成生成项目“F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\LuaDebug\LuaDebug.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:10.59
