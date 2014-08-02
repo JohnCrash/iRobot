@@ -195,6 +195,7 @@ void LuaMobDebug::write_handler(const boost::system::error_code& e,std::size_t b
 
 void LuaMobDebug::doGetVariable(const std::string& name)
 {
+	/*
 	if( mSocket )
 	{
 		std::string cmd("GETV ");
@@ -202,6 +203,7 @@ void LuaMobDebug::doGetVariable(const std::string& name)
 		cmd += "\n";
 		boost::asio::write( *mSocket,buffer(cmd,cmd.size()) );
 	}
+	*/
 }
 
 void LuaMobDebug::doTraceback()

@@ -1,7 +1,7 @@
-﻿生成启动时间为 2014/8/1 15:11:31。
+﻿生成启动时间为 2014/8/1 16:00:00。
      1>项目“F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\LuaDebug\LuaDebug.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IF:\Source\boost_1_55_0 /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D LUADEBUG_EXPORTS /D _SCL_SECURE_NO_WARNING /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\mobdebug.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IF:\Source\boost_1_55_0 /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D LUADEBUG_EXPORTS /D _SCL_SECURE_NO_WARNING /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\PluginDefinition.cpp ..\..\mobdebug.cpp
          mobdebug.cpp
          Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
          - add -D_WIN32_WINNT=0x0501 to the compiler command line; or
@@ -87,6 +87,9 @@
                  [
                      BidiIter=std::_String_const_iterator<std::_String_val<std::_Simple_types<char>>>
                  ]
+         正在生成代码...
+         正在跳过...(未检测到相关更改)
+         PluginDefinition.cpp
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(1137,5): warning MSB8012: TargetPath(F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.dll) does not match the Linker's OutputFile property value (C:\Program Files (x86)\Notepad++\plugins\LuaDebug.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Program Files (x86)\Notepad++\plugins\LuaDebug.dll" /INCREMENTAL /NOLOGO /LIBPATH:F:\Source\boost_1_55_0\stage\lib shlwapi.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Debug\LuaDebug.lib" /MACHINE:X86 /SAFESEH /DLL Debug\mobdebug.obj
@@ -100,4 +103,4 @@
 
 生成成功。
 
-已用时间 00:00:10.59
+已用时间 00:00:12.89
