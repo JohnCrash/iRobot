@@ -30,6 +30,8 @@ public:
 	void run();
 	void stop();
 	void doContinue();
+	void getStack();
+	void parseStack( const std::string& s );
 	void doStep();
 	void doStepIn();
 	void doReset();

@@ -44,7 +44,7 @@ mStep("OVER\n"),
 mStepIn("STEP\n")
 {
 	//简单的赋值
-	mLocalRoot = "F:\\Source\\Edu\\EDEngine\\proj.win32\\Debug.win32";
+	mLocalRoot = "H:\\Source\\Edu-github\\EDEngine\\proj.win32\\Debug.win32";
 	search_dir( mLocalRoot,"*");
 }
 
@@ -65,30 +65,18 @@ std::string LuaMobDebug::mapLocalToRemot(std::string local)
 
 std::string LuaMobDebug::mapRemotToLocal(const std::string r)
 {
-	if( r.empty() )
+	std::vector<std::string> vs;
+	split_path(r,vs);
+	if(!vs.empty())
 	{
-		return mLocalRoot;
-	}
-	if( r.at(0)=='.' ) //相对路径
-	{
-		if( r.at(1)=='/' || r.at(1)=='\\' ) //linux
+		std::string key;
+		key = vs.front();
+		if( mLocalFileMap.find(key)!=mLocalFileMap.end())
 		{
-			std::string file = r.substr(2);
-			std::vector<std::string> vs;
-			split_path(file,vs);
-			if(!vs.empty())
-			{
-				std::string key;
-				key = vs.front();
-				if( mLocalFileMap.find(key)!=mLocalFileMap.end())
-				{
-					return mLocalFileMap[key];
-				}
-			}
-			return mLocalRoot + r.substr(1);
+			return mLocalFileMap[key];
 		}
 	}
-	else //绝对路径
+	//尝试绝对路径
 	{
 		std::string s;
 		std::vector<std::string> vs;
@@ -108,7 +96,7 @@ std::string LuaMobDebug::mapRemotToLocal(const std::string r)
 			}
 		}
 	}
-	return mLocalRoot;
+	return r;
 }
 
 LuaMobDebug::~LuaMobDebug()
@@ -134,7 +122,7 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 	if( getline(is,str) )
 	{
 		/*
-			200
+			200 OK
 			202 Paused source line
 			203 Paused source line watch_idx
 			204 Output stream size
@@ -146,6 +134,7 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		xpressive::sregex infop = xpressive::sregex::compile("204 Output\s+(\\w+) (\\d+)");
 		xpressive::sregex errorp = xpressive::sregex::compile("401 Error in Execution (\\d+)");
 		xpressive::sregex errorpt = xpressive::sregex::compile("error<([^\?<>|\"*]+)>@(\\d+)");
+		xpressive::sregex stackp = xpressive::sregex::compile("200 OK (.+)");
 		
 		xpressive::smatch what;
 		if( xpressive::regex_match(str,what,bpbreak2)||xpressive::regex_match(str,what,bpbreak1) )
@@ -161,7 +150,11 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 				Break( source,boost::lexical_cast<int>(what[2]) );
 			}
 		}
-
+		else if( xpressive::regex_match(str,what,stackp) )
+		{
+			std::string s = what[1];
+			parseStack( s );
+		}
 		else if( xpressive::regex_match(str,what,infop) )
 		{
 			if( GetInfoNotify )
@@ -183,6 +176,26 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		mInbuf,
 		'\n',
 		bind(&LuaMobDebug::readline_handler,this,placeholders::error,placeholders::signal_number) );
+}
+
+void LuaMobDebug::parseStack( const std::string& s )
+{
+	auto start = s.find_first_of('{',0);
+	auto end = s.rfind('}');
+	if( start != std::string::npos && end != std::string::npos )
+	{
+		auto ss = s.substr(start,end-start+1);
+		printf("%s",ss.c_str());
+	}
+}
+
+void LuaMobDebug::getStack()
+{
+	if( mSocket )
+	{
+		std::string cmd("STACK\n");
+		boost::asio::write( *mSocket,buffer(cmd,cmd.size()) );
+	}
 }
 
 void LuaMobDebug::write_handler(const boost::system::error_code& e,std::size_t bytes_transferred)
