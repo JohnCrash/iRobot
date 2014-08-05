@@ -99,5 +99,6 @@ protected:
 	bool isRunning;
 	bool isGetV;
 	std::string lastGetV;
+	std::string lastErrorMsg;
 };
 #endif

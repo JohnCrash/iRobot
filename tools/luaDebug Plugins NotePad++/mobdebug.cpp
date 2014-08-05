@@ -142,8 +142,8 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		xpressive::sregex bpbreak1 = xpressive::sregex::compile("202 Paused (\\S+) (\\d+)");
 		xpressive::sregex bpbreak2 = xpressive::sregex::compile("203 Paused (\\S+) (\\d+) (\\d+)");
 		xpressive::sregex infop = xpressive::sregex::compile("GETV (.+)");
-		xpressive::sregex errorp = xpressive::sregex::compile("401 Error in Execution (\\d+)");
-		xpressive::sregex errorpt = xpressive::sregex::compile("error<([^\?<>|\"*]+)>@(\\d+)");
+		xpressive::sregex errorp = xpressive::sregex::compile("ERRMSG (.+)");
+		xpressive::sregex errorpt = xpressive::sregex::compile("ERROR (\\S+) (\\d+)");
 		xpressive::sregex stackp = xpressive::sregex::compile("200 OK (.+)");
 		
 		xpressive::smatch what;
@@ -159,6 +159,7 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 				lastBreakLine = line;
 				Break( source,boost::lexical_cast<int>(what[2]) );
 				isRunning = false;
+				lastErrorMsg.clear();
 			}
 		}
 		else if( xpressive::regex_match(str,what,stackp) )
@@ -187,7 +188,10 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		else if( xpressive::regex_match(str,what,errorp) )
 		{
 			if( ErrorNotify )
+			{
 				ErrorNotify(what[1]);
+				lastErrorMsg = what[1];
+			}
 		}
 	}
 	boost::asio::async_read_until( 
@@ -234,6 +238,9 @@ void LuaMobDebug::doGetVariable(const std::string& name)
 		cmd += "\n";
 		lastGetV = name;
 		boost::asio::write( *mSocket,buffer(cmd,cmd.size()) );
+	}else if(!lastErrorMsg.empty())
+	{
+		GetInfoNotify(lastErrorMsg);
 	}
 }
 
@@ -259,6 +266,7 @@ void LuaMobDebug::doContinue()
 {
 	if( mSocket )
 	{
+		lastErrorMsg.clear();
 		isRunning = true;
 		boost::asio::async_write( *mSocket,
 			buffer(mContinue,mContinue.size()),
@@ -281,6 +289,7 @@ void LuaMobDebug::doReset()
 {
 	if( mSocket )
 	{
+		lastErrorMsg.clear();
 		isRunning = true;
 		std::string reset("EXIT\n");
 		boost::asio::write( *mSocket,buffer(reset,reset.size()) );
