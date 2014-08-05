@@ -36,15 +36,24 @@ mAcceptor(mIos,ip::tcp::endpoint(
 			)),
 */
 
-LuaMobDebug::LuaMobDebug(const char *addr,int port):
+LuaMobDebug::LuaMobDebug(std::string addr,int port):
 	mAcceptor(mIos,ip::tcp::endpoint(ip::address::from_string(addr),8172)),
 mThread(nullptr),
 mContinue("RUN\n"),
 mStep("OVER\n"),
 mStepIn("STEP\n")
 {
+	isGetV = true;
+	isRunning = true;
 	//¼òµ¥µÄ¸³Öµ
-	mLocalRoot = "H:\\Source\\Edu-github\\EDEngine\\proj.win32\\Debug.win32";
+	//mLocalRoot = "F:\\Source\\Edu\\EDEngine\\proj.win32\\Debug.win32";
+	//search_dir( mLocalRoot,"*");
+}
+
+void LuaMobDebug::set_lua_source_root(std::wstring root)
+{
+	mLocalRoot = toUTF8(root);
+	mLocalFileMap.clear();
 	search_dir( mLocalRoot,"*");
 }
 
@@ -101,6 +110,7 @@ std::string LuaMobDebug::mapRemotToLocal(const std::string r)
 
 LuaMobDebug::~LuaMobDebug()
 {
+	stop();
 }
 //
 void LuaMobDebug::async_accept()
@@ -131,7 +141,7 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		//xpressive::sregex setbp = xpressive::sregex::compile("break<([^\?<>|\"*]+)>@(\\d+)");
 		xpressive::sregex bpbreak1 = xpressive::sregex::compile("202 Paused (\\S+) (\\d+)");
 		xpressive::sregex bpbreak2 = xpressive::sregex::compile("203 Paused (\\S+) (\\d+) (\\d+)");
-		xpressive::sregex infop = xpressive::sregex::compile("204 Output\s+(\\w+) (\\d+)");
+		xpressive::sregex infop = xpressive::sregex::compile("GETV (.+)");
 		xpressive::sregex errorp = xpressive::sregex::compile("401 Error in Execution (\\d+)");
 		xpressive::sregex errorpt = xpressive::sregex::compile("error<([^\?<>|\"*]+)>@(\\d+)");
 		xpressive::sregex stackp = xpressive::sregex::compile("200 OK (.+)");
@@ -148,6 +158,7 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 				lastBreakSource = remoate;
 				lastBreakLine = line;
 				Break( source,boost::lexical_cast<int>(what[2]) );
+				isRunning = false;
 			}
 		}
 		else if( xpressive::regex_match(str,what,stackp) )
@@ -158,7 +169,15 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		else if( xpressive::regex_match(str,what,infop) )
 		{
 			if( GetInfoNotify )
-				GetInfoNotify(what[1]);
+			{
+				std::string ss = lastGetV+"\n"+what[1];
+				for(auto it = ss.begin();it!=ss.end();++it)
+				{
+					if( *it=='\t' )
+						*it='\n';
+				}
+				GetInfoNotify(ss);
+			}
 		}
 		else if( xpressive::regex_match(str,what,errorpt) )
 		{
@@ -208,15 +227,14 @@ void LuaMobDebug::write_handler(const boost::system::error_code& e,std::size_t b
 
 void LuaMobDebug::doGetVariable(const std::string& name)
 {
-	/*
-	if( mSocket )
+	if( mSocket && !isRunning && isGetV )
 	{
 		std::string cmd("GETV ");
 		cmd += name;
 		cmd += "\n";
+		lastGetV = name;
 		boost::asio::write( *mSocket,buffer(cmd,cmd.size()) );
 	}
-	*/
 }
 
 void LuaMobDebug::doTraceback()
@@ -241,6 +259,7 @@ void LuaMobDebug::doContinue()
 {
 	if( mSocket )
 	{
+		isRunning = true;
 		boost::asio::async_write( *mSocket,
 			buffer(mContinue,mContinue.size()),
 			bind(&LuaMobDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
@@ -251,6 +270,7 @@ void LuaMobDebug::doStep()
 {
 	if( mSocket )
 	{
+		isRunning = true;
 		boost::asio::async_write( *mSocket,
 			buffer(mStep,mStep.size()),
 			bind(&LuaMobDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
@@ -261,6 +281,7 @@ void LuaMobDebug::doReset()
 {
 	if( mSocket )
 	{
+		isRunning = true;
 		std::string reset("EXIT\n");
 		boost::asio::write( *mSocket,buffer(reset,reset.size()) );
 	}
@@ -270,6 +291,7 @@ void LuaMobDebug::doStepIn()
 {
 	if( mSocket )
 	{
+		isRunning = true;
 		boost::asio::async_write( *mSocket,
 			buffer(mStepIn,mStepIn.size()),
 			bind(&LuaMobDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
@@ -280,6 +302,7 @@ void LuaMobDebug::accept_handler(const system::error_code& e,SocketPtr s)
 {
 	if( e )
 	{
+		mIos.stop();
 		return;
 	}
 
@@ -363,9 +386,17 @@ void LuaMobDebug::removeBreakpoint( std::string source,int line )
 
 void LuaMobDebug::listener()
 {
-	async_accept();
+	try
+	{
+		async_accept();
 
-	mIos.run();
+		mIos.run();
+
+		mSocket.reset();
+	}catch(std::exception& e)
+	{
+		return;
+	}
 }
 
 void LuaMobDebug::run()
@@ -379,11 +410,17 @@ void LuaMobDebug::run()
 
 void LuaMobDebug::stop()
 {
-	if( mSocket )
-		mSocket.reset();
-	mIos.stop();
+	try
+	{
+		mAcceptor.close();
+	}catch(std::exception &e)
+	{
+	}
 
 	if( mThread )
+	{
+		mThread->join();
 		delete mThread;
+	}
 	mThread = nullptr;
 }

@@ -38,6 +38,7 @@ int LastLine = -1;
 std::string LastSource;
 HINSTANCE ghThisInstance;
 HWND getCurrentSCI();
+std::wstring get_lua_source_root();
 
 //确定当前编辑的文件名
 std::string getCurrentFile()
@@ -296,6 +297,20 @@ void ErrorInfo( std::string msg)
 	lastInfo = errorMsg;
 	PostMessage(nppData._scintillaMainHandle,SHOW_INFO,0,0);
 }
+
+std::string get_local_ip()
+{
+	char hostname[255];
+	if( !gethostname(hostname,sizeof(hostname)) )
+	{
+		hostent *ht = gethostbyname(hostname);
+		if( ht&&ht->h_addr_list)
+		{
+			return std::string(inet_ntoa(*(in_addr *)ht->h_addr_list[0]));
+		}
+	}
+	return std::string("127.0.0.0");
+}
 //
 // Initialize your plugin data here
 // It will be called while plugin loading   
@@ -303,13 +318,18 @@ void pluginInit(HANDLE hModule)
 {
 	if( !dbg )
 	{
+		std::string ip = get_local_ip();
 		try
 		{
-			dbg=new LuaMobDebug("192.168.2.113",8172);
-		}catch(...)
+			dbg=new LuaMobDebug(ip,8172);
+			if( dbg )
+			{
+				dbg->set_lua_source_root(get_lua_source_root());
+			}
+		}catch(std::exception &e)
 		{
 			dbg = nullptr;
-			MessageBox(NULL,TEXT("不能在指定的IP地址上监听"),TEXT("Lua Debuger initialization failed"),MB_OK);
+			MessageBox(NULL,toUnicode(e.what()).c_str(),toUnicode(ip).c_str(),MB_OK);
 		}
 	}
 	if(dbg)
@@ -456,7 +476,7 @@ void CreateMyTooltip (HWND hwnd)
 		hwndTT = CreateWindowEx(WS_EX_TOPMOST,
 			TOOLTIPS_CLASS,
 			NULL,
-			WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP,		
+			WS_POPUP | TTS_NOPREFIX |TTS_BALLOON,// TTS_ALWAYSTIP,		
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
 			CW_USEDEFAULT,
@@ -478,7 +498,7 @@ void CreateMyTooltip (HWND hwnd)
 
 		/* INITIALIZE MEMBERS OF THE TOOLINFO STRUCTURE */
 		ti.cbSize = sizeof(TOOLINFO);
-		ti.uFlags = TTF_SUBCLASS;
+		ti.uFlags = TTF_SUBCLASS|TTF_TRANSPARENT ;
 		ti.hwnd = hwnd;
 		ti.hinst = ghThisInstance;
 		ti.uId = uid;
@@ -493,6 +513,8 @@ void CreateMyTooltip (HWND hwnd)
 		SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti);	
 		wndMap[hwnd] = hwndTT;
 		SendMessage(hwndTT, TTM_ACTIVATE, (WPARAM)TRUE, 0);	
+		//设置延迟
+		SendMessage(hwndTT, TTM_SETDELAYTIME, (WPARAM)TTDT_AUTOMATIC, 999*1000);	
 	}
 	else
 	{
@@ -672,6 +694,77 @@ void tracefront()
 	if(dbg )
 		dbg->doTracefront();
 }
+#include "Shlobj.h"
+
+std::wstring get_lua_source_root()
+{
+	HKEY Root,NotePad,Key;
+	std::wstring s;
+	s.reserve(255);
+	if( RegCreateKey(HKEY_CURRENT_USER,TEXT("Software"),&Root)==ERROR_SUCCESS)
+	{
+		if( RegCreateKey(Root,TEXT("NotePad++"),&NotePad)==ERROR_SUCCESS)
+		{
+			TCHAR path[255];
+			LONG len;
+			if( RegQueryValue(NotePad,TEXT("luaDebugRoot"),path,&len) == ERROR_SUCCESS )
+			{
+				s = path;
+			}
+			RegCloseKey(NotePad);
+		}
+		RegCloseKey(Root);
+	}
+	return s;
+}
+void set_lua_source_root(std::wstring n)
+{
+	HKEY Root,NotePad,Key;
+	if( RegCreateKey(HKEY_CURRENT_USER,TEXT("Software"),&Root)==ERROR_SUCCESS)
+	{
+		if( RegCreateKey(Root,TEXT("NotePad++"),&NotePad)==ERROR_SUCCESS)
+		{
+			if( RegCreateKey(NotePad,TEXT("luaDebugRoot"),&Key)==ERROR_SUCCESS)
+			{
+				RegSetValue(Key,NULL,REG_SZ,n.c_str(),n.length());
+				RegCloseKey(Key);
+			}
+			RegCloseKey(NotePad);
+		}
+		RegCloseKey(Root);
+	}
+}
+//打开关闭取变量
+void enableGetV()
+{
+	if( dbg )
+	{
+		dbg->enableGetV();
+	}
+}
+//打开配置对话框
+void configureDialog()
+{
+	wchar_t szPath[MAX_PATH];
+	std::string str;
+	BROWSEINFO bi;
+	bi.hwndOwner = getCurrentSCI();
+	bi.pidlRoot = NULL;
+	bi.pszDisplayName = szPath;
+	bi.lpszTitle = TEXT("Select lua source root");
+	bi.ulFlags = 0;
+	bi.lpfn = NULL;
+	bi.iImage = 0;
+	LPITEMIDLIST lp = SHBrowseForFolder(&bi);
+	if(lp && SHGetPathFromIDList(lp, szPath))
+	{
+		set_lua_source_root(std::wstring(szPath));
+		if( dbg )
+		{
+			dbg->set_lua_source_root( std::wstring(szPath) );
+		}
+	}
+}
 
 ShortcutKey mySK[nbFunc] = 
 {
@@ -710,6 +803,8 @@ void commandMenuInit()
 	setCommand(5,TEXT("Reset"),reset,&mySK[5],false);
 	setCommand(6,TEXT("Trace back"),traceback,&mySK[6],false);
 	setCommand(7,TEXT("Trace front"),tracefront,&mySK[7],false);
+	setCommand(8,TEXT("Tooltips Enable or Disable"),enableGetV,NULL,false);
+	setCommand(9,TEXT("Configure..."),configureDialog,NULL,false);
 
 	SubClass(nppData._scintillaMainHandle);
 	SubClass(nppData._scintillaSecondHandle);
@@ -722,6 +817,15 @@ void commandMenuInit()
 void commandMenuCleanUp()
 {
 	// Don't forget to deallocate your shortcut here
+	if(dbg)
+	{
+		__try{
+			delete dbg;
+			dbg = nullptr;
+		}__except(EXCEPTION_EXECUTE_HANDLER)
+		{
+		}
+	}
 	KillTimer(nppData._nppHandle,1002);
 	//destory tooltip
 	for( std::map<HWND,HWND>::iterator i = wndMap.begin();i!=wndMap.end();++i )

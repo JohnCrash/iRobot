@@ -36,7 +36,7 @@ const TCHAR NPP_PLUGIN_NAME[] = TEXT("Lua debuger");
 //
 // Here define the number of your plugin commands
 //
-const int nbFunc = 8;
+const int nbFunc = 10;
 
 
 //
