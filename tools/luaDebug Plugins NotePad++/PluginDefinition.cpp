@@ -305,7 +305,7 @@ void pluginInit(HANDLE hModule)
 	{
 		try
 		{
-			dbg=new LuaMobDebug("192.168.2.113",8172);
+			dbg=new LuaMobDebug("192.168.0.182",8172);
 		}catch(...)
 		{
 			dbg = nullptr;
