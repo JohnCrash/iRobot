@@ -25,7 +25,7 @@ typedef function<void (std::string)> GetInfoFunction;
 class LuaMobDebug
 {
 public:
-	LuaMobDebug(const char *addr,int port);
+	LuaMobDebug(std::string addr,int port);
 	virtual ~LuaMobDebug();
 	void run();
 	void stop();
@@ -61,6 +61,11 @@ public:
 	{
 		ErrorNotify = ndf;
 	}
+	void set_lua_source_root(std::wstring root);
+	void enableGetV()
+	{
+		isGetV = !isGetV;
+	}
 protected:
 	void async_accept();
 	void accept_handler(const system::error_code& e,SocketPtr sock);
@@ -91,5 +96,9 @@ protected:
 	int lastBreakLine;
 	std::string lastBreakSource;
 	int doStepCount;
+	bool isRunning;
+	bool isGetV;
+	std::string lastGetV;
+	std::string lastErrorMsg;
 };
 #endif
