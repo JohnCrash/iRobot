@@ -1,31 +1,34 @@
 #include "utf8.h"
 #include <Windows.h>
-std::string reversion(const std::string& s)
+std::wstring reversion(const std::wstring& s)
 {
-	std::string r;
+	std::wstring r;
 	for(auto i=s.rbegin();i!=s.rend();++i)
 		r += *i;
 	return r;
 }
 
-void split_path(const std::string& r,std::vector<std::string>& vs)
+void split_path(const std::wstring& r,std::vector<std::wstring>& vs)
 {
-	std::string s;
-	for( int i=r.length()-1;i>=0;i-- )
+	std::wstring s;
+	if( !r.empty() )
 	{
-		if( r.at(i)!='/'&&r.at(i)!='\\' )
+		for( int i=r.length()-1;i>=0;i-- )
 		{
-			s += r.at(i);
-		}else
+			if( r.at(i)!='/'&&r.at(i)!='\\' )
+			{
+				s += r.at(i);
+			}else
+			{
+				vs.push_back(reversion(s));
+				s.clear();
+			}
+		}
+		if( !s.empty() )
 		{
 			vs.push_back(reversion(s));
 			s.clear();
 		}
-	}
-	if( !s.empty() )
-	{
-		vs.push_back(reversion(s));
-		s.clear();
 	}
 }
 

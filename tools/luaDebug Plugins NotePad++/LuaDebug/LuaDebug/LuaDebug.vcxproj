@@ -64,7 +64,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>C:\Program Files\Notepad++\plugins\LuaDebug.dll</OutputFile>
+      <OutputFile>c:\Program Files\Notepad++\plugins\LuaDebug.dll</OutputFile>
       <AdditionalLibraryDirectories>H:\Source\boost_1_55_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

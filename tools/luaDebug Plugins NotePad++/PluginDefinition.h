@@ -22,6 +22,8 @@
 // All difinitions of plugin interface
 //
 #include "PluginInterface.h"
+#include <vector>
+#include <string>
 
 //-------------------------------------//
 //-- STEP 1. DEFINE YOUR PLUGIN NAME --//
@@ -67,6 +69,35 @@ void commandMenuCleanUp();
 bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk = NULL, bool check0nInit = false);
 
 
+//切换到文档
+void switchDocument( std::wstring source);
+
+//清理标记
+void clearMakeLine( std::wstring source, int line );
+//标记
+void makeLine( std::wstring source,int line,int type );
+//调到指定的行
+bool gotoLine( std::wstring source,int line );
+//切换到指定文档
+void SwitchTo(std::wstring filename );
+//确定当前编辑的文件名
+std::wstring getCurrentFile();
+//取得当前编辑窗口光标所在行
+int getCurrentLine();
+//取当前编辑窗句柄
+HWND getCurrentSCI();
+//保存全部文档
+void saveAll();
+void setCurrentBookLine(int line);
+void clearCurrentBookLine(int line);
+//当前行是一个BookLine?
+bool isCurrentBookLine( int line );
+int CurrentBookNext( int line );
+std::vector<std::wstring> GetAllFileName();
+int GetNextMark( int line );
+bool GetMark( int line );
+
+//
 //
 // Your plugin command functions
 //

@@ -1,14 +1,14 @@
 #include "MobDebug.h"
 #include "utf8.h"
 
-void LuaMobDebug::search_dir(std::string dir,std::string pat)
+void LuaMobDebug::search_dir(std::wstring dir,std::wstring pat)
 {
 	WIN32_FIND_DATA ff;
-	std::string search_path;
+	std::wstring search_path;
 	search_path.append(dir);
-	search_path.append("\\");
+	search_path.append(TEXT("\\"));
 	search_path.append(pat);
-	HANDLE handle = FindFirstFile(toUnicode(search_path).c_str(),&ff);
+	HANDLE handle = FindFirstFile(search_path.c_str(),&ff);
 	if(handle!=INVALID_HANDLE_VALUE)
 	{
 		while( FindNextFile(handle,&ff) )
@@ -17,14 +17,14 @@ void LuaMobDebug::search_dir(std::string dir,std::string pat)
 			if((ff.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)&&
 				filename!=TEXT(".")&&filename!=TEXT(".."))
 			{//目录
-				search_dir( dir+"\\"+toUTF8(filename),"*");
+				search_dir( dir+TEXT("\\")+filename,TEXT("*"));
 			}
 			else if(ff.dwFileAttributes&FILE_ATTRIBUTE_ARCHIVE)
 			{
-				std::string filename = toUTF8(ff.cFileName);
-				std::string ex = filename.substr(filename.length()-4);
-				if( ex==".lua"||ex==".Lua"||ex==".LUA" )
-					mLocalFileMap[filename] = dir + "\\" + filename;
+				std::wstring filename = ff.cFileName;
+				std::wstring ex = filename.substr(filename.length()-4);
+				if( ex==TEXT(".lua")||ex==TEXT(".Lua")||ex==TEXT(".LUA") )
+					mLocalFileMap[filename] = dir + TEXT("\\") + filename;
 			}
 		}
 		FindClose(handle);
@@ -45,66 +45,56 @@ mStepIn("STEP\n")
 {
 	isGetV = true;
 	isRunning = true;
-	//简单的赋值
-	//mLocalRoot = "F:\\Source\\Edu\\EDEngine\\proj.win32\\Debug.win32";
-	//search_dir( mLocalRoot,"*");
 }
 
 void LuaMobDebug::set_lua_source_root(std::wstring root)
 {
-	mLocalRoot = toUTF8(root);
+	mLocalRoot = root;
 	mLocalFileMap.clear();
-	search_dir( mLocalRoot,"*");
+	search_dir( mLocalRoot,TEXT("*"));
 }
 
-std::string LuaMobDebug::mapLocalToRemot(std::string local)
+std::wstring LuaMobDebug::mapLocalToRemot(std::wstring local)
 {
 	if( local.length() > mLocalRoot.length()+1 )
 	{
-		std::string s = local.substr(mLocalRoot.length()+1);
+		std::wstring s = local.substr(mLocalRoot.length()+1);
 		for(auto i=s.begin();i!=s.end();++i )
 		{
 			if( *i == '\\' )
 				*i = '/';
 		}
-		return ".\\"+s;
+		return TEXT(".\\")+s;
 	}
 	return local;
 }
 
-std::string LuaMobDebug::mapRemotToLocal(const std::string r)
+std::wstring LuaMobDebug::mapRemotToLocal(const std::wstring r,bool &b)
 {
-	std::vector<std::string> vs;
+	std::vector<std::wstring> vs;
 	split_path(r,vs);
 	if(!vs.empty())
 	{
-		std::string key;
+		std::wstring key;
 		key = vs.front();
 		if( mLocalFileMap.find(key)!=mLocalFileMap.end())
 		{
+			b = true;
 			return mLocalFileMap[key];
 		}
 	}
 	//尝试绝对路径
 	{
-		std::string s;
-		std::vector<std::string> vs;
-		split_path(r,vs);
-		for(auto it=vs.begin();it!=vs.end();++it)
+		std::string filename = toUTF8(r);
+		FILE* fp = fopen(filename.c_str(),"r");
+		if(fp)
 		{
-			std::string filename=mLocalRoot;
-			std::string tmp = "\\"+*it;
-			s = tmp + s;
-			filename += s;
-			FILE* fp = fopen(filename.c_str(),"r");
-			if(fp)
-			{
-				fclose(fp);
-				mRemoteRoot = r.substr(0,r.length()-s.length());
-				return filename;
-			}
+			fclose(fp);
+			b = true;
+			return r;
 		}
 	}
+	b = false;
 	return r;
 }
 
@@ -151,15 +141,24 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		{
 			if( Break )
 			{
-				std::string remoate = what[1];
+				std::wstring remoate = toUnicode(what[1]);
 				int line = boost::lexical_cast<int>(what[2]);
-				std::string source = mapRemotToLocal(remoate);
-				doStepCount = 0;
-				lastBreakSource = remoate;
-				lastBreakLine = line;
-				Break( source,boost::lexical_cast<int>(what[2]) );
-				isRunning = false;
-				lastErrorMsg.clear();
+				bool b;
+				std::wstring source = mapRemotToLocal(remoate,b);
+				if( b )
+				{
+					doStepCount = 0;
+					lastBreakSource = remoate;
+					lastBreakLine = line;
+					Break( source,line );
+					isRunning = false;
+					lastErrorMsg.clear();
+				}
+				else
+				{
+					std::wstring msg = remoate;
+					MessageBox(NULL,msg.c_str(),TEXT("File not found"),MB_OK);
+				}
 			}
 		}
 		else if( xpressive::regex_match(str,what,stackp) )
@@ -171,26 +170,38 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		{
 			if( GetInfoNotify )
 			{
-				std::string ss = lastGetV+"\n"+what[1];
+				std::wstring ss = toUnicode(lastGetV)+TEXT("\n")+toUnicode(what[1]);
 				for(auto it = ss.begin();it!=ss.end();++it)
 				{
 					if( *it=='\t' )
 						*it='\n';
 				}
-				GetInfoNotify(ss);
+				GetInfoNotify(toUTF8(ss));
 			}
 		}
 		else if( xpressive::regex_match(str,what,errorpt) )
 		{
 			if( Error )
-				Error( what[1],boost::lexical_cast<int>(what[2]) );
+			{
+				std::wstring remoate = toUnicode(what[1]);
+				int line = boost::lexical_cast<int>(what[2]);
+				bool b;
+				std::wstring source = mapRemotToLocal(remoate,b);
+				if(b)
+					Error( source,line);
+				else
+				{
+					std::wstring msg = remoate;
+					MessageBox(NULL,msg.c_str(),TEXT("File not found"),MB_OK);
+				}
+			}
 		}
 		else if( xpressive::regex_match(str,what,errorp) )
 		{
 			if( ErrorNotify )
 			{
-				ErrorNotify(what[1]);
 				lastErrorMsg = what[1];
+				ErrorNotify(lastErrorMsg);
 			}
 		}
 	}
@@ -323,15 +334,15 @@ void LuaMobDebug::accept_handler(const system::error_code& e,SocketPtr s)
 
 	for( BPS::iterator i = bps.begin();i!=bps.end();++i )
 	{
-		std::string remoat_source = mapLocalToRemot(i->second);
+		std::wstring remoat_source = mapLocalToRemot(i->second);
 		std::stringstream ss(std::stringstream::out);
-		ss<<"SETB "<<remoat_source<<" "<<i->first<<"\n";
+		ss<<"SETB "<< toUTF8(remoat_source) <<" "<<i->first<<"\n";
 		
 		boost::asio::write( *mSocket,boost::asio::buffer(ss.str()) );
 	}
 
-	//doContinue();
-	doStep();
+	doContinue();
+	//doStep();
 
 	boost::asio::async_read_until( *mSocket,
 		mInbuf,
@@ -340,7 +351,7 @@ void LuaMobDebug::accept_handler(const system::error_code& e,SocketPtr s)
 }
 
 //加入断点
-void LuaMobDebug::addBreakpoint( std::string source,int line )
+void LuaMobDebug::addBreakpoint( std::wstring source,int line )
 {
 	for( BPS::iterator i = bps.begin();i!=bps.end();++i )
 	{
@@ -349,12 +360,12 @@ void LuaMobDebug::addBreakpoint( std::string source,int line )
 			return;
 		}
 	}
-	bps.push_back(std::pair<int,std::string>(line,source));
+	bps.push_back(std::pair<int,std::wstring>(line,source));
 	if( mSocket && mSocket->is_open() )
 	{
 		std::stringstream ss(std::stringstream::out);
-		std::string remoat_source = mapLocalToRemot(source);
-		ss<<"SETB "<<remoat_source<<" "<<line<<"\n";
+		std::wstring remoat_source = mapLocalToRemot(source);
+		ss<<"SETB "<< toUTF8(remoat_source)<<" "<<line<<"\n";
 		mSocket->write_some(boost::asio::buffer(ss.str()));
 	}
 }
@@ -366,15 +377,15 @@ void LuaMobDebug::removeAll()
 		for( auto i =bps.begin();i!=bps.end();++i )
 		{
 			std::stringstream ss(std::stringstream::out);
-			std::string remoat_source = mapLocalToRemot(i->second);
-			ss<<"DELB "<<remoat_source<<" "<<i->first<<"\n";
+			std::wstring remoat_source = mapLocalToRemot(i->second);
+			ss<<"DELB "<< toUTF8(remoat_source) <<" "<<i->first<<"\n";
 			mSocket->write_some(boost::asio::buffer(ss.str()));			
 		}
 	}
 	bps.clear();
 }
 
-void LuaMobDebug::removeBreakpoint( std::string source,int line )
+void LuaMobDebug::removeBreakpoint( std::wstring source,int line )
 {
 	for( BPS::iterator i = bps.begin();i!=bps.end();++i )
 	{
@@ -384,8 +395,8 @@ void LuaMobDebug::removeBreakpoint( std::string source,int line )
 			if( mSocket && mSocket->is_open() )
 			{
 				std::stringstream ss(std::stringstream::out);
-				std::string remoat_source = mapLocalToRemot(source);
-				ss<<"DELB "<<remoat_source<<" "<<line<<"\n";
+				std::wstring remoat_source = mapLocalToRemot(source);
+				ss<<"DELB "<< toUTF8(remoat_source) <<" "<<line<<"\n";
 				mSocket->write_some(boost::asio::buffer(ss.str()));
 			}
 			return;

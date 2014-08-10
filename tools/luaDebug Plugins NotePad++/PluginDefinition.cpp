@@ -35,19 +35,19 @@ NppData nppData;
 LuaMobDebug *dbg;//("192.168.2.116",8172);
 
 int LastLine = -1;
-std::string LastSource;
+std::wstring LastSource;
 HINSTANCE ghThisInstance;
 HWND getCurrentSCI();
 std::wstring get_lua_source_root();
 
 //确定当前编辑的文件名
-std::string getCurrentFile()
+std::wstring getCurrentFile()
 {
 	std::wstring name;
 	name.resize(256);
 	LRESULT BufferID = ::SendMessage(nppData._nppHandle,NPPM_GETCURRENTBUFFERID,0,0);
 	::SendMessage(nppData._nppHandle,NPPM_GETFULLPATHFROMBUFFERID,BufferID,(LPARAM)name.c_str());
-	return toUTF8(name);
+	return name;
 }
 
 //取得当前编辑窗口光标所在行
@@ -101,15 +101,12 @@ int CurrentBookNext( int line )
 	}
 }
 
-bool gotoLine( std::string source,int line )
+bool gotoLine( std::wstring source,int line )
 {
-	std::wstring us = toUnicode(source);
-	//open file
-	bool b = (bool)::SendMessage(nppData._nppHandle, NPPM_DOOPEN, 0,(WPARAM)us.c_str());
-	if( b )
-	//goto line
-		::SendMessage(getCurrentSCI(),SCI_GOTOLINE,(WPARAM)line-1,0);
-	return b;
+	std::wstring us = source;
+	SwitchTo( us );
+	::SendMessage(getCurrentSCI(),SCI_GOTOLINE,(WPARAM)line-1,0);
+	return true;
 }
 
 #define SCE_UNIVERSAL_FOUND_STYLE_INC 28
@@ -117,20 +114,30 @@ bool gotoLine( std::string source,int line )
 
 int lastMakeLineType;
 
-void makeLine( std::string source,int line,int type )
+void makeLine( std::wstring source,int line,int type )
 {
 	int start,len;
-	std::wstring us = toUnicode(source);
-	//切换到文件
-	SendMessage(nppData._nppHandle,NPPM_DOOPEN,0,(LPARAM)us.c_str());
+	std::wstring us = source;
+	SwitchTo( source );
 
 	start = ::SendMessage(getCurrentSCI(),SCI_POSITIONFROMLINE,line-1,0);
 	if( start != -1 )
 	{
 		len = ::SendMessage(getCurrentSCI(),SCI_LINELENGTH,line-1,0);
-		::SendMessage(getCurrentSCI(),SCI_SETINDICATORCURRENT,type,0);
-		::SendMessage(getCurrentSCI(),SCI_INDICATORFILLRANGE,start,len);
-		lastMakeLineType = type;
+		if( len > 0 )
+		{
+			::SendMessage(getCurrentSCI(),SCI_SETINDICATORCURRENT,type,0);
+			::SendMessage(getCurrentSCI(),SCI_INDICATORFILLRANGE,start,len);
+			lastMakeLineType = type;
+		}
+		else
+		{
+			MessageBox(getCurrentSCI(),TEXT("len < 0"),TEXT("makeLine"),MB_OK);
+		}
+	}
+	else
+	{
+		MessageBox(getCurrentSCI(),TEXT("start = -1"),TEXT("makeLine"),MB_OK);
 	}
 }
 
@@ -146,13 +153,11 @@ HWND getCurrentSCI()
 		return nppData._scintillaMainHandle;
 }
 
-void clearMakeLine( std::string source, int line )
+void clearMakeLine( std::wstring source, int line )
 {
 	int start,len;
-	std::wstring us = toUnicode(source);
-	//切换到文件
-	SendMessage(nppData._nppHandle,NPPM_DOOPEN,0,(LPARAM)us.c_str());
-
+	std::wstring us = source;
+	SwitchTo(source);
 	start = ::SendMessage(getCurrentSCI(),SCI_POSITIONFROMLINE,line-1,0);
 	if( start != -1 )
 	{
@@ -195,10 +200,10 @@ bool GetMark( int line )
 	return (int)SendMessage(getCurrentSCI(),SCI_MARKERGET,line-1,0)==0x1000000?true:false;
 }
 
-std::string lastBreakSource;
+std::wstring lastBreakSource;
 int lastBreakline;
 
-void breakPoint( std::string source,int line )
+void breakPoint( std::wstring source,int line )
 {
 	SetActiveWindow(nppData._nppHandle);
 	SetForegroundWindow(nppData._nppHandle);
@@ -208,6 +213,8 @@ void breakPoint( std::string source,int line )
 	if( LastLine != -1 )
 	{
 		clearMakeLine(LastSource,LastLine);
+		LastSource.clear();
+		LastLine = -1;
 	}
 
 	if( gotoLine( source,line ) )
@@ -218,7 +225,7 @@ void breakPoint( std::string source,int line )
 	}
 }
 
-void Error(std::string source,int line)
+void Error(std::wstring source,int line)
 {
 	SetActiveWindow(nppData._nppHandle);
 	SetForegroundWindow(nppData._nppHandle);
@@ -228,6 +235,8 @@ void Error(std::string source,int line)
 	if( LastLine != -1 )
 	{
 		clearMakeLine(LastSource,LastLine);
+		LastSource.clear();
+		LastLine = -1;
 	}
 
 	if( gotoLine( source,line ) )
@@ -240,7 +249,21 @@ void Error(std::string source,int line)
 
 void SwitchTo(std::wstring filename )
 {
-	SendMessage(nppData._nppHandle,NPPM_SWITCHTOFILE,0,(LPARAM)filename.c_str());
+	if( !SendMessage(nppData._nppHandle,NPPM_SWITCHTOFILE,0,(LPARAM)filename.c_str()) )
+	{
+		std::string fn = toUTF8(filename);
+		FILE *fp = fopen( fn.c_str(),"r" );
+		if( fp )
+		{
+			fclose( fp );
+			//没有切换好
+			SendMessage(nppData._nppHandle,NPPM_DOOPEN,0,(LPARAM)filename.c_str());
+		}
+		else
+		{
+			MessageBox(nppData._nppHandle,filename.c_str(),TEXT("Not exist file"),MB_OK );
+		}
+	}
 }
 
 void newDebug()
@@ -258,7 +281,7 @@ void newDebug()
 				line = GetNextMark(line);
 				if( line==-1 )break;
 				line++;
-				dbg->addBreakpoint(toUTF8(*i),line);
+				dbg->addBreakpoint(*i,line);
 			}while( line>=0 );
 		}
 	}
@@ -268,7 +291,7 @@ void newDebug()
 std::string lastInfo;
 std::string errorMsg;
 int  errorLine;
-std::string errorSource;
+std::wstring errorSource;
 
 void showInfo(std::string info)
 {
@@ -283,7 +306,7 @@ void ErrorInfo( std::string msg)
 	xpressive::smatch what;
 	if( xpressive::regex_match(msg,what,setbp) )
 	{
-		errorSource = what[1];
+		errorSource = toUnicode(what[1]);
 		boost::to_lower(errorSource);
 		errorLine = lexical_cast<int>(what[2]);
 		errorMsg = what[3];
@@ -359,6 +382,8 @@ void run()
 		if( LastLine != -1 )
 		{
 			clearMakeLine(LastSource,LastLine);
+			LastSource.clear();
+			LastLine = -1;
 		}
 		dbg->doContinue();
 	}
@@ -368,7 +393,7 @@ void setBreakpoint()
 {
 	if(dbg )
 	{
-		std::string file = getCurrentFile();
+		std::wstring file = getCurrentFile();
 		int line = getCurrentLine();
 		if( GetMark(line) )
 		{
@@ -391,11 +416,14 @@ void step()
 		if( LastLine != -1 )
 		{
 			clearMakeLine(LastSource,LastLine);
+			LastSource.clear();
+			LastLine = -1;
 		}
 		dbg->doStep();
 	}
 }
 
+bool flag = false;
 void stepin()
 {
 	if(dbg )
@@ -403,6 +431,8 @@ void stepin()
 		if( LastLine != -1 )
 		{
 			clearMakeLine(LastSource,LastLine);
+			LastSource.clear();
+			LastLine = -1;
 		}
 		dbg->doStepIn();
 	}
@@ -436,6 +466,8 @@ void reset()
 		if( LastLine != -1 )
 		{
 			clearMakeLine(LastSource,LastLine);
+			LastSource.clear();
+			LastLine = -1;
 		}
 		dbg->doReset();
 	}
@@ -622,9 +654,9 @@ VOID CALLBACK TimerProc( HWND hWnd,UINT uMsg,UINT_PTR id,DWORD dwTime)
 						int startpos = SendMessage(mouseWnd,SCI_POSITIONFROMLINE,line,0);
 						if( startpos>= 0 )
 						{
-							std::string source = getCurrentFile();
+							std::wstring source = getCurrentFile();
 							boost::to_lower(source);
-							lineHandle(str,pos-startpos,source,line);
+							lineHandle(str,pos-startpos,toUTF8(source),line);
 						}
 					}
 				}
@@ -819,12 +851,8 @@ void commandMenuCleanUp()
 	// Don't forget to deallocate your shortcut here
 	if(dbg)
 	{
-		__try{
-			delete dbg;
-			dbg = nullptr;
-		}__except(EXCEPTION_EXECUTE_HANDLER)
-		{
-		}
+		delete dbg;
+		dbg = nullptr;
 	}
 	KillTimer(nppData._nppHandle,1002);
 	//destory tooltip

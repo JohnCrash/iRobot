@@ -15,10 +15,10 @@ using namespace boost;
 using namespace boost::asio;
 
 typedef shared_ptr<ip::tcp::socket> SocketPtr;
-typedef shared_ptr<std::string> StringPtr;
-typedef std::vector<std::pair<int,std::string>> BPS;
+typedef shared_ptr<std::wstring> StringPtr;
+typedef std::vector<std::pair<int,std::wstring>> BPS;
 
-typedef function<void (std::string,int) > BreakFunction;
+typedef function<void (std::wstring,int) > BreakFunction;
 typedef function<void () > NewDebugFunction;
 typedef function<void (std::string)> GetInfoFunction;
 
@@ -38,8 +38,8 @@ public:
 	void doTraceback();
 	void doTracefront();
 	void doGetVariable(const std::string& name);
-	void addBreakpoint( std::string source,int line );
-	void removeBreakpoint( std::string source,int line );
+	void addBreakpoint( std::wstring source,int line );
+	void removeBreakpoint( std::wstring source,int line );
 	void removeAll();
 	void setGetInfoNotify( GetInfoFunction gif )
 	{
@@ -72,9 +72,9 @@ protected:
 	void write_handler(const system::error_code& e,std::size_t bytes_transferred);
 	void readline_handler( const system::error_code& e,std::size_t size );
 	void listener();
-	std::string mapRemotToLocal(std::string str);
-	void search_dir(std::string dir,std::string pat);
-	std::string mapLocalToRemot(std::string local);
+	std::wstring mapRemotToLocal(std::wstring str,bool &b);
+	void search_dir(std::wstring dir,std::wstring pat);
+	std::wstring mapLocalToRemot(std::wstring local);
 
 	io_service mIos;
 	SocketPtr mSocket;
@@ -90,11 +90,12 @@ protected:
 	NewDebugFunction NewDebug;
 	GetInfoFunction GetInfoNotify;
 	GetInfoFunction ErrorNotify;
-	std::string mLocalRoot; //本地代码根
-	std::string mRemoteRoot; //远程根
-	std::map<std::string,std::string> mLocalFileMap;
+
+	std::wstring mLocalRoot; //本地代码根
+	std::wstring mRemoteRoot; //远程根
+	std::map<std::wstring,std::wstring> mLocalFileMap;
 	int lastBreakLine;
-	std::string lastBreakSource;
+	std::wstring lastBreakSource;
 	int doStepCount;
 	bool isRunning;
 	bool isGetV;

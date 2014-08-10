@@ -5,7 +5,7 @@
     </LocalDebuggerCommandArguments>
     <LocalDebuggerEnvironment>C:\Program Files (x86)\Notepad++\</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommand>C:\Program Files\Notepad++\notepad++.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommand>c:\Program Files\Notepad++\notepadPlus_Debug.exe</LocalDebuggerCommand>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommand>C:\Program Files (x86)\Notepad++\notepad++.exe</LocalDebuggerCommand>
