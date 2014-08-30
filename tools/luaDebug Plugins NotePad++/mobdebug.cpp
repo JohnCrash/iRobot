@@ -22,9 +22,12 @@ void LuaMobDebug::search_dir(std::wstring dir,std::wstring pat)
 			else if(ff.dwFileAttributes&FILE_ATTRIBUTE_ARCHIVE)
 			{
 				std::wstring filename = ff.cFileName;
-				std::wstring ex = filename.substr(filename.length()-4);
-				if( ex==TEXT(".lua")||ex==TEXT(".Lua")||ex==TEXT(".LUA") )
-					mLocalFileMap[filename] = dir + TEXT("\\") + filename;
+				if( filename.length()>4 )
+				{
+					std::wstring ex = filename.substr(filename.length()-4);
+					if( ex==TEXT(".lua")||ex==TEXT(".Lua")||ex==TEXT(".LUA") )
+						mLocalFileMap[filename] = dir + TEXT("\\") + filename;
+				}
 			}
 		}
 		FindClose(handle);
@@ -56,6 +59,7 @@ void LuaMobDebug::set_lua_source_root(std::wstring root)
 
 std::wstring LuaMobDebug::mapLocalToRemot(std::wstring local)
 {
+	/*
 	if( local.length() > mLocalRoot.length()+1 )
 	{
 		std::wstring s = local.substr(mLocalRoot.length()+1);
@@ -65,6 +69,11 @@ std::wstring LuaMobDebug::mapLocalToRemot(std::wstring local)
 				*i = '/';
 		}
 		return TEXT(".\\")+s;
+	}*/
+	size_t pos = local.rfind('\\');
+	if( pos != std::wstring::npos )
+	{
+		return local.substr(pos+1);
 	}
 	return local;
 }

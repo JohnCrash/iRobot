@@ -76,12 +76,12 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LUADEBUG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>F:\Source\boost_1_55_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>H:\Source\boost_1_55_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -89,8 +89,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>F:\Source\boost_1_55_0\stage\lib</AdditionalLibraryDirectories>
-      <OutputFile>C:\Program Files (x86)\Notepad++\plugins\LuaDebug.dll</OutputFile>
+      <AdditionalLibraryDirectories>H:\Source\boost_1_55_0\stage\lib</AdditionalLibraryDirectories>
+      <OutputFile>C:\Program Files\Notepad++\plugins\LuaDebug.dll</OutputFile>
       <AdditionalDependencies>shlwapi.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

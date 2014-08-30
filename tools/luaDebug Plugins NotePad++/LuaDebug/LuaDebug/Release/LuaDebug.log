@@ -1,17 +1,41 @@
-﻿生成启动时间为 2014/8/1 9:48:37。
-     1>项目“F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\LuaDebug\LuaDebug.vcxproj”在节点 2 上(Build 个目标)。
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(1137,5): warning MSB8012: TargetPath(F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.dll) does not match the Linker's OutputFile property value (C:\Program Files (x86)\Notepad++\plugins\LuaDebug.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
-     1>Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Program Files (x86)\Notepad++\plugins\LuaDebug.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:F:\Source\boost_1_55_0\stage\lib shlwapi.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.lib" /MACHINE:X86 /SAFESEH /DLL Release\LuaDebug.obj
-         Release\mobdebug.obj
+﻿Build started 2014/8/31 0:54:01.
+     1>Project "H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\LuaDebug\LuaDebug.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IH:\Source\boost_1_55_0 /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D LUADEBUG_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\PluginDefinition.cpp ..\..\mobdebug.cpp
+         PluginDefinition.cpp
+         Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+         - add -D_WIN32_WINNT=0x0501 to the compiler command line; or
+         - add _WIN32_WINNT=0x0501 to your project's Preprocessor Definitions.
+         Assuming _WIN32_WINNT=0x0501 (i.e. Windows XP target).
+     1>H:\Source\boost_1_55_0\boost/format/alt_sstream_impl.hpp : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>..\..\PluginDefinition.cpp(255): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 11.0\VC\include\stdio.h(218) : see declaration of 'fopen'
+     1>..\..\PluginDefinition.cpp(595): warning C4018: '<' : signed/unsigned mismatch
+     1>..\..\PluginDefinition.cpp(598): warning C4018: '<' : signed/unsigned mismatch
+     1>..\..\PluginDefinition.cpp(600): warning C4018: '<' : signed/unsigned mismatch
+     1>..\..\PluginDefinition.cpp(733): warning C4101: 'Key' : unreferenced local variable
+         mobdebug.cpp
+         Please define _WIN32_WINNT or _WIN32_WINDOWS appropriately. For example:
+         - add -D_WIN32_WINNT=0x0501 to the compiler command line; or
+         - add _WIN32_WINNT=0x0501 to your project's Preprocessor Definitions.
+         Assuming _WIN32_WINNT=0x0501 (i.e. Windows XP target).
+     1>H:\Source\boost_1_55_0\boost/format/alt_sstream_impl.hpp : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>..\..\mobdebug.cpp(98): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 11.0\VC\include\stdio.h(218) : see declaration of 'fopen'
+     1>..\..\mobdebug.cpp(425): warning C4101: 'e' : unreferenced local variable
+     1>..\..\mobdebug.cpp(445): warning C4101: 'e' : unreferenced local variable
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(1137,5): warning MSB8012: TargetPath(H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.dll) does not match the Linker's OutputFile property value (C:\Program Files\Notepad++\plugins\LuaDebug.dll). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
+       Link:
+         C:\Program Files\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Program Files\Notepad++\plugins\LuaDebug.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:H:\Source\boost_1_55_0\stage\lib shlwapi.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.lib" /MACHINE:X86 /SAFESEH /DLL Release\mobdebug.obj
          Release\NppPluginDemo.obj
          Release\PluginDefinition.obj
-            正在创建库 F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.lib 和对象 F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.exp
-         正在生成代码
-         已完成代码的生成
-         LuaDebug.vcxproj -> F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.dll
-     1>已完成生成项目“F:\Source\iRobot\tools\luaDebug Plugins NotePad++\LuaDebug\LuaDebug\LuaDebug.vcxproj”(Build 个目标)的操作。
+         Release\utf8.obj
+            Creating library H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.lib and object H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.exp
+         Generating code
+         Finished generating code
+         LuaDebug.vcxproj -> H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\Release\LuaDebug.dll
+     1>Done Building Project "H:\Source\iRobot-github\tools\luaDebug Plugins NotePad++\LuaDebug\LuaDebug\LuaDebug.vcxproj" (Build target(s)).
 
-生成成功。
+Build succeeded.
 
-已用时间 00:00:07.26
+Time Elapsed 00:00:36.64
