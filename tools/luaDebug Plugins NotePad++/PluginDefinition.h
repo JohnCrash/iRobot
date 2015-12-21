@@ -23,7 +23,7 @@
 //
 #include "PluginInterface.h"
 #include <vector>
-#include <string>
+//#include <string>
 
 //-------------------------------------//
 //-- STEP 1. DEFINE YOUR PLUGIN NAME --//

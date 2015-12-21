@@ -1,15 +1,17 @@
 #ifndef _LuaMobDebug_H_
 #define _LuaMobDebug_H_
 
-//#define __STDC_WANT_SECURE_LIB__ 1
+#define __STDC_WANT_SECURE_LIB__ 1
 
+#include <stdio.h>
 #include "boost/thread.hpp"
-#include <boost/smart_ptr.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/smart_ptr.hpp"
+#include "boost/lexical_cast.hpp"
 #include "boost/algorithm/string.hpp"
 #include "boost/xpressive/xpressive_dynamic.hpp"
 #include "boost/asio.hpp"
-#include <boost/format.hpp>
+#include "boost/format.hpp"
+#include <string>
 
 using namespace boost;
 using namespace boost::asio;

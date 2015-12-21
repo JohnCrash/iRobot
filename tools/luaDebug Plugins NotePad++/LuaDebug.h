@@ -1,27 +1,29 @@
 #ifndef _LUADEBUG_H_
 #define _LUADEBUG_H_
 
+//#define __STDC_WANT_SECURE_LIB__ 1
 #define __STDC_WANT_SECURE_LIB__ 1
+//#define _CRT_NONSTDC_NO_DEPRECATE 1
 
 #include "boost/thread.hpp"
-#include <boost/smart_ptr.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/shared_ptr.hpp"
+#include "boost/lexical_cast.hpp"
 #include "boost/algorithm/string.hpp"
 #include "boost/xpressive/xpressive_dynamic.hpp"
 #include "boost/asio.hpp"
-#include <boost/format.hpp>
+#include "boost/format.hpp"
 
 using namespace std;
 using namespace boost;
 using namespace boost::asio;
 
-typedef shared_ptr<ip::tcp::socket> SocketPtr;
-typedef shared_ptr<string> StringPtr;
+typedef boost::shared_ptr<ip::tcp::socket> SocketPtr;
+typedef boost::shared_ptr<string> StringPtr;
 typedef vector<pair<int,string>> BPS;
 #define nullptr 0
-typedef function<void (string,int) > BreakFunction;
-typedef function<void () > NewDebugFunction;
-typedef function<void (string)> GetInfoFunction;
+typedef boost::function<void(string, int) > BreakFunction;
+typedef boost::function<void() > NewDebugFunction;
+typedef boost::function<void(string)> GetInfoFunction;
 
 class LuaDebug
 {

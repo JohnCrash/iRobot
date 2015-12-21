@@ -25,8 +25,21 @@ void LuaMobDebug::search_dir(std::wstring dir,std::wstring pat)
 				if( filename.length()>4 )
 				{
 					std::wstring ex = filename.substr(filename.length()-4);
-					if( ex==TEXT(".lua")||ex==TEXT(".Lua")||ex==TEXT(".LUA") )
-						mLocalFileMap[filename] = dir + TEXT("\\") + filename;
+					if (ex == TEXT(".lua") || ex == TEXT(".Lua") || ex == TEXT(".LUA"))
+					{
+						/*
+						 * 文件的存放的目录的第一级当成键，与文件名用'/'链接
+						 */
+						int lp = dir.find_last_of('\\');
+						if (lp != std::string::npos)
+						{
+							mLocalFileMap[dir.substr(lp+1) + TEXT("/") + filename] = dir + TEXT("\\") + filename;
+						}
+						else
+						{ //没有发现路径？
+							mLocalFileMap[filename] = dir + TEXT("\\") + filename;
+						}
+					}
 				}
 			}
 		}
@@ -70,22 +83,27 @@ std::wstring LuaMobDebug::mapLocalToRemot(std::wstring local)
 		}
 		return TEXT(".\\")+s;
 	}*/
-	size_t pos = local.rfind('\\');
-	if( pos != std::wstring::npos )
+	std::vector<std::wstring> vs;
+	split_path(local, vs);
+	if (vs.size() > 1)
 	{
-		return local.substr(pos+1);
+		return vs[1] + TEXT("/") + vs[0];
 	}
-	return local;
+	else
+		return local; 
 }
 
 std::wstring LuaMobDebug::mapRemotToLocal(const std::wstring r,bool &b)
 {
 	std::vector<std::wstring> vs;
 	split_path(r,vs);
-	if(!vs.empty())
+	if(vs.size()>1)
 	{
 		std::wstring key;
-		key = vs.front();
+		if (vs[1] == TEXT(".") && vs.size()>2)
+			key = vs[2] + TEXT("/") + vs[0];
+		else
+			key = vs[1]+TEXT("/")+vs[0];
 		if( mLocalFileMap.find(key)!=mLocalFileMap.end())
 		{
 			b = true;
@@ -115,7 +133,7 @@ LuaMobDebug::~LuaMobDebug()
 void LuaMobDebug::async_accept()
 {
 	SocketPtr s = SocketPtr(new ip::tcp::socket(mIos));
-	mAcceptor.async_accept(*s,boost::bind(&LuaMobDebug::accept_handler,this,placeholders::error,s));
+	mAcceptor.async_accept(*s,boost::bind(&LuaMobDebug::accept_handler,this,boost::asio::placeholders::error,s));
 }
 
 void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size )
@@ -140,7 +158,7 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		//xpressive::sregex setbp = xpressive::sregex::compile("break<([^\?<>|\"*]+)>@(\\d+)");
 		xpressive::sregex bpbreak1 = xpressive::sregex::compile("202 Paused (\\S+) (\\d+)");
 		xpressive::sregex bpbreak2 = xpressive::sregex::compile("203 Paused (\\S+) (\\d+) (\\d+)");
-		xpressive::sregex infop = xpressive::sregex::compile("GETV (.+)");
+		xpressive::sregex infop = xpressive::sregex::compile("GETV (.*)");
 		xpressive::sregex errorp = xpressive::sregex::compile("ERRMSG (.+)");
 		xpressive::sregex errorpt = xpressive::sregex::compile("ERROR (\\S+) (\\d+)");
 		xpressive::sregex stackp = xpressive::sregex::compile("200 OK (.+)");
@@ -180,10 +198,17 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 			if( GetInfoNotify )
 			{
 				std::wstring ss = toUnicode(lastGetV)+TEXT("\n")+toUnicode(what[1]);
-				for(auto it = ss.begin();it!=ss.end();++it)
+				if (!ss.empty())
 				{
-					if( *it=='\t' )
-						*it='\n';
+					for (auto it = ss.begin(); it != ss.end(); ++it)
+					{
+						if (*it == '\t')
+							*it = '\n';
+					}
+				}
+				else
+				{
+					ss = TEXT("empty");
 				}
 				GetInfoNotify(toUTF8(ss));
 			}
@@ -218,7 +243,7 @@ void LuaMobDebug::readline_handler( const system::error_code& e,std::size_t size
 		*mSocket,
 		mInbuf,
 		'\n',
-		bind(&LuaMobDebug::readline_handler,this,placeholders::error,placeholders::signal_number) );
+		bind(&LuaMobDebug::readline_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 }
 
 void LuaMobDebug::parseStack( const std::string& s )
@@ -290,7 +315,7 @@ void LuaMobDebug::doContinue()
 		isRunning = true;
 		boost::asio::async_write( *mSocket,
 			buffer(mContinue,mContinue.size()),
-			bind(&LuaMobDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
+			bind(&LuaMobDebug::write_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 	}
 }
 
@@ -301,7 +326,7 @@ void LuaMobDebug::doStep()
 		isRunning = true;
 		boost::asio::async_write( *mSocket,
 			buffer(mStep,mStep.size()),
-			bind(&LuaMobDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
+			bind(&LuaMobDebug::write_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 	}
 }
 
@@ -323,7 +348,7 @@ void LuaMobDebug::doStepIn()
 		isRunning = true;
 		boost::asio::async_write( *mSocket,
 			buffer(mStepIn,mStepIn.size()),
-			bind(&LuaMobDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
+			bind(&LuaMobDebug::write_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 	}
 }
 
@@ -356,7 +381,7 @@ void LuaMobDebug::accept_handler(const system::error_code& e,SocketPtr s)
 	boost::asio::async_read_until( *mSocket,
 		mInbuf,
 		'\n',
-		bind(&LuaMobDebug::readline_handler,this,placeholders::error,placeholders::signal_number) );
+		bind(&LuaMobDebug::readline_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 }
 
 //加入断点
@@ -398,7 +423,7 @@ void LuaMobDebug::removeBreakpoint( std::wstring source,int line )
 {
 	for( BPS::iterator i = bps.begin();i!=bps.end();++i )
 	{
-		if( i->first == line && i->second == source )
+		if (i->first == line && wcscmp(source.c_str(),i->second.c_str())==0)
 		{
 			bps.erase(i);
 			if( mSocket && mSocket->is_open() )

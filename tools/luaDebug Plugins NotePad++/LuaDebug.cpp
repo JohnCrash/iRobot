@@ -69,7 +69,7 @@ LuaDebug::~LuaDebug()
 void LuaDebug::async_accept()
 {
 	SocketPtr s = SocketPtr(new ip::tcp::socket(mIos));
-	mAcceptor.async_accept(*s,boost::bind(&LuaDebug::accept_handler,this,placeholders::error,s));
+	mAcceptor.async_accept(*s,boost::bind(&LuaDebug::accept_handler,this,boost::asio::placeholders::error,s));
 }
 
 void LuaDebug::readline_handler( const system::error_code& e,std::size_t size )
@@ -114,7 +114,7 @@ void LuaDebug::readline_handler( const system::error_code& e,std::size_t size )
 		*mSocket,
 		mInbuf,
 		'\n',
-		bind(&LuaDebug::readline_handler,this,placeholders::error,placeholders::signal_number) );
+		bind(&LuaDebug::readline_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 }
 
 void LuaDebug::write_handler(const boost::system::error_code& e,std::size_t bytes_transferred)
@@ -160,7 +160,7 @@ void LuaDebug::doContinue()
 	{
 		boost::asio::async_write( *mSocket,
 			buffer(mContinue,mContinue.size()),
-			bind(&LuaDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
+			bind(&LuaDebug::write_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 	}
 }
 
@@ -170,7 +170,7 @@ void LuaDebug::doStep()
 	{
 		boost::asio::async_write( *mSocket,
 			buffer(mStep,mStep.size()),
-			bind(&LuaDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
+			bind(&LuaDebug::write_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 	}
 }
 
@@ -189,7 +189,7 @@ void LuaDebug::doStepIn()
 	{
 		boost::asio::async_write( *mSocket,
 			buffer(mStepIn,mStepIn.size()),
-			bind(&LuaDebug::write_handler,this,placeholders::error,placeholders::signal_number) );
+			bind(&LuaDebug::write_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 	}
 }
 
@@ -219,7 +219,7 @@ void LuaDebug::accept_handler(const system::error_code& e,SocketPtr s)
 	boost::asio::async_read_until( *mSocket,
 		mInbuf,
 		'\n',
-		bind(&LuaDebug::readline_handler,this,placeholders::error,placeholders::signal_number) );
+		bind(&LuaDebug::readline_handler, this, boost::asio::placeholders::error, boost::asio::placeholders::signal_number));
 }
 
 //º”»Î∂œµ„
